@@ -1,0 +1,63 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="clr-namespace:JaCoreUI.ViewModels"
+        mc:Ignorable="d" d:DesignWidth="1024" d:DesignHeight="600"
+        Width="1920" Height="1080"
+        x:Class="JaCoreUI.MainWindow"
+        Title="JaCoreUI"
+        x:DataType="vm:MainWindowViewModel">
+        
+        <Grid Background="{DynamicResource PrimaryBackground}" ColumnDefinitions="Auto, *">
+           <Border Padding="20" Background="{DynamicResource PrimaryBackgroundGradientLr}">
+               <Grid RowDefinitions="*, Auto">
+                   <StackPanel Spacing="15">
+                       <Image Source="{SvgImage Assets/Images/applogo.svg}" Width="160" Margin="0,0,0,25"></Image>
+                       
+                       <Button Content="Home" HorizontalAlignment="Stretch"></Button>
+                       <Button Content="Home" HorizontalAlignment="Stretch"></Button>
+                       <Button Content="Home" HorizontalAlignment="Stretch"></Button>
+                       <Button Content="Home" HorizontalAlignment="Stretch"></Button>
+                       <Button Content="Home" HorizontalAlignment="Stretch"></Button>
+                       <Button Content="Home" HorizontalAlignment="Stretch"></Button>
+                       
+                   </StackPanel>
+                  
+                   <Button Grid.Row="1" Content="{Binding ThemeService.ThemeButtonText}"
+                           Command="{Binding ThemeService.ToggleThemeCommand}"
+                           Padding="15 5"
+                           MinWidth="120"/>
+                   
+               </Grid>
+               
+           </Border>
+            
+            <Button Grid.Column="1" Background="Transparent"
+                    BorderThickness="0"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Top"
+                    Margin="10"
+                    ZIndex="100"
+                    >
+                <Button.Content>
+                    <Border Background="White" CornerRadius="20">
+                        <StackPanel Orientation="Horizontal" Spacing="5">
+                            <!-- User Icon -->
+                            <Image 
+                                   Width="24" Height="24" Margin="7"/>
+                            <!-- User Text -->
+                            <TextBlock Text="John Doe" Padding="7" VerticalAlignment="Center" Foreground="Black"/>
+                        </StackPanel>
+                    </Border>
+                </Button.Content>
+            </Button>
+            
+            
+           <ContentControl Grid.Column="1" ZIndex="0" Content="{Binding CurrentView}">
+               
+           </ContentControl> 
+            
+        </Grid>        
+        
+</Window>

@@ -1,0 +1,37 @@
+﻿<!-- Styles/DarkTheme.axaml -->
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Styles.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.ThemeDictionaries>
+                <ResourceDictionary x:Key="Dark">
+                    
+                    <!-- Backgrounds -->
+                    <SolidColorBrush x:Key="PrimaryBackground">#1A256C</SolidColorBrush>
+                    <LinearGradientBrush x:Key="PrimaryBackgroundGradientLr" StartPoint="0%,0%" EndPoint="100%,0%">
+                        <GradientStop Offset="0" Color="#14172D"/>
+                        <GradientStop Offset="1" Color="#151E57"/>
+                    </LinearGradientBrush>
+            
+                    <LinearGradientBrush x:Key="PrimaryBackgroundGradientUd" StartPoint="0%,0%" EndPoint="0%,100%">
+                        <GradientStop Offset="0" Color="#11123F"/>
+                        <GradientStop Offset="1" Color="#151E57"/>
+                    </LinearGradientBrush>
+
+                    <!-- Text Colors -->
+                    <SolidColorBrush x:Key="TextPrimary">#D4D4D4</SolidColorBrush>
+                    <SolidColorBrush x:Key="TextSecondary">#A0A0A0</SolidColorBrush>
+            
+                    <!-- Control Colors -->
+                    <SolidColorBrush x:Key="ButtonForeground">#D4D4D4</SolidColorBrush>
+                    <SolidColorBrush x:Key="ButtonBackground">#2D3250</SolidColorBrush>
+            
+                    <!-- Accent Colors -->
+                    <SolidColorBrush x:Key="AccentColor">#6C8AE4</SolidColorBrush>
+                    <SolidColorBrush x:Key="AccentHoverColor">#829DFF</SolidColorBrush>
+                    
+                </ResourceDictionary>
+            </ResourceDictionary.ThemeDictionaries>
+        </ResourceDictionary>
+    </Styles.Resources>
+</Styles>
