@@ -1,51 +1,47 @@
-﻿<Styles xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    <Styles.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.ThemeDictionaries>
-                <ResourceDictionary x:Key="Light">
-                    <!-- Backgrounds -->
-                    <SolidColorBrush x:Key="PrimaryBackground">#BDC1C6</SolidColorBrush>
-                    
-                    <LinearGradientBrush x:Key="PrimaryBackgroundGradientLr" 
-                                       StartPoint="0%,0%" EndPoint="100%,0%">
-                        <GradientStop Offset="0" Color="#3C4043"/>
-                        <GradientStop Offset="1" Color="#BDC1C6"/>
-                    </LinearGradientBrush>
-                    
-                    <LinearGradientBrush x:Key="PrimaryBackgroundGradientUd" 
-                                       StartPoint="0%,0%" EndPoint="0%,100%">
-                        <GradientStop Offset="0" Color="#3C4043"/>
-                        <GradientStop Offset="1" Color="#BDC1C6"/>
-                    </LinearGradientBrush>
+﻿<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <ResourceDictionary.ThemeDictionaries>
+        <ResourceDictionary x:Key="Light">
+            <!-- Backgrounds -->
+            <SolidColorBrush x:Key="PrimaryBackground">#BDC1C6</SolidColorBrush>
 
-                    <!-- Text Colors -->
-                    <SolidColorBrush x:Key="TextPrimary">#2D2D2D</SolidColorBrush>
-                    <SolidColorBrush x:Key="TextSecondary">#5A5A5A</SolidColorBrush>
-                    <SolidColorBrush x:Key="TextDisabled">#909090</SolidColorBrush>
+            <LinearGradientBrush x:Key="PrimaryBackgroundGradientLr"
+                                 StartPoint="0%,0%" EndPoint="100%,0%">
+                <GradientStop Offset="0" Color="#3C4043" />
+                <GradientStop Offset="1" Color="#BDC1C6" />
+            </LinearGradientBrush>
 
-                    <!-- Control Colors -->
-                    <SolidColorBrush x:Key="ButtonForeground">#2D2D2D</SolidColorBrush>
-                    <LinearGradientBrush x:Key="ButtonBackground" 
-                                       StartPoint="0%,0%" EndPoint="0%,100%">
-                        <GradientStop Offset="0" Color="#3C4043"/>
-                        <GradientStop Offset="1" Color="#BDC1C6"/>
-                    </LinearGradientBrush>
-                    <SolidColorBrush x:Key="ButtonBorder">#C8C8C8</SolidColorBrush>
+            <LinearGradientBrush x:Key="PrimaryBackgroundGradientUd"
+                                 StartPoint="0%,0%" EndPoint="0%,100%">
+                <GradientStop Offset="0" Color="#3C4043" />
+                <GradientStop Offset="1" Color="#BDC1C6" />
+            </LinearGradientBrush>
 
-                    <!-- Accent Colors -->
-                    <SolidColorBrush x:Key="AccentColor">#6C7A89</SolidColorBrush>
-                    <SolidColorBrush x:Key="AccentHoverColor">#7D8B99</SolidColorBrush>
+            <!-- Text Colors -->
+            <SolidColorBrush x:Key="TextPrimary">#2D2D2D</SolidColorBrush>
+            <SolidColorBrush x:Key="TextSecondary">#5A5A5A</SolidColorBrush>
+            <SolidColorBrush x:Key="TextDisabled">#909090</SolidColorBrush>
 
-                    <!-- Surface Colors -->
-                    <SolidColorBrush x:Key="CardBackground">#BCD1C6</SolidColorBrush>
-                    <SolidColorBrush x:Key="CardBorder">#E0E0E0</SolidColorBrush>
+            <!-- Control Colors -->
+            <SolidColorBrush x:Key="ButtonForeground">#2D2D2D</SolidColorBrush>
+            <LinearGradientBrush x:Key="ButtonBackground"
+                                 StartPoint="0%,0%" EndPoint="0%,100%">
+                <GradientStop Offset="0" Color="#3C4043" />
+                <GradientStop Offset="1" Color="#BDC1C6" />
+            </LinearGradientBrush>
+            <SolidColorBrush x:Key="ButtonBorder">#C8C8C8</SolidColorBrush>
 
-                    <!-- Special Colors -->
-                    <SolidColorBrush x:Key="FocusColor">#8D9EAD</SolidColorBrush>
-                    <SolidColorBrush x:Key="SelectionColor">#D8E1E8</SolidColorBrush>
-                </ResourceDictionary>
-            </ResourceDictionary.ThemeDictionaries>
+            <!-- Accent Colors -->
+            <SolidColorBrush x:Key="AccentColor">#6C7A89</SolidColorBrush>
+            <SolidColorBrush x:Key="AccentHoverColor">#7D8B99</SolidColorBrush>
+
+            <!-- Surface Colors -->
+            <SolidColorBrush x:Key="CardBackground">#BCD1C6</SolidColorBrush>
+            <SolidColorBrush x:Key="CardBorder">#E0E0E0</SolidColorBrush>
+
+            <!-- Special Colors -->
+            <SolidColorBrush x:Key="FocusColor">#8D9EAD</SolidColorBrush>
+            <SolidColorBrush x:Key="SelectionColor">#D8E1E8</SolidColorBrush>
         </ResourceDictionary>
-    </Styles.Resources>
-</Styles>
+    </ResourceDictionary.ThemeDictionaries>
+</ResourceDictionary>

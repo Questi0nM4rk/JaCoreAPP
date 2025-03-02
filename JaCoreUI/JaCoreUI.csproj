@@ -1,0 +1,55 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <OutputType>WinExe</OutputType>
+        <TargetFramework>net9.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
+        <ApplicationManifest>app.manifest</ApplicationManifest>
+        <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+        <LangVersion>preview</LangVersion>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Avalonia" Version="11.2.1"/>
+        <PackageReference Include="Avalonia.Desktop" Version="11.2.1"/>
+        <PackageReference Include="Avalonia.Svg.Skia" Version="11.2.0.2" />
+        <PackageReference Include="Avalonia.Themes.Fluent" Version="11.2.1"/>
+        <PackageReference Include="Avalonia.Fonts.Inter" Version="11.2.1"/>
+        <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
+        <PackageReference Include="Avalonia.Diagnostics" Version="11.2.1">
+            <IncludeAssets Condition="'$(Configuration)' != 'Debug'">None</IncludeAssets>
+            <PrivateAssets Condition="'$(Configuration)' != 'Debug'">All</PrivateAssets>
+        </PackageReference>
+        <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.0-preview.1.25080.5" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="Assests\Images\app_logo.png" />
+      <None Remove="Assests\Images\small_logo.png" />
+      <None Remove="Assests\Images\big_logo.png" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="Assests\Images\applogo.svg" />
+      <AvaloniaResource Include="Assets\Images\applogo.svg" />
+      <None Remove="Assests\Images\small_logo.svg" />
+      <AvaloniaResource Include="Assets\Images\small_logo.svg" />
+      <None Remove="Assests\Images\biglogo.svg" />
+      <AvaloniaResource Include="Assets\Images\biglogo.svg" />
+      <None Remove="Assets\Images\applogo.svg" />
+      <AvaloniaResource Include="Assets\Images\applogo.svg" />
+      <None Remove="Assets\Images\biglogo.svg" />
+      <AvaloniaResource Include="Assets\Images\biglogo.svg" />
+      <None Remove="Assets\Images\small_logo.svg" />
+      <AvaloniaResource Include="Assets\Images\small_logo.svg" />
+      <AvaloniaXaml Remove="Styles\DarkTheme.axaml" />
+      <AvaloniaResource Include="Styles\DarkTheme.axaml" />
+      <AvaloniaXaml Remove="Styles\LightTheme.axaml" />
+      <AvaloniaResource Include="Styles\LightTheme.axaml" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Models\" />
+    </ItemGroup>
+</Project>
