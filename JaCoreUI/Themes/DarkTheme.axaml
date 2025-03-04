@@ -1,0 +1,83 @@
+﻿<!-- Styles/DarkTheme.axaml -->
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <ResourceDictionary.ThemeDictionaries>
+        <ResourceDictionary x:Key="Dark">
+
+            <Thickness x:Key="PrimaryBorderThickness">2</Thickness>
+
+            <SolidColorBrush x:Key="PrimaryForeground">#CFCFCF</SolidColorBrush>
+            <SolidColorBrush x:Key="PrimaryForegroundSubtle">#aaa</SolidColorBrush>
+            <SolidColorBrush x:Key="PrimaryBackground">#14172D</SolidColorBrush>
+
+            <LinearGradientBrush x:Key="PrimaryBackgroundGradientLr" StartPoint="0%, 0%" EndPoint="100%, 0%">
+                <GradientStop Offset="0" Color="#151E5E"></GradientStop>
+                <GradientStop Offset="1" Color="#14172D"></GradientStop>
+            </LinearGradientBrush>
+
+            <LinearGradientBrush x:Key="PrimaryBackgroundGradientUd" StartPoint="0%, 0%" EndPoint="0%, 100%">
+                <GradientStop Offset="0" Color="#151E5E"></GradientStop>
+                <GradientStop Offset="1" Color="#14172D"></GradientStop>
+            </LinearGradientBrush>
+            
+            <SolidColorBrush x:Key="PrimaryHoverBackground">#333B5A</SolidColorBrush>
+            <SolidColorBrush x:Key="PrimaryHoverForeground">White</SolidColorBrush>
+
+            <LinearGradientBrush x:Key="DefaultGradient" StartPoint="0%, 0%" EndPoint="100%, 0%">
+                <GradientStop Offset="0" Color="#333B5A"></GradientStop>
+                <GradientStop Offset="1" Color="#333B5A"></GradientStop>
+            </LinearGradientBrush>
+
+            <LinearGradientBrush x:Key="ActiveGradientText" StartPoint="0%, 0%" EndPoint="100%, 0%">
+                <GradientStop Offset="0" Color="#7C59CD"></GradientStop>
+                <GradientStop Offset="1" Color="#7C59AB"></GradientStop>
+            </LinearGradientBrush>
+
+            <LinearGradientBrush x:Key="ActiveGradient" StartPoint="0%, 0%" EndPoint="100%, 0%">
+                <GradientStop Offset="0" Color="#6633DD"></GradientStop>
+                <GradientStop Offset="1" Color="#431B9F"></GradientStop>
+            </LinearGradientBrush>
+
+            <LinearGradientBrush x:Key="ActiveHoverGradient" StartPoint="0%, 0%" EndPoint="100%, 0%">
+                <GradientStop Offset="0" Color="#6633DD"></GradientStop>
+                <GradientStop Offset="1" Color="#6633AD"></GradientStop>
+            </LinearGradientBrush>
+
+            <LinearGradientBrush x:Key="HoverGradient" StartPoint="0%, 0%" EndPoint="100%, 0%">
+                <GradientStop Offset="0" Color="#00ffff"></GradientStop>
+                <GradientStop Offset="1" Color="#ff00ff"></GradientStop>
+            </LinearGradientBrush>
+
+            <LinearGradientBrush x:Key="SuccessGradient" StartPoint="0%, 0%" EndPoint="100%, 0%">
+                <GradientStop Offset="0" Color="#00ff00"></GradientStop>
+                <GradientStop Offset="1" Color="#009900"></GradientStop>
+            </LinearGradientBrush>
+
+            <LinearGradientBrush x:Key="SuccessHoverGradient" StartPoint="0%, 0%" EndPoint="100%, 0%">
+                <GradientStop Offset="0" Color="#44ff44"></GradientStop>
+                <GradientStop Offset="1" Color="#55cc55"></GradientStop>
+            </LinearGradientBrush>
+
+            <LinearGradientBrush x:Key="AlertGradient" StartPoint="0%, 0%" EndPoint="100%, 0%">
+                <GradientStop Offset="0" Color="#ffff00"></GradientStop>
+                <GradientStop Offset="1" Color="#ff8800"></GradientStop>
+            </LinearGradientBrush>
+
+            <LinearGradientBrush x:Key="AlertHoverGradient" StartPoint="0%, 0%" EndPoint="100%, 0%">
+                <GradientStop Offset="0" Color="#ffff00"></GradientStop>
+                <GradientStop Offset="1" Color="#ffff00"></GradientStop>
+            </LinearGradientBrush>
+
+            <LinearGradientBrush x:Key="DangerGradient" StartPoint="0%, 0%" EndPoint="100%, 0%">
+                <GradientStop Offset="0" Color="#ff0000"></GradientStop>
+                <GradientStop Offset="1" Color="#aa0000"></GradientStop>
+            </LinearGradientBrush>
+
+            <LinearGradientBrush x:Key="DangerHoverGradient" StartPoint="0%, 0%" EndPoint="100%, 0%">
+                <GradientStop Offset="0" Color="#ff4444"></GradientStop>
+                <GradientStop Offset="1" Color="#bb1111"></GradientStop>
+            </LinearGradientBrush>
+
+        </ResourceDictionary>
+    </ResourceDictionary.ThemeDictionaries>
+</ResourceDictionary>

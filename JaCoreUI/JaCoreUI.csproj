@@ -25,31 +25,46 @@
     </ItemGroup>
 
     <ItemGroup>
-      <None Remove="Assests\Images\app_logo.png" />
-      <None Remove="Assests\Images\small_logo.png" />
-      <None Remove="Assests\Images\big_logo.png" />
+      <Folder Include="Models\" />
+        <Folder Include="Assets\" />
+        <Folder Include="Themes\" />
+        <Folder Include="Views\" />
     </ItemGroup>
 
     <ItemGroup>
-      <None Remove="Assests\Images\applogo.svg" />
-      <AvaloniaResource Include="Assets\Images\applogo.svg" />
-      <None Remove="Assests\Images\small_logo.svg" />
-      <AvaloniaResource Include="Assets\Images\small_logo.svg" />
-      <None Remove="Assests\Images\biglogo.svg" />
-      <AvaloniaResource Include="Assets\Images\biglogo.svg" />
       <None Remove="Assets\Images\applogo.svg" />
       <AvaloniaResource Include="Assets\Images\applogo.svg" />
       <None Remove="Assets\Images\biglogo.svg" />
       <AvaloniaResource Include="Assets\Images\biglogo.svg" />
       <None Remove="Assets\Images\small_logo.svg" />
       <AvaloniaResource Include="Assets\Images\small_logo.svg" />
-      <AvaloniaXaml Remove="Styles\DarkTheme.axaml" />
-      <AvaloniaResource Include="Styles\DarkTheme.axaml" />
-      <AvaloniaXaml Remove="Styles\LightTheme.axaml" />
-      <AvaloniaResource Include="Styles\LightTheme.axaml" />
+      <None Remove="Assets\Fonts\NotoSansJP.ttf" />
+      <AvaloniaResource Include="Assets\Fonts\NotoSansJP.ttf" />
+      <None Remove="Assets\Fonts\Phosphor.ttf" />
+      <AvaloniaResource Include="Assets\Fonts\Phosphor.ttf" />
+      <None Remove="Assets\Fonts\Phosphor-Fill.ttf" />
+      <AvaloniaResource Include="Assets\Fonts\Phosphor-Fill.ttf" />
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Models\" />
+      <Compile Update="Controls\IconButton.axaml.cs">
+        <DependentUpon>IconButton.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
+      <Compile Update="Controls\IconButton.axaml.cs">
+        <DependentUpon>IconButton.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
+    </ItemGroup>
+
+    <ItemGroup>
+      <AdditionalFiles Include="Controls\CheckBox.axaml" />
+      <AdditionalFiles Include="Controls\ComboBox.axaml" />
+      <AdditionalFiles Include="Controls\ComboBoxItem.axaml" />
+      <AdditionalFiles Include="Controls\IconButton.axaml" />
+      <AdditionalFiles Include="Controls\ListBoxItem.axaml" />
+      <AdditionalFiles Include="Controls\TabControl.axaml" />
+      <AdditionalFiles Include="Controls\TabItem.axaml" />
+      <AdditionalFiles Include="Controls\ToggleButton.axaml" />
     </ItemGroup>
 </Project>

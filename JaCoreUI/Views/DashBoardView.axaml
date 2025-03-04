@@ -7,8 +7,19 @@
              x:Class="JaCoreUI.Views.DashBoardView"
              x:DataType="vm:DashboardViewModel">
     
-    <Grid RowDefinitions="60, *">
-        <Border Background="{DynamicResource PrimaryBackgroundGradientUd}"></Border>
+    <Grid RowDefinitions="70, *">
+        <Border Padding="20" Background="{DynamicResource PrimaryBackgroundGradientUd}">
+            <TextBlock>Dashboard</TextBlock>
+            
+        </Border>
+        
+        <Border Grid.Row="1" Background="{DynamicResource PrimaryBackground}">
+            <Grid ColumnDefinitions="*, Auto">
+                
+                
+            </Grid>
+            
+        </Border>
         
     </Grid>
     

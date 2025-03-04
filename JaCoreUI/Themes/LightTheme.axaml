@@ -1,0 +1,78 @@
+﻿<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <ResourceDictionary.ThemeDictionaries>
+        <ResourceDictionary x:Key="Light">
+            <!-- Base grayscale palette -->
+            <Thickness x:Key="PrimaryBorderThickness">2</Thickness>
+
+            <!-- Text colors -->
+            <SolidColorBrush x:Key="PrimaryForeground">#444444</SolidColorBrush>     <!-- Dark gray -->
+            <SolidColorBrush x:Key="PrimaryForegroundSubtle">#666666</SolidColorBrush> <!-- Medium gray -->
+
+            <!-- Background colors -->
+            <SolidColorBrush x:Key="PrimaryBackground">#F8F9FA</SolidColorBrush>     <!-- Off-white -->
+            <LinearGradientBrush x:Key="PrimaryBackgroundGradient" StartPoint="0%, 0%" EndPoint="100%, 0%">
+                <GradientStop Offset="0" Color="#F0F0F0" /> <!-- Light gray -->
+                <GradientStop Offset="1" Color="#E0E0E0" /> <!-- Medium-light gray -->
+            </LinearGradientBrush>
+
+            <!-- Interactive states -->
+            <SolidColorBrush x:Key="PrimaryHoverBackground">#E0E0E0</SolidColorBrush> <!-- Light gray -->
+            <SolidColorBrush x:Key="PrimaryHoverForeground">#333333</SolidColorBrush>  <!-- Dark gray -->
+
+            <!-- Default components -->
+            <LinearGradientBrush x:Key="DefaultGradient" StartPoint="0%, 0%" EndPoint="100%, 0%">
+                <GradientStop Offset="0" Color="#D0D0D0" /> <!-- Light gray -->
+                <GradientStop Offset="1" Color="#C0C0C0" /> <!-- Medium gray -->
+            </LinearGradientBrush>
+
+            <!-- Active states -->
+            <LinearGradientBrush x:Key="ActiveGradientText" StartPoint="0%, 0%" EndPoint="100%, 0%">
+                <GradientStop Offset="0" Color="#808080" /> <!-- Medium gray -->
+                <GradientStop Offset="1" Color="#707070" /> <!-- Dark medium gray -->
+            </LinearGradientBrush>
+
+            <LinearGradientBrush x:Key="ActiveGradient" StartPoint="0%, 0%" EndPoint="100%, 0%">
+                <GradientStop Offset="0" Color="#B0B0B0" /> <!-- Light medium gray -->
+                <GradientStop Offset="1" Color="#909090" /> <!-- Medium-dark gray -->
+            </LinearGradientBrush>
+
+            <!-- Hover states -->
+            <LinearGradientBrush x:Key="HoverGradient" StartPoint="0%, 0%" EndPoint="100%, 0%">
+                <GradientStop Offset="0" Color="#E8E8E8" /> <!-- Very light gray -->
+                <GradientStop Offset="1" Color="#D8D8D8" /> <!-- Light gray -->
+            </LinearGradientBrush>
+
+            <!-- Status indicators -->
+            <LinearGradientBrush x:Key="SuccessGradient" StartPoint="0%, 0%" EndPoint="100%, 0%">
+                <GradientStop Offset="0" Color="#D0D0D0" /> <!-- Light gray -->
+                <GradientStop Offset="1" Color="#B0B0B0" /> <!-- Medium gray -->
+            </LinearGradientBrush>
+
+            <LinearGradientBrush x:Key="SuccessHoverGradient" StartPoint="0%, 0%" EndPoint="100%, 0%">
+                <GradientStop Offset="0" Color="#C0C0C0" /> <!-- Medium gray -->
+                <GradientStop Offset="1" Color="#A0A0A0" /> <!-- Dark medium gray -->
+            </LinearGradientBrush>
+
+            <LinearGradientBrush x:Key="AlertGradient" StartPoint="0%, 0%" EndPoint="100%, 0%">
+                <GradientStop Offset="0" Color="#F0F0F0" /> <!-- Very light gray -->
+                <GradientStop Offset="1" Color="#E0E0E0" /> <!-- Light gray -->
+            </LinearGradientBrush>
+
+            <LinearGradientBrush x:Key="AlertHoverGradient" StartPoint="0%, 0%" EndPoint="100%, 0%">
+                <GradientStop Offset="0" Color="#E8E8E8" /> <!-- Very light gray -->
+                <GradientStop Offset="1" Color="#D8D8D8" /> <!-- Light gray -->
+            </LinearGradientBrush>
+
+            <LinearGradientBrush x:Key="DangerGradient" StartPoint="0%, 0%" EndPoint="100%, 0%">
+                <GradientStop Offset="0" Color="#A0A0A0" /> <!-- Dark medium gray -->
+                <GradientStop Offset="1" Color="#808080" /> <!-- Medium gray -->
+            </LinearGradientBrush>
+
+            <LinearGradientBrush x:Key="DangerHoverGradient" StartPoint="0%, 0%" EndPoint="100%, 0%">
+                <GradientStop Offset="0" Color="#909090" /> <!-- Medium-dark gray -->
+                <GradientStop Offset="1" Color="#707070" /> <!-- Dark gray -->
+            </LinearGradientBrush>
+        </ResourceDictionary>
+    </ResourceDictionary.ThemeDictionaries>
+</ResourceDictionary>
