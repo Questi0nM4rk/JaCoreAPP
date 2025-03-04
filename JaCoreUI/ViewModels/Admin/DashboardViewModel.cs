@@ -1,7 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using JaCoreUI.Services;
 
-namespace JaCoreUI.ViewModels;
+namespace JaCoreUI.ViewModels.Admin;
 
 public partial class DashboardViewModel(ThemeService themeService) : ObservableObject
 {

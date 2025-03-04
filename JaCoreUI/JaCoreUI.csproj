@@ -28,7 +28,13 @@
       <Folder Include="Models\" />
         <Folder Include="Assets\" />
         <Folder Include="Themes\" />
-        <Folder Include="Views\" />
+        <Folder Include="ViewModels\Debug\" />
+        <Folder Include="ViewModels\Device\" />
+        <Folder Include="ViewModels\Production\" />
+        <Folder Include="ViewModels\Template\" />
+        <Folder Include="ViewModels\User\" />
+        <Folder Include="Views\Debug\" />
+        <Folder Include="Views\Settings\" />
     </ItemGroup>
 
     <ItemGroup>
@@ -53,6 +59,38 @@
       </Compile>
       <Compile Update="Controls\IconButton.axaml.cs">
         <DependentUpon>IconButton.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
+      <Compile Update="Views\Admin\DashBoardView.axaml.cs">
+        <DependentUpon>DashBoardView.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
+      <Compile Update="Views\Device\DeviceCreationView.axaml.cs">
+        <DependentUpon>DeviceCreationView.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
+      <Compile Update="Views\Device\DeviceDetailsView.axaml.cs">
+        <DependentUpon>DeviceDetailsView.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
+      <Compile Update="Views\Device\DevicesView.axaml.cs">
+        <DependentUpon>DevicesView.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
+      <Compile Update="Views\Production\ProductionsView.axaml.cs">
+        <DependentUpon>ProductionsView.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
+      <Compile Update="Views\Template\TemplateDetailsView.axaml.cs">
+        <DependentUpon>TemplateDetailsView.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
+      <Compile Update="Views\Template\TemplatesView.axaml.cs">
+        <DependentUpon>TemplatesView.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
+      <Compile Update="Views\Shell\ShellView.axaml.cs">
+        <DependentUpon>MainWindow.axaml</DependentUpon>
         <SubType>Code</SubType>
       </Compile>
     </ItemGroup>

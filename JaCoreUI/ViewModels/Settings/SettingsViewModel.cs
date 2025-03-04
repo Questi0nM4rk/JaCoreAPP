@@ -1,6 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 
-namespace JaCoreUI.ViewModels;
+namespace JaCoreUI.ViewModels.Settings;
 
 public partial class SettingsViewModel : ObservableObject
 {

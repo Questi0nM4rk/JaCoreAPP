@@ -1,6 +1,6 @@
 ﻿<Styles xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:controls="clr-namespace:BatchProcess3.Controls">
+        xmlns:controls="clr-namespace:JaCoreUI.Controls">
     <Design.PreviewWith>
             <!-- Add Controls for Previewer Here -->
             <Border Padding="20" Background="{DynamicResource PrimaryBackgroundGradientLr}" Width="600">
@@ -30,7 +30,9 @@
                             <Label Classes="icon-only" Content="&#xe272;"></Label>
                         </Button>
                         
-                        
+                        <Button Classes="user">
+                            
+                        </Button>
                         
                     </StackPanel>
                 

@@ -5,6 +5,10 @@ using Avalonia.Markup.Xaml;
 using CommunityToolkit.Mvvm.Input;
 using JaCoreUI.Services;
 using JaCoreUI.ViewModels;
+using JaCoreUI.ViewModels.Admin;
+using JaCoreUI.ViewModels.Settings;
+using JaCoreUI.ViewModels.Shell;
+using JaCoreUI.Views.Shell;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace JaCoreUI;
@@ -25,7 +29,7 @@ public partial class App : Application
         return new ServiceCollection()
             .AddTransient<Program>()
             .AddSingleton<ThemeService>()
-            .AddTransient<MainWindowViewModel>()
+            .AddTransient<ShellViewModel>()
             .AddTransient<DashboardViewModel>()
             .AddTransient<SettingsViewModel>()
             .BuildServiceProvider();
@@ -35,8 +39,8 @@ public partial class App : Application
     {
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
-            var vm = Services?.GetRequiredService<MainWindowViewModel>();
-            desktop.MainWindow = new MainWindow { DataContext = vm };
+            var vm = Services?.GetRequiredService<ShellViewModel>();
+            desktop.MainWindow = new ShellView { DataContext = vm };
         }
         base.OnFrameworkInitializationCompleted();
     }

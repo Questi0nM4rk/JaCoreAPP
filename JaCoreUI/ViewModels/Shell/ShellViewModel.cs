@@ -1,18 +1,20 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using JaCoreUI.Services;
+using JaCoreUI.ViewModels.Admin;
+using JaCoreUI.ViewModels.Settings;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace JaCoreUI.ViewModels;
+namespace JaCoreUI.ViewModels.Shell;
 
-public partial class MainWindowViewModel : ObservableObject
+public partial class ShellViewModel : ObservableObject
 {
     [ObservableProperty]
     public partial object? CurrentView { get; set; }
 
     public ThemeService ThemeService { get; }
 
-    public MainWindowViewModel(ThemeService themeService)
+    public ShellViewModel(ThemeService themeService)
     {
         ThemeService = themeService;
         Navigate("Dashboard");

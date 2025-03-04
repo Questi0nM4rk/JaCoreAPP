@@ -2,11 +2,11 @@
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 
-namespace JaCoreUI.Views;
+namespace JaCoreUI.Views.Production;
 
-public partial class DashBoardView : UserControl
+public partial class ProductionsView : UserControl
 {
-    public DashBoardView()
+    public ProductionsView()
     {
         InitializeComponent();
     }

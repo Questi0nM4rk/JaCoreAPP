@@ -3,7 +3,7 @@ using Avalonia.Media;
 using System;
 using System.Globalization;
 
-namespace BatchProcess3.ValueConverters;
+namespace JaCoreUI.ValueConverters;
 
 public class BooleanToBoldFontConverter : IValueConverter
 {
