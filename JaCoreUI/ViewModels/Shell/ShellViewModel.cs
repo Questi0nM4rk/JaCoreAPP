@@ -11,25 +11,24 @@ namespace JaCoreUI.ViewModels.Shell;
 
 public partial class ShellViewModel : ObservableObject
 {
-    [ObservableProperty]
-    private partial NavigationService Navigation { get; set; }
+    private readonly PageFactory _pageFactory;
     
     [ObservableProperty]
     public partial ThemeService Theme { get; set; }
 
     [ObservableProperty]
-    public partial PageViewModel? CurrentView { get; set; }
+    public partial PageViewModel CurrentPage { get; set; }
 
-    public ShellViewModel(NavigationService navigationService, ThemeService themeService)
+    public ShellViewModel(PageFactory pageFactory, ThemeService themeService)
     {
-        Navigation = navigationService;
         Theme = themeService;
-        Navigation.NavigateTo(ApplicationPageNames.Dashboard);
+        _pageFactory = pageFactory;
+        CurrentPage = _pageFactory.GetPageViewModel(ApplicationPageNames.Dashboard);
     }
 
     [RelayCommand]
     public void Home()
     {
-        Navigation.NavigateTo(ApplicationPageNames.Dashboard);
+        CurrentPage = _pageFactory.GetPageViewModel(ApplicationPageNames.Dashboard);
     }
 }

@@ -1,5 +1,6 @@
 using System;
 using Avalonia;
+using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using JaCoreUI.Data;
 using JaCoreUI.Factories;
@@ -12,6 +13,7 @@ using JaCoreUI.ViewModels.Settings;
 using JaCoreUI.ViewModels.Shell;
 using JaCoreUI.ViewModels.Template;
 using JaCoreUI.ViewModels.User;
+using JaCoreUI.Views.Shell;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace JaCoreUI;
@@ -29,8 +31,7 @@ public partial class App : Application
 
 // Register services
         collection
-            .AddSingleton<ThemeService>()
-            .AddSingleton<NavigationService>();
+            .AddSingleton<ThemeService>();
 
 // Register ViewModels
         collection
@@ -67,5 +68,27 @@ public partial class App : Application
         });
 
         collection.AddSingleton<PageFactory>();
+
+        // Build the service provider
+        var services = collection.BuildServiceProvider();
+            
+        switch (ApplicationLifetime)
+        {
+            case IClassicDesktopStyleApplicationLifetime desktop:
+                desktop.MainWindow = new ShellView()
+                {
+                    DataContext  = services.GetRequiredService<ShellViewModel>()
+                };
+                break;
+            case ISingleViewApplicationLifetime singleViewPlatform:
+                singleViewPlatform.MainView = new ShellView()
+                {
+                    DataContext = services.GetRequiredService<ShellViewModel>()
+                };
+                break;
+        }
+
+        base.OnFrameworkInitializationCompleted();
+
     }
 }

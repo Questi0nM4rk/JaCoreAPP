@@ -3,6 +3,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm="clr-namespace:JaCoreUI.ViewModels.Shell"
+        xmlns:svg="using:Avalonia.Svg.Skia"
         mc:Ignorable="d" d:DesignWidth="1024" d:DesignHeight="600"
         Width="1920" Height="1080"
         x:Class="JaCoreUI.Views.Shell.ShellView"
@@ -13,7 +14,7 @@
            <Border Padding="20" Background="{DynamicResource PrimaryBackgroundGradientLr}">
                <Grid RowDefinitions="*, Auto">
                    <StackPanel Spacing="15">
-                       <Image Source="{SvgImage Assets/Images/applogo.svg}" Width="160" Margin="0,0,0,25"></Image>
+                       <svg:Svg Path="avares://JaCoreUI/Assets/Images/applogo.svg" Width="160" Margin="0,0,0,25"/>
                        
                        <Button HorizontalAlignment="Stretch">
                            <StackPanel Orientation="Horizontal">
@@ -67,7 +68,7 @@
             
             
            <ContentControl Grid.Column="1" ZIndex="0" HorizontalAlignment="Stretch"
-                           VerticalAlignment="Stretch" Content="{Binding CurrentView}"/> 
+                           VerticalAlignment="Stretch" Content="{Binding CurrentPage}"/> 
             
         </Grid>  
         
