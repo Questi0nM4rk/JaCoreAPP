@@ -3,6 +3,7 @@
              xmlns:vm="clr-namespace:JaCoreUI.ViewModels.Admin"
              xmlns:v="clr-namespace:JaCoreUI.Views.Admin"
              xmlns:local="clr-namespace:JaCoreUI"
+             xmlns:svg="using:Avalonia.Svg.Skia"
              x:Class="JaCoreUI.App"
              RequestedThemeVariant="Dark">
     
@@ -15,12 +16,12 @@
             <Style Selector="Window">
                 <Setter Property="FontFamily" Value="{DynamicResource DefaultFontFamily}"></Setter>
             </Style>
-            <StyleInclude Source="Styles/Buttons.axaml"></StyleInclude>
-            <StyleInclude Source="Styles/General.axaml"></StyleInclude>
-            <StyleInclude Source="Styles/Labels.axaml"></StyleInclude>
-            <StyleInclude Source="Styles/ListBox.axaml"></StyleInclude>
-            <StyleInclude Source="Styles/TextBlock.axaml"></StyleInclude>
-            <StyleInclude Source="Styles/TextBox.axaml"></StyleInclude>
+            <StyleInclude Source="Styles/Buttons.axaml"/>
+            <StyleInclude Source="Styles/General.axaml"/>
+            <StyleInclude Source="Styles/Labels.axaml"/>
+            <StyleInclude Source="Styles/ListBox.axaml"/>
+            <StyleInclude Source="Styles/TextBlock.axaml"/>
+            <StyleInclude Source="Styles/TextBox.axaml"/>
         </FluentTheme>
     </Application.Styles>
     
@@ -35,15 +36,18 @@
             <ResourceDictionary.MergedDictionaries>
                 <MergeResourceInclude Source="/Themes/DarkTheme.axaml" />
                 <MergeResourceInclude Source="/Themes/LightTheme.axaml" />
-                <MergeResourceInclude Source="/Controls/IconButton.axaml"></MergeResourceInclude>
-                <MergeResourceInclude Source="/Controls/CheckBox.axaml"></MergeResourceInclude>
-                <MergeResourceInclude Source="/Controls/ToggleButton.axaml"></MergeResourceInclude>
-                <MergeResourceInclude Source="/Controls/ComboBox.axaml"></MergeResourceInclude>
-                <MergeResourceInclude Source="/Controls/ComboBoxItem.axaml"></MergeResourceInclude>
-                <MergeResourceInclude Source="/Controls/ListBoxItem.axaml"></MergeResourceInclude>
-                <MergeResourceInclude Source="/Controls/TabControl.axaml"></MergeResourceInclude>
-                <MergeResourceInclude Source="/Controls/TabItem.axaml"></MergeResourceInclude>
+                <MergeResourceInclude Source="/Controls/IconButton.axaml"/>
+                <MergeResourceInclude Source="/Controls/CheckBox.axaml"/>
+                <MergeResourceInclude Source="/Controls/ToggleButton.axaml"/>
+                <MergeResourceInclude Source="/Controls/ComboBox.axaml"/>
+                <MergeResourceInclude Source="/Controls/ComboBoxItem.axaml"/>
+                <MergeResourceInclude Source="/Controls/ListBoxItem.axaml"/>
+                <MergeResourceInclude Source="/Controls/TabControl.axaml"/>
+                <MergeResourceInclude Source="/Controls/TabItem.axaml"/>
             </ResourceDictionary.MergedDictionaries>
+            
+            <svg:SvgSource x:Key="AppLogo" Path="/Assets/Images/applogo.svg"/>
+            
         </ResourceDictionary>
         
         <FontFamily x:Key="Phosphor">/Assets/Fonts/Phosphor.ttf#Phosphor</FontFamily>

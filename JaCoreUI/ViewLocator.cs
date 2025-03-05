@@ -9,18 +9,21 @@ public class ViewLocator : IDataTemplate
 {
     public Control? Build(object? data)
     {
-        if (data is null)
-            return null;
+        if (data is null) return null;
         
-        var viewName = data.GetType().FullName!.Replace("ViewModel", "View", StringComparison.InvariantCulture);
-        var type = Type.GetType(viewName);
+        var viewModelType = data.GetType();
+        var viewName = viewModelType.FullName!
+            .Replace("ViewModels", "Views")
+            .Replace("ViewModel", "View");
+        
+        var viewType = Type.GetType(viewName);
+        
+        if (viewType == null)
+        {
+            return new TextBlock { Text = $"View Not Found: {viewName}" };
+        }
 
-        if (type is null)
-            return null;
-        
-        var control = (Control)Activator.CreateInstance(type)!;
-        control.DataContext = data;
-        return control;
+        return (Control)Activator.CreateInstance(viewType)!;
     }
 
     public bool Match(object? data) => data is PageViewModel;

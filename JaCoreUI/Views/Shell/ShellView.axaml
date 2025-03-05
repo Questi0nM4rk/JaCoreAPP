@@ -3,17 +3,18 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm="clr-namespace:JaCoreUI.ViewModels.Shell"
+        xmlns:svg="using:Avalonia.Svg.Skia"
         mc:Ignorable="d" d:DesignWidth="1024" d:DesignHeight="600"
         Width="1920" Height="1080"
         x:Class="JaCoreUI.Views.Shell.ShellView"
         Title="JaCoreUI"
         x:DataType="vm:ShellViewModel">
-        
-        <Grid Background="{DynamicResource PrimaryBackground}" ColumnDefinitions="Auto, *">
+    
+    <Grid Background="{DynamicResource PrimaryBackground}" ColumnDefinitions="Auto, *">
            <Border Padding="20" Background="{DynamicResource PrimaryBackgroundGradientLr}">
                <Grid RowDefinitions="*, Auto">
                    <StackPanel Spacing="15">
-                       <Image Source="{SvgImage Assets/Images/applogo.svg}" Width="160" Margin="0,0,0,25"></Image>
+                       <svg:Svg Path="avares://JaCoreUI/Assets/Images/applogo.svg" Width="160" Margin="0,0,0,25"/>
                        
                        <Button HorizontalAlignment="Stretch">
                            <StackPanel Orientation="Horizontal">
@@ -42,8 +43,8 @@
                        
                    </StackPanel>
                   
-                   <Button Grid.Row="1" Content="{Binding ThemeService.ThemeButtonText}"
-                           Command="{Binding ThemeService.ToggleThemeCommand}"
+                   <Button Grid.Row="1" Content="{Binding Theme.ThemeButtonText}"
+                           Command="{Binding Theme.ToggleThemeCommand}"
                            Padding="15 5"
                            MinWidth="120"/>
                    
@@ -67,8 +68,8 @@
             
             
            <ContentControl Grid.Column="1" ZIndex="0" HorizontalAlignment="Stretch"
-                           VerticalAlignment="Stretch" Content="{Binding CurrentView}"/> 
+                           VerticalAlignment="Stretch" Content="{Binding CurrentPage}"/> 
             
-        </Grid>        
+        </Grid>  
         
 </Window>

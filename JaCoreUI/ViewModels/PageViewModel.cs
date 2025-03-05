@@ -3,12 +3,12 @@ using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace JaCoreUI.ViewModels;
 
-public partial class PageViewModel : ViewModelBase
+public abstract partial class PageViewModel : ViewModelBase
 {
     [ObservableProperty]
     public partial ApplicationPageNames PageName { get; set; }
 
-    protected PageViewModel(ApplicationPageNames pageName)
+    internal PageViewModel(ApplicationPageNames pageName)
     {
         PageName = pageName;
         
@@ -17,5 +17,5 @@ public partial class PageViewModel : ViewModelBase
             OnDesignTimeConstructor();
     }
 
-    protected virtual void OnDesignTimeConstructor() { }
+    protected abstract void OnDesignTimeConstructor();
 }

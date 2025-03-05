@@ -1,12 +1,13 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using JaCoreUI.Data;
 using JaCoreUI.Services;
 
 namespace JaCoreUI.ViewModels.Admin;
 
-public partial class DashboardViewModel(ThemeService themeService) : ObservableObject
+public partial class DashboardViewModel() : PageViewModel(ApplicationPageNames.Dashboard)
 {
-    public ThemeService ThemeService { get; } = themeService;
-
-    [ObservableProperty]
-    public partial string Title { get; set; } = "Dashboard";
+    protected override void OnDesignTimeConstructor()
+    {
+        
+    }
 }
