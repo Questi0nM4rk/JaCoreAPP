@@ -29,10 +29,6 @@
         <Folder Include="Assets\" />
         <Folder Include="Themes\" />
         <Folder Include="ViewModels\Debug\" />
-        <Folder Include="ViewModels\Device\" />
-        <Folder Include="ViewModels\Production\" />
-        <Folder Include="ViewModels\Template\" />
-        <Folder Include="ViewModels\User\" />
         <Folder Include="Views\Debug\" />
         <Folder Include="Views\Settings\" />
     </ItemGroup>

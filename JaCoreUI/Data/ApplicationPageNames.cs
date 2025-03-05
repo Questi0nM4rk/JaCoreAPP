@@ -3,11 +3,21 @@
 public enum ApplicationPageNames
 {
     Unknown = 0,
-    Home = 1,
-    Process = 2,
-    Actions = 3,
-    Macros = 4,
-    Reporter = 5,
-    History = 6,
-    Settings = 7
+    Dashboard = 1,
+    Register,
+    
+    Devices,
+    DeviceCreation,
+    DeviceDetails,
+    
+    Productions,
+    ProductionCreation,
+    ProductionWork,
+    
+    Templates,
+    TemplateDetails,
+    
+    Login,
+    Settings = 12,
+    
 }

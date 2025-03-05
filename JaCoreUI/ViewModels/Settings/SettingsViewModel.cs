@@ -1,9 +1,12 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using JaCoreUI.Data;
 
 namespace JaCoreUI.ViewModels.Settings;
 
-public partial class SettingsViewModel : ObservableObject
+public partial class SettingsViewModel() : PageViewModel(ApplicationPageNames.Settings)
 {
-    [ObservableProperty]
-    public partial string Title { get; set; } = "Settings";
+    protected override void OnDesignTimeConstructor()
+    {
+        throw new System.NotImplementedException();
+    }
 }

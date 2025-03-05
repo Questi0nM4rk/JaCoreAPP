@@ -1,5 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using JaCoreUI.Data;
+using JaCoreUI.Factories;
 using JaCoreUI.Services;
 using JaCoreUI.ViewModels.Admin;
 using JaCoreUI.ViewModels.Settings;
@@ -10,24 +12,24 @@ namespace JaCoreUI.ViewModels.Shell;
 public partial class ShellViewModel : ObservableObject
 {
     [ObservableProperty]
-    public partial object? CurrentView { get; set; }
-
-    public ThemeService ThemeService { get; }
-
-    public ShellViewModel(ThemeService themeService)
-    {
-        ThemeService = themeService;
-        Navigate("Dashboard");
-    }
+    private partial NavigationService Navigation { get; set; }
     
-    [RelayCommand]
-    private void Navigate(string? destination)
+    [ObservableProperty]
+    public partial ThemeService Theme { get; set; }
+
+    [ObservableProperty]
+    public partial PageViewModel? CurrentView { get; set; }
+
+    public ShellViewModel(NavigationService navigationService, ThemeService themeService)
     {
-        CurrentView = destination switch
-        {
-            "Dashboard" => App.Current?.Services?.GetRequiredService<DashboardViewModel>(),
-            "Settings" => App.Current?.Services?.GetRequiredService<SettingsViewModel>(),
-            _ => CurrentView
-        };
+        Navigation = navigationService;
+        Theme = themeService;
+        Navigation.NavigateTo(ApplicationPageNames.Dashboard);
+    }
+
+    [RelayCommand]
+    public void Home()
+    {
+        Navigation.NavigateTo(ApplicationPageNames.Dashboard);
     }
 }
