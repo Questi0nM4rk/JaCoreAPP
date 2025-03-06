@@ -22,6 +22,10 @@
         <!-- <Setter Property="Foreground" Value="{DynamicResource PrimaryForeground}"></Setter> -->
     </Style>
     
+    <Style Selector="Label.user">
+        <Setter Property="" />
+    </Style>
+    
     <Style Selector="Label.h1">
         <Setter Property="FontSize" Value="34"></Setter>
         <Setter Property="FontWeight" Value="Black"></Setter>

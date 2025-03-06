@@ -5,17 +5,13 @@
   <Design.PreviewWith>
     <Border Padding="20" Background="{DynamicResource PrimaryBackground}">
       <StackPanel Spacing="20">
-        <IconButton IconText="&#xe7f2;" Height="100" Content="Click Me!" />
-        <IconButton IconText="&#xe7f2;" Content="Click Me!" />
-        <IconButton IconText="&#xe3e4;" Foreground="Red" Classes="accent" Content="Click Me!" />
-        <IconButton IconText="&#xe3e4;" Classes="outline" Content="Click Me!" />
-        <Button Content="Click Me!" />
-        <Button Classes="accent" Content="Click Me!" />
+        <UserButton  />
+        
       </StackPanel>
     </Border>
   </Design.PreviewWith>
 
-  <ControlTheme x:Key="{x:Type IconButton}" TargetType="IconButton">
+  <ControlTheme x:Key="{x:Type UserButton}" TargetType="UserButton">
     <Setter Property="Background" Value="{DynamicResource ButtonBackground}" />
     <Setter Property="Foreground" Value="{DynamicResource ButtonForeground}" />
     <Setter Property="BorderBrush" Value="{DynamicResource ButtonBorderBrush}" />

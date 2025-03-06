@@ -29,11 +29,6 @@
                         <Button Classes="transparent">
                             <Label Classes="icon-only" Content="&#xe272;"></Label>
                         </Button>
-                        
-                        <Button Classes="user">
-                            
-                        </Button>
-                        
                     </StackPanel>
                 
                     <StackPanel Grid.Column="1" Spacing="15">

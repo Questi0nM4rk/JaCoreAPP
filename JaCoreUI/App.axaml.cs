@@ -2,6 +2,7 @@ using System;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
+using Avalonia.Metadata;
 using JaCoreUI.Data;
 using JaCoreUI.Factories;
 using JaCoreUI.Services;
@@ -15,6 +16,8 @@ using JaCoreUI.ViewModels.Template;
 using JaCoreUI.ViewModels.User;
 using JaCoreUI.Views.Shell;
 using Microsoft.Extensions.DependencyInjection;
+
+[assembly: XmlnsDefinition("https://github.com/avaloniaui", "JaCoreUI.Controls")]
 
 namespace JaCoreUI;
 
