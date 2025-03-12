@@ -53,7 +53,8 @@ public partial class App : Application
             .AddTransient<LoginViewModel>();
 
 // Register factory with correct generic parameters
-        collection.AddSingleton<Func<ApplicationPageNames, PageViewModel>>(provider => name => name switch
+        collection.AddSingleton<Func<ApplicationPageNames, PageViewModel>>(provider => name 
+        => name switch    
         {
             ApplicationPageNames.Dashboard => provider.GetRequiredService<DashboardViewModel>(),
             ApplicationPageNames.Register => provider.GetRequiredService<RegisterViewModel>(),

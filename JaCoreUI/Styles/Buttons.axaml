@@ -20,7 +20,7 @@
                         <Button Classes="success" Content="Success" />
                         <Button Classes="outline success" Content="Success" />
                 
-                        <controls:IconButton IconText="&#xe2c2;" Content="Icon Stretch" HorizontalAlignment="Stretch" />
+                        <IconButton IconText="&#xe2c2;" Content="Icon Stretch" HorizontalAlignment="Stretch" />
 
                         <Button>
                             <Label Classes="icon-only" Content="&#xe272;"></Label>
@@ -29,6 +29,9 @@
                         <Button Classes="transparent">
                             <Label Classes="icon-only" Content="&#xe272;"></Label>
                         </Button>
+                        
+                        <UserButton IconSource="avares://JaCoreUI/Assets/Images/usericon.svg" Content="John Doe" />
+                        
                     </StackPanel>
                 
                     <StackPanel Grid.Column="1" Spacing="15">
@@ -52,6 +55,8 @@
             <DropShadowEffect BlurRadius="30" Opacity="0.3"></DropShadowEffect>
         </Setter>
     </Style>
+    
+    <Style Selector=":is(Button).UserButton"></Style>
     
     <!-- Small button -->
     <Style Selector=":is(Button).small">

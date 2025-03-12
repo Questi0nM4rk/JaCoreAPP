@@ -3,23 +3,37 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="clr-namespace:JaCoreUI.ViewModels.Admin"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             xmlns:svg="using:Avalonia.Svg.Skia"
+             mc:Ignorable="d" d:DesignWidth="1920" d:DesignHeight="1080"
              x:Class="JaCoreUI.Views.Admin.DashBoardView"
-             x:DataType="vm:DashboardViewModel">
-    
-    <Grid RowDefinitions="70, *">
-        <Border Padding="20" Background="{DynamicResource PrimaryBackgroundGradientUd}">
-            <TextBlock>Dashboard</TextBlock>
-            
+             x:DataType="vm:DashboardViewModel"
+             Foreground="{DynamicResource PrimaryForeground}"
+             Background="{DynamicResource PrimaryBackground}">
+
+    <Grid ColumnDefinitions="*, Auto" RowDefinitions="Auto, *">
+        <!-- Header -->
+        <Grid Name="HeaderGrid" Grid.ColumnSpan="2">
+            <Image Source="{SvgImage /Assets/Images/chembackground.svg}" Height="200" Stretch="UniformToFill" />
+            <Viewbox MaxHeight="130" MinHeight="50">
+                <StackPanel VerticalAlignment="Center">
+                    <Label Classes="h1" Content="Přehled" HorizontalAlignment="Center" />
+                    <Label Classes="h3" Content="Hlavní přehled produkcí a zařízení" HorizontalAlignment="Center" />
+                </StackPanel>
+            </Viewbox>
+        </Grid>
+        
+        <Border Grid.Row="1" Grid.Column="0" BorderBrush="{DynamicResource PrimaryHoverBackground}"
+                BorderThickness="5" Padding="10" Margin="15" CornerRadius="15" BoxShadow="">
+            <StackPanel>
+                <Label Classes="h1" Content="Aktivní Produkce" Foreground="{DynamicResource fore}" Padding="7" />
+                <SearchBox Watermark="Vyhledej produkce..." Margin="0,10,0,10" MaxWidth="1200" MinWidth="400" HorizontalAlignment="Left"/>
+                <DataGrid Margin="0,5,0,0">
+                    
+                </DataGrid>
+            </StackPanel>
         </Border>
         
-        <Border Grid.Row="1" Background="{DynamicResource PrimaryBackground}">
-            <Grid ColumnDefinitions="*, Auto">
-                
-                
-            </Grid>
-            
-        </Border>
+        <Border Grid.Row="1" Grid.Column="1" Background="Black"></Border>
         
     </Grid>
     

@@ -1,18 +1,18 @@
 ﻿<ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:controls="clr-namespace:JaCoreUI.Controls"
+                    xmlns:svg="using:Avalonia.Svg.Skia"
                     x:ClassModifier="internal">
   <Design.PreviewWith>
-    <Border Padding="20" Background="{DynamicResource PrimaryBackground}">
-      <StackPanel Spacing="20">
-        <UserButton  />
-        
+    <Border Padding="20" Background="{DynamicResource PrimaryBackground}" Width="500">
+      <StackPanel Spacing="20" HorizontalAlignment="Center">
+        <UserButton IconSource="avares://JaCoreUI/Assets/Images/usericon.svg" Content="John Doe" />
+        <Button Content="test"/>
       </StackPanel>
     </Border>
   </Design.PreviewWith>
 
   <ControlTheme x:Key="{x:Type UserButton}" TargetType="UserButton">
-    <Setter Property="Background" Value="{DynamicResource ButtonBackground}" />
+    <Setter Property="Background" Value="{DynamicResource UserButtonBackground}" />
     <Setter Property="Foreground" Value="{DynamicResource ButtonForeground}" />
     <Setter Property="BorderBrush" Value="{DynamicResource ButtonBorderBrush}" />
     <Setter Property="BorderThickness" Value="{DynamicResource ButtonBorderThemeThickness}" />
@@ -30,10 +30,11 @@
     <Setter Property="Template">
       <ControlTemplate>
         <ContentPresenter x:Name="PART_ContentPresenter"
-                          Background="{TemplateBinding Background}"
+                          Classes="UserButton"
+                          Background="{DynamicResource UserButtonBackground}"
                           BorderBrush="{TemplateBinding BorderBrush}"
                           BorderThickness="{TemplateBinding BorderThickness}"
-                          CornerRadius="{TemplateBinding CornerRadius}"
+                          CornerRadius="30"
                           Content="{TemplateBinding Content}"
                           Padding="{TemplateBinding Padding}"
                           RecognizesAccessKey="True"
@@ -42,9 +43,9 @@
           
             <ContentPresenter.ContentTemplate>
               <DataTemplate DataType="x:Object">
-                <StackPanel Orientation="Horizontal">
-                  <Label VerticalAlignment="Center" Foreground="{Binding $parent[controls:IconButton].Foreground}" Classes="icon" Content="{Binding $parent[controls:IconButton].IconText}"></Label>
-                  <ContentControl VerticalAlignment="Center" Foreground="{Binding $parent[controls:IconButton].Foreground}" DataContext="{Binding $parent[controls:IconButton].DataContext}" Content="{Binding $parent[controls:IconButton].Content}" />
+                <StackPanel Orientation="Horizontal" Spacing="6">
+                  <svg:Svg Height="32" VerticalAlignment="Center" HorizontalAlignment="Center" Path="{Binding $parent[UserButton].IconSource}"/>
+                  <ContentControl VerticalAlignment="Center" Padding="3" Foreground="{Binding $parent[UserButton].Foreground}" DataContext="{Binding $parent[UserButton].DataContext}" Content="{Binding $parent[UserButton].Content}" />
                 </StackPanel>
               </DataTemplate>
             </ContentPresenter.ContentTemplate>
@@ -60,7 +61,7 @@
     </Style>
     
     <Style Selector="^:pressed">
-      <Setter Property="RenderTransform" Value="scale(0.98)" />
+      <Setter Property="RenderTransform" Value="scale(0.95)" />
     </Style>
 
     <Style Selector="^:pressed  /template/ ContentPresenter#PART_ContentPresenter">

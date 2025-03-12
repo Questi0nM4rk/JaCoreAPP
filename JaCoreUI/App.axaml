@@ -2,6 +2,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:vm="clr-namespace:JaCoreUI.ViewModels.Admin"
              xmlns:v="clr-namespace:JaCoreUI.Views.Admin"
+             xmlns:converters="using:Avalonia.Data.Converters"
              xmlns:local="clr-namespace:JaCoreUI"
              xmlns:svg="using:Avalonia.Svg.Skia"
              x:Class="JaCoreUI.App"
@@ -16,12 +17,14 @@
             <Style Selector="Window">
                 <Setter Property="FontFamily" Value="{DynamicResource DefaultFontFamily}"></Setter>
             </Style>
+            <StyleInclude Source="avares://Avalonia.Controls.DataGrid/Themes/Fluent.xaml"/>
             <StyleInclude Source="Styles/Buttons.axaml"/>
             <StyleInclude Source="Styles/General.axaml"/>
             <StyleInclude Source="Styles/Labels.axaml"/>
             <StyleInclude Source="Styles/ListBox.axaml"/>
             <StyleInclude Source="Styles/TextBlock.axaml"/>
             <StyleInclude Source="Styles/TextBox.axaml"/>
+            <StyleInclude Source="Styles/DataGrid.axaml"/>
         </FluentTheme>
     </Application.Styles>
     
@@ -44,10 +47,9 @@
                 <MergeResourceInclude Source="/Controls/ListBoxItem.axaml"/>
                 <MergeResourceInclude Source="/Controls/TabControl.axaml"/>
                 <MergeResourceInclude Source="/Controls/TabItem.axaml"/>
+                <MergeResourceInclude Source="/Controls/UserButton.axaml"/>
+                <MergeResourceInclude Source="/Controls/SearchBox.axaml"/>
             </ResourceDictionary.MergedDictionaries>
-            
-            <svg:SvgSource x:Key="AppLogo" Path="/Assets/Images/applogo.svg"/>
-            
         </ResourceDictionary>
         
         <FontFamily x:Key="Phosphor">/Assets/Fonts/Phosphor.ttf#Phosphor</FontFamily>

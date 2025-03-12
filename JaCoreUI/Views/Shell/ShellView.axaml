@@ -11,63 +11,41 @@
         x:DataType="vm:ShellViewModel">
     
     <Grid Background="{DynamicResource PrimaryBackground}" ColumnDefinitions="Auto, *">
-           <Border Padding="20" Background="{DynamicResource PrimaryBackgroundGradientLr}">
+           <Border Grid.ColumnSpan="1" Padding="10,15,20,10" Background="{DynamicResource PrimaryBackgroundGradientLr}">
                <Grid RowDefinitions="*, Auto">
                    <StackPanel Spacing="15">
                        <svg:Svg Path="avares://JaCoreUI/Assets/Images/applogo.svg" Width="160" Margin="0,0,0,25"/>
                        
-                       <Button HorizontalAlignment="Stretch">
-                           <StackPanel Orientation="Horizontal">
-                               <Label Classes="icon" Content="&#xe2c2;"/>
-                               <Label Content="Dashboard"/>
-                           </StackPanel>
-                       </Button>
-                       <Button HorizontalAlignment="Stretch">
-                           <StackPanel Orientation="Horizontal">
-                               <Label Classes="icon" Content="&#xe2c2;"/>
-                               <Label Content="Aktivní Produkce"/>
-                           </StackPanel>
-                       </Button>
-                       <Button HorizontalAlignment="Stretch">
-                           <StackPanel Orientation="Horizontal">
-                               <Label Classes="icon" Content="&#xe2c2;"/>
-                               <Label Content="Zařízení"/>
-                           </StackPanel>
-                       </Button>
-                       <Button HorizontalAlignment="Stretch">
-                           <StackPanel Orientation="Horizontal">
-                               <Label Classes="icon" FontFamily="{DynamicResource PhosphorFill}" Content="&#xe2c2;"/>
-                               <Label Content="Templates"/>
-                           </StackPanel>
-                       </Button>
+                       <IconButton Classes="outline" IconText="&#xe2c2;" Content="Přehled" HorizontalAlignment="Stretch"/>
+                       <IconButton Classes="outline" IconText="&#xe79e;" Content="Aktivní Produkce" HorizontalAlignment="Stretch"/>
+                       <IconButton Classes="outline" IconText="&#xe8f8;" Content="Šablony Produkcí" HorizontalAlignment="Stretch"/>
+                       <IconButton Classes="outline" IconText="&#xeba4;" Content="Zařízení" HorizontalAlignment="Stretch"/>
+                       <IconButton Classes="outline" IconText="&#xe68e;" Content="Zaměstnanci" HorizontalAlignment="Stretch"/>
+                       
+                   </StackPanel>
+                   
+                   <StackPanel Grid.Row="1" Orientation="Horizontal" Spacing="10">
+                       
+                        <Button Classes="transparent">
+                            <Label FontFamily="{DynamicResource Phosphor}" FontSize="23"
+                                   Classes="icon-only" Content="&#xe272;"></Label>
+                        </Button>
+                       
+                       <Button Content="{Binding Theme.ThemeButtonText}"
+                               Command="{Binding Theme.ToggleThemeCommand}"
+                               Padding="15 5"
+                               MinWidth="120"/>
                        
                    </StackPanel>
                   
-                   <Button Grid.Row="1" Content="{Binding Theme.ThemeButtonText}"
-                           Command="{Binding Theme.ToggleThemeCommand}"
-                           Padding="15 5"
-                           MinWidth="120"/>
                    
                </Grid>
                
            </Border>
 
-            <Button Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Top" Classes="user">
-                <Button.Content>
-                    <Border Classes="user"> 
-                        <StackPanel Orientation="Horizontal" Spacing="5">
-                            <!-- User Icon -->
-                            <Image
-                                Width="24" Height="24" Margin="7" />
-                            <!-- User Text -->
-                            <Label Content="John Doe" Classes="user" />
-                        </StackPanel>
-                    </Border>
-                </Button.Content>
-            </Button>
+            <UserButton Grid.Column="1" HorizontalAlignment="Right" ZIndex="100" VerticalAlignment="Top" Margin="15" IconSource="avares://JaCoreUI/Assets/Images/usericon.svg" Content="John Doe"/>
             
-            
-           <ContentControl Grid.Column="1" ZIndex="0" HorizontalAlignment="Stretch"
+           <ContentControl Grid.Column="1" ZIndex="0" HorizontalAlignment="Stretch" Background="Black"
                            VerticalAlignment="Stretch" Content="{Binding CurrentPage}"/> 
             
         </Grid>  

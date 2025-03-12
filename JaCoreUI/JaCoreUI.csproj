@@ -10,13 +10,14 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Avalonia" Version="11.2.1"/>
-        <PackageReference Include="Avalonia.Desktop" Version="11.2.1"/>
+        <PackageReference Include="Avalonia" Version="11.2.5" />
+        <PackageReference Include="Avalonia.Controls.DataGrid" Version="11.2.5" />
+        <PackageReference Include="Avalonia.Desktop" Version="11.2.5" />
         <PackageReference Include="Avalonia.Svg.Skia" Version="11.2.0.2" />
-        <PackageReference Include="Avalonia.Themes.Fluent" Version="11.2.1"/>
-        <PackageReference Include="Avalonia.Fonts.Inter" Version="11.2.1"/>
+        <PackageReference Include="Avalonia.Themes.Fluent" Version="11.2.5" />
+        <PackageReference Include="Avalonia.Fonts.Inter" Version="11.2.5" />
         <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
-        <PackageReference Include="Avalonia.Diagnostics" Version="11.2.1">
+        <PackageReference Include="Avalonia.Diagnostics" Version="11.2.5">
             <IncludeAssets Condition="'$(Configuration)' != 'Debug'">None</IncludeAssets>
             <PrivateAssets Condition="'$(Configuration)' != 'Debug'">All</PrivateAssets>
         </PackageReference>
@@ -25,10 +26,10 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Models\" />
         <Folder Include="Assets\" />
         <Folder Include="Themes\" />
         <Folder Include="ViewModels\Debug\" />
+        <Folder Include="ViewModels\Employee\" />
         <Folder Include="Views\Debug\" />
         <Folder Include="Views\Settings\" />
     </ItemGroup>
@@ -48,6 +49,12 @@
       <AvaloniaResource Include="Assets\Fonts\Phosphor-Fill.ttf" />
       <None Remove="Assets\Images\usericon.svg" />
       <AvaloniaResource Include="Assets\Images\usericon.svg" />
+      <None Remove="Assets\Images\template.svg" />
+      <None Remove="Assets\Images\background.svg" />
+      <None Remove="Assets\Images\compound.svg" />
+      <AvaloniaResource Include="Assets\Images\chembackground.svg" />
+      <None Remove="Assets\Images\chembackground.svg" />
+      <AvaloniaResource Include="Assets\Images\chembackground.svg" />
     </ItemGroup>
 
     <ItemGroup>
