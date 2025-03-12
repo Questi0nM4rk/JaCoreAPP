@@ -38,7 +38,7 @@
 
   <!-- DataGrid Base Style -->
   <Style Selector="DataGrid">
-    <Setter Property="Background" Value="{DynamicResource PrimaryBackground}"/>
+    <Setter Property="Background" Value="{DynamicResource DataGridBackground}"/>
     <Setter Property="Foreground" Value="{DynamicResource PrimaryForeground}"/>
     <Setter Property="BorderBrush" Value="{DynamicResource PrimaryBorderBrush}"/>
     <Setter Property="BorderThickness" Value="5"/>

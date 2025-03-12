@@ -8,9 +8,10 @@
 
             <SolidColorBrush x:Key="PrimaryForeground">#CFCFCF</SolidColorBrush>
             <SolidColorBrush x:Key="PrimaryForegroundSubtle">#aaa</SolidColorBrush>
-            <SolidColorBrush x:Key="PrimaryBackground">#14172D</SolidColorBrush>
+            <SolidColorBrush x:Key="PrimaryBackground">#1D174F</SolidColorBrush>
+            <SolidColorBrush x:Key="DataGridBackground">#2E3061</SolidColorBrush>
 
-            <SolidColorBrush x:Key="UserButtonBackground">#16398F</SolidColorBrush>
+            <SolidColorBrush x:Key="UserButtonBackground">#33298E</SolidColorBrush>
             
             <LinearGradientBrush x:Key="PrimaryBackgroundGradientLr" StartPoint="0%, 0%" EndPoint="100%, 0%">
                 <GradientStop Offset="0" Color="#151E5E"></GradientStop>
@@ -18,20 +19,20 @@
             </LinearGradientBrush>
 
             <LinearGradientBrush x:Key="PrimaryBackgroundGradientUd" StartPoint="0%, 0%" EndPoint="0%, 100%">
-                <GradientStop Offset="0" Color="#151E5E"></GradientStop>
+                <GradientStop Offset="0" Color="#1A2574"></GradientStop>
                 <GradientStop Offset="1" Color="#14172D"></GradientStop>
             </LinearGradientBrush>
             
             <LinearGradientBrush x:Key="BannerBackGradientBrush" StartPoint="0%,20%" EndPoint="100%,80%">
-                <GradientStop Color="#11113D" Offset="0.1" />
-                <GradientStop Color="#540979" Offset="0.5" />
-                <GradientStop Color="#29118D" Offset="0.9" />
+                <GradientStop Color="#1A237E" Offset="0.0"/>
+                <GradientStop Color="#303F9F" Offset="0.5"/>
+                <GradientStop Color="#3949AB" Offset="1.0"/>
             </LinearGradientBrush>
             
             <SolidColorBrush x:Key="PrimaryHoverBackground">#333B5A</SolidColorBrush>
             <SolidColorBrush x:Key="PrimaryHoverForeground">White</SolidColorBrush>
 
-            <SolidColorBrush x:Key="PrimaryBorderBrush">#322AAA</SolidColorBrush>
+            <SolidColorBrush x:Key="PrimaryBorderBrush">#5D68D0</SolidColorBrush>
             
             <LinearGradientBrush x:Key="DefaultGradient" StartPoint="0%, 0%" EndPoint="100%, 0%">
                 <GradientStop Offset="0" Color="#333B5A"></GradientStop>
