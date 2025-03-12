@@ -22,10 +22,10 @@
                 <GradientStop Offset="1" Color="#14172D"></GradientStop>
             </LinearGradientBrush>
             
-            <LinearGradientBrush x:Key="BannerGradientBrush" StartPoint="0%,0%" EndPoint="100%,100%">
-                <GradientStop Color="#14172D" Offset="0"/>
-                <GradientStop Color="#151D5A" Offset="0.5"/>
-                <GradientStop Color="#14172D" Offset="1"/>
+            <LinearGradientBrush x:Key="BannerBackGradientBrush" StartPoint="0%,20%" EndPoint="100%,80%">
+                <GradientStop Color="#11113D" Offset="0.1" />
+                <GradientStop Color="#540979" Offset="0.5" />
+                <GradientStop Color="#29118D" Offset="0.9" />
             </LinearGradientBrush>
             
             <SolidColorBrush x:Key="PrimaryHoverBackground">#333B5A</SolidColorBrush>

@@ -39,7 +39,7 @@ public partial class App : Application
 // Register ViewModels
         collection
             .AddSingleton<ShellViewModel>()
-            .AddTransient<DashboardViewModel>()
+            .AddTransient<DashBoardViewModel>()
             .AddTransient<RegisterViewModel>()
             .AddTransient<DevicesViewModel>()
             .AddTransient<DeviceCreationViewModel>()
@@ -56,7 +56,7 @@ public partial class App : Application
         collection.AddSingleton<Func<ApplicationPageNames, PageViewModel>>(provider => name 
         => name switch    
         {
-            ApplicationPageNames.Dashboard => provider.GetRequiredService<DashboardViewModel>(),
+            ApplicationPageNames.Dashboard => provider.GetRequiredService<DashBoardViewModel>(),
             ApplicationPageNames.Register => provider.GetRequiredService<RegisterViewModel>(),
             ApplicationPageNames.Devices => provider.GetRequiredService<DevicesViewModel>(),
             ApplicationPageNames.DeviceCreation => provider.GetRequiredService<DeviceCreationViewModel>(),

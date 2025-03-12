@@ -29,9 +29,7 @@
     </Application.Styles>
     
     <Application.DataTemplates>
-        <DataTemplate DataType="vm:DashboardViewModel">
-            <v:DashBoardView/>
-        </DataTemplate>
+        <local:ViewLocator/>
     </Application.DataTemplates>
              
     <Application.Resources>

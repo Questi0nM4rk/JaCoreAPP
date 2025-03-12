@@ -7,23 +7,22 @@ namespace JaCoreUI;
 
 public class ViewLocator : IDataTemplate
 {
-    public Control? Build(object? data)
+    public Control Build(object? data)
     {
-        if (data is null) return null;
-        
+        ArgumentNullException.ThrowIfNull(data);
+
         var viewModelType = data.GetType();
         var viewName = viewModelType.FullName!
             .Replace("ViewModels", "Views")
             .Replace("ViewModel", "View");
-        
         var viewType = Type.GetType(viewName);
-        
         if (viewType == null)
         {
             return new TextBlock { Text = $"View Not Found: {viewName}" };
         }
-
-        return (Control)Activator.CreateInstance(viewType)!;
+        var control = (Control)Activator.CreateInstance(viewType)!;
+        control.DataContext = data;
+        return control;
     }
 
     public bool Match(object? data) => data is PageViewModel;
