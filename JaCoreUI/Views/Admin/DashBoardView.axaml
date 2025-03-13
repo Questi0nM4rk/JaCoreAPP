@@ -6,16 +6,13 @@
              mc:Ignorable="d" d:DesignWidth="1920" d:DesignHeight="1080"
              x:Class="JaCoreUI.Views.Admin.DashBoardView"
              x:DataType="vm:DashBoardViewModel"
-             Foreground="{DynamicResource PrimaryForeground}"
-             Background="{DynamicResource PrimaryBackground}">
+             Background="Transparent">
 
     <Grid ColumnDefinitions="*, Auto" RowDefinitions="Auto, *">
-        <!-- Header with Gradient Background -->
-        <Grid Name="HeaderGrid" MaxHeight="150" Grid.ColumnSpan="2">
-            <Border Background="{DynamicResource BannerBackGradientBrush}" >
-            </Border>
+        <!-- Header -->
+        <Grid MaxHeight="100" Grid.ColumnSpan="2">
             <Image Source="{SvgImage /Assets/Images/chembackground.svg}" Stretch="UniformToFill"
-                   Opacity="0.7" />
+                   Opacity="0.4" />
             <Viewbox MaxHeight="130" MinHeight="30">
                 <StackPanel VerticalAlignment="Center">
                     <Label Classes="h1" Content="Přehled" HorizontalAlignment="Center" Foreground="White" />
@@ -26,8 +23,7 @@
         </Grid>
 
         <!-- Productions Section -->
-        <Border Grid.Row="1" Grid.Column="0" Background="{DynamicResource DataGridBackground}"
-                Padding="20" Margin="15,15,10,15" CornerRadius="15">
+        <Border Grid.Row="1" Grid.Column="0" Padding="20" Margin="15,15,10,15" Classes="floating">
             <Grid RowDefinitions="Auto, Auto, *">
                 <Label Grid.Row="0" Classes="h1" Content="Aktivní Produkce"
                        Foreground="{DynamicResource PrimaryForeground}" Padding="7" />
@@ -49,7 +45,7 @@
                           ItemsSource="{Binding Productions}"
                           AutoGenerateColumns="False"
                           GridLinesVisibility="Horizontal"
-                          BorderThickness="1"
+                          BorderThickness="0"
                           CanUserSortColumns="True"
                           IsReadOnly="True">
                     <DataGrid.Columns>
@@ -78,8 +74,8 @@
         </Border>
 
         <!-- Devices Section -->
-        <Border Grid.Row="1" Grid.Column="1" MaxWidth="600" Background="{DynamicResource DataGridBackground}"
-               Padding="20" Margin="0,15,15,15" CornerRadius="15">
+        <Border Grid.Row="1" Grid.Column="1" MaxWidth="600"
+               Padding="20" Margin="15,15,15,15" Classes="floating">
             <Grid RowDefinitions="Auto, Auto, *">
                 <Label Grid.Row="0" Classes="h1" Content="Zařízení" Foreground="{DynamicResource PrimaryForeground}"
                        Padding="7" />

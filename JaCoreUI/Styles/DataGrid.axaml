@@ -2,46 +2,44 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="using:JaCoreUI.Data"
         xmlns:data="clr-namespace:JaCoreUI.Data">
-  
+
   <!-- Preview with sample data -->
   <Design.PreviewWith>
-    <Border Padding="20" Width="600" Height="300" Background="{DynamicResource PrimaryBackground}">
-      <DataGrid AutoGenerateColumns="False"
-                GridLinesVisibility="All"
-                BorderThickness="1"
-                CanUserSortColumns="True"
-                x:DataType="data:DataGridDesignData">
-        <DataGrid.DataContext>
-          <local:DataGridDesignData/>
-        </DataGrid.DataContext>
-        <DataGrid.ItemsSource>
-          <Binding Path="SampleItems"/>
-        </DataGrid.ItemsSource>
-        <DataGrid.Columns>
-          <DataGridTextColumn Header="Name" Width="*" Binding="{Binding Name}"/>
-          <DataGridTextColumn Header="Status" Width="*" Binding="{Binding Status}"/>
-          <DataGridTextColumn Header="Last Updated" Width="*" Binding="{Binding LastUpdated}"/>
-          <DataGridTemplateColumn Header="Actions" Width="Auto">
-            <DataGridTemplateColumn.CellTemplate>
-              <DataTemplate>
-                <StackPanel Orientation="Horizontal" Spacing="4" Margin="4">
-                  <Button Content="Edit" Classes="small"/>
-                  <Button Content="Delete" Classes="small danger"/>
-                </StackPanel>
-              </DataTemplate>
-            </DataGridTemplateColumn.CellTemplate>
-          </DataGridTemplateColumn>
-        </DataGrid.Columns>
-      </DataGrid>
+    <Border Padding="20" Width="600" Height="300" Background="{DynamicResource PrimaryBackgroundGradient}">
+      <Border Classes="floating">
+        <DataGrid x:DataType="data:DataGridDesignData">
+          <DataGrid.DataContext>
+            <local:DataGridDesignData />
+          </DataGrid.DataContext>
+          <DataGrid.ItemsSource>
+            <Binding Path="SampleItems" />
+          </DataGrid.ItemsSource>
+          <DataGrid.Columns>
+            <DataGridTextColumn Header="Name" Width="*" Binding="{Binding Name}" />
+            <DataGridTextColumn Header="Status" Width="*" Binding="{Binding Status}" />
+            <DataGridTextColumn Header="Last Updated" Width="*" Binding="{Binding LastUpdated}" />
+            <DataGridTemplateColumn Header="Actions" Width="Auto">
+              <DataGridTemplateColumn.CellTemplate>
+                <DataTemplate>
+                  <StackPanel Orientation="Horizontal" Spacing="4" Margin="4">
+                    <Button Content="Edit" Classes="small" />
+                    <Button Content="Delete" Classes="small danger" />
+                  </StackPanel>
+                </DataTemplate>
+              </DataGridTemplateColumn.CellTemplate>
+            </DataGridTemplateColumn>
+          </DataGrid.Columns>
+        </DataGrid>
+      </Border>
+
     </Border>
   </Design.PreviewWith>
 
   <!-- DataGrid Base Style -->
   <Style Selector="DataGrid">
-    <Setter Property="Background" Value="{DynamicResource DataGridBackground}"/>
+    <Setter Property="Background" Value="Transparent"/>
     <Setter Property="Foreground" Value="{DynamicResource PrimaryForeground}"/>
-    <Setter Property="BorderBrush" Value="{DynamicResource PrimaryBorderBrush}"/>
-    <Setter Property="BorderThickness" Value="5"/>
+    <Setter Property="BorderThickness" Value="0"/>
     <Setter Property="CornerRadius" Value="15"/>
     <Setter Property="RowBackground" Value="Transparent"/>
     <Setter Property="HorizontalGridLinesBrush" Value="{DynamicResource PrimaryBorderBrush}"/>
@@ -49,7 +47,7 @@
     <Setter Property="CanUserResizeColumns" Value="True"/>
     <Setter Property="CanUserReorderColumns" Value="True"/>
     <Setter Property="CanUserSortColumns" Value="True"/>
-    <Setter Property="GridLinesVisibility" Value="All"/>
+    <Setter Property="GridLinesVisibility" Value="Horizontal"/>
     <Setter Property="HorizontalScrollBarVisibility" Value="Auto"/>
     <Setter Property="VerticalScrollBarVisibility" Value="Auto"/>
     <Setter Property="SelectionMode" Value="Extended"/>
@@ -67,6 +65,7 @@
     <Setter Property="SeparatorBrush" Value="{DynamicResource PrimaryBorderBrush}"/>
     <Setter Property="HorizontalContentAlignment" Value="Left"/>
     <Setter Property="VerticalContentAlignment" Value="Center"/>
+    <Setter Property="AreSeparatorsVisible" Value="False"/>
   </Style>
 
   <!-- Column Header Hover -->

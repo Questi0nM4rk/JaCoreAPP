@@ -25,6 +25,8 @@
             <StyleInclude Source="Styles/TextBlock.axaml"/>
             <StyleInclude Source="Styles/TextBox.axaml"/>
             <StyleInclude Source="Styles/DataGrid.axaml"/>
+            <StyleInclude Source="Styles/Border.axaml"/>
+            <StyleInclude Source="Styles/Separator.axaml"/>
         </FluentTheme>
     </Application.Styles>
     

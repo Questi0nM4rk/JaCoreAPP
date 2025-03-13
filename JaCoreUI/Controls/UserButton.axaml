@@ -3,7 +3,7 @@
                     xmlns:svg="using:Avalonia.Svg.Skia"
                     x:ClassModifier="internal">
   <Design.PreviewWith>
-    <Border Padding="20" Background="{DynamicResource PrimaryBackground}" Width="500">
+    <Border Padding="20" Background="{DynamicResource PrimaryBackgroundGradient}" Width="500">
       <StackPanel Spacing="20" HorizontalAlignment="Center">
         <UserButton IconSource="avares://JaCoreUI/Assets/Images/usericon.svg" Content="John Doe" />
         <Button Content="test"/>
@@ -12,7 +12,7 @@
   </Design.PreviewWith>
 
   <ControlTheme x:Key="{x:Type UserButton}" TargetType="UserButton">
-    <Setter Property="Background" Value="{DynamicResource UserButtonBackground}" />
+    <Setter Property="Background" Value="{DynamicResource ElementBackgroundGradient}" />
     <Setter Property="Foreground" Value="{DynamicResource ButtonForeground}" />
     <Setter Property="BorderBrush" Value="{DynamicResource ButtonBorderBrush}" />
     <Setter Property="BorderThickness" Value="{DynamicResource ButtonBorderThemeThickness}" />
@@ -30,8 +30,7 @@
     <Setter Property="Template">
       <ControlTemplate>
         <ContentPresenter x:Name="PART_ContentPresenter"
-                          Classes="UserButton"
-                          Background="{DynamicResource UserButtonBackground}"
+                          Background="{TemplateBinding Background}"
                           BorderBrush="{TemplateBinding BorderBrush}"
                           BorderThickness="{TemplateBinding BorderThickness}"
                           CornerRadius="30"
@@ -41,7 +40,7 @@
                           HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
                           VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}">
           
-            <ContentPresenter.ContentTemplate>
+          <ContentPresenter.ContentTemplate>
               <DataTemplate DataType="x:Object">
                 <StackPanel Orientation="Horizontal" Spacing="6">
                   <svg:Svg Height="32" VerticalAlignment="Center" HorizontalAlignment="Center" Path="{Binding $parent[UserButton].IconSource}"/>

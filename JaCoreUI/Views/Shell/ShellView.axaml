@@ -8,20 +8,33 @@
         Width="1920" Height="1080"
         x:Class="JaCoreUI.Views.Shell.ShellView"
         Title="JaCoreUI"
+        Background="{DynamicResource PrimaryBackgroundGradient}"
         x:DataType="vm:ShellViewModel">
-    
-    <Grid Background="{DynamicResource PrimaryBackground}" ColumnDefinitions="Auto, *">
-           <Border Grid.ColumnSpan="1" Padding="10,15,20,10" Background="{DynamicResource PrimaryBackgroundGradientLr}">
+        
+        <Grid ColumnDefinitions="Auto, *">
+           <Border Grid.ColumnSpan="1" Padding="10,15,20,10" Margin="5" Classes="floating">
                <Grid RowDefinitions="*, Auto">
                    <StackPanel Spacing="15">
-                       <svg:Svg Path="avares://JaCoreUI/Assets/Images/applogo.svg" Width="160" Margin="0,0,0,25"/>
+                       <StackPanel Orientation="Horizontal">
+                           <svg:Svg Path="avares://JaCoreUI/Assets/Images/small_logo.svg" Width="80" Margin="-10,0,-10,0"
+                                    HorizontalAlignment="Left" />
+                           <Label Content="Chimy" Classes="h2" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                       </StackPanel>
+
+                       <Rectangle Height="2">
+                           <Rectangle.Fill>
+                               <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,0%">
+                                   <GradientStop Offset="0" Color="DimGray"/>
+                                   <GradientStop Offset="0.5" Color="Gray"/>
+                                   <GradientStop Offset="1" Color="DimGray"/>
+                               </LinearGradientBrush>
+                           </Rectangle.Fill>
+                       </Rectangle>
                        
-                       <IconButton Classes="outline" IconText="&#xe2c2;" Content="Přehled" HorizontalAlignment="Stretch"/>
-                       <IconButton Classes="outline" IconText="&#xe79e;" Content="Aktivní Produkce" HorizontalAlignment="Stretch"/>
-                       <IconButton Classes="outline" IconText="&#xe8f8;" Content="Šablony Produkcí" HorizontalAlignment="Stretch"/>
-                       <IconButton Classes="outline" IconText="&#xeba4;" Content="Zařízení" HorizontalAlignment="Stretch"/>
-                       <IconButton Classes="outline" IconText="&#xe68e;" Content="Zaměstnanci" HorizontalAlignment="Stretch"/>
-                       
+                       <ListBox>
+                           
+                       </ListBox>
+                      
                    </StackPanel>
                    
                    <StackPanel Grid.Row="1" Orientation="Horizontal" Spacing="10">
@@ -45,9 +58,8 @@
 
             <UserButton Grid.Column="1" HorizontalAlignment="Right" ZIndex="100" VerticalAlignment="Top" Margin="15" IconSource="avares://JaCoreUI/Assets/Images/usericon.svg" Content="John Doe"/>
             
-           <ContentControl Grid.Column="1" ZIndex="0" HorizontalAlignment="Stretch" Background="Black"
+           <ContentControl Grid.Column="1" ZIndex="0" HorizontalAlignment="Stretch" 
                            VerticalAlignment="Stretch" Content="{Binding CurrentPage}"/> 
             
         </Grid>  
-        
 </Window>

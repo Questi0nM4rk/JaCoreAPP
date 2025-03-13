@@ -39,8 +39,6 @@
       <AvaloniaResource Include="Assets\Images\applogo.svg" />
       <None Remove="Assets\Images\biglogo.svg" />
       <AvaloniaResource Include="Assets\Images\biglogo.svg" />
-      <None Remove="Assets\Images\small_logo.svg" />
-      <AvaloniaResource Include="Assets\Images\small_logo.svg" />
       <None Remove="Assets\Fonts\NotoSansJP.ttf" />
       <AvaloniaResource Include="Assets\Fonts\NotoSansJP.ttf" />
       <None Remove="Assets\Fonts\Phosphor.ttf" />
@@ -55,6 +53,8 @@
       <AvaloniaResource Include="Assets\Images\chembackground.svg" />
       <None Remove="Assets\Images\chembackground.svg" />
       <AvaloniaResource Include="Assets\Images\chembackground.svg" />
+      <None Remove="Assets\Images\small_logo.svg" />
+      <AvaloniaResource Include="Assets\Images\small_logo.svg" />
     </ItemGroup>
 
     <ItemGroup>
