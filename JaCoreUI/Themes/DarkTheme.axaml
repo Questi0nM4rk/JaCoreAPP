@@ -6,7 +6,7 @@
 
             <Thickness x:Key="PrimaryBorderThickness">2</Thickness>
 
-            <SolidColorBrush x:Key="PrimaryForeground">#EFEFEF</SolidColorBrush>
+            <SolidColorBrush x:Key="PrimaryForeground">White</SolidColorBrush>
             <SolidColorBrush x:Key="PrimaryForegroundSubtle">#aaa</SolidColorBrush>
             <SolidColorBrush x:Key="PrimaryBackground">#6332ae</SolidColorBrush>
 
