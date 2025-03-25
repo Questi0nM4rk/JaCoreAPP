@@ -1,0 +1,29 @@
+﻿<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+
+    <Design.PreviewWith>
+        <Border Padding="20" Background="{DynamicResource PrimaryBackgroundGradient}" Width="700" Height="500">
+                <Grid ColumnDefinitions="*, *" RowDefinitions="*, *">
+                    <Border Classes="floating" Margin="5">
+                        <Button Content="Test" />
+                    </Border>
+                    <Border Grid.Column="1" Grid.Row="0" Classes="floating" Margin="5">
+                        <Button Content="Test" />
+                    </Border>
+                    <Border Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Classes="floating" Margin="5">
+                        <Button Content="Test" />
+                    </Border>
+                </Grid>
+        </Border>
+    </Design.PreviewWith>
+
+    
+    <Style Selector="Border.floating">
+        <Setter Property="Background" Value="{DynamicResource FloatingGradient}"/>
+        <Setter Property="Opacity" Value="0.6"/>
+        <Setter Property="BoxShadow" Value="5 5 15 1 Black"/>
+        <Setter Property="CornerRadius" Value="8"/>
+        <Setter Property="Padding" Value="16"/>
+    </Style>
+</Styles>

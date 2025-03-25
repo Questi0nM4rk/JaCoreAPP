@@ -1,8 +1,10 @@
 ﻿<Styles xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <Design.PreviewWith>
-        <Border Padding="20" Background="{DynamicResource PrimaryBackground}" Height="200" Width="300">
+        <Border Padding="20" Background="{DynamicResource PrimaryBackgroundGradient}" Height="200" Width="300">
             <!-- Add Controls for Previewer Here -->
+            <Border Classes="floating">
+                
             <StackPanel Spacing="10">
                 <ListBox>
                     <ListBoxItem>test</ListBoxItem>
@@ -11,21 +13,51 @@
                 </ListBox>
             </StackPanel>
             
+            </Border>
         </Border>
     </Design.PreviewWith>
 
-    <!-- Add Styles Here -->
-    
     <Style Selector="ListBox">
-        <Setter Property="Background" Value="{DynamicResource PrimaryBackgroundGradient}"></Setter>
-        <Setter Property="BorderBrush" Value="{DynamicResource DefaultGradient}"></Setter>
-        <Setter Property="BorderThickness" Value="{DynamicResource PrimaryBorderThickness}"></Setter>
-        <Setter Property="CornerRadius" Value="3"></Setter>
-        <Setter Property="Foreground" Value="{DynamicResource PrimaryForeground}"></Setter>
+        <!-- Base ListBox styling -->
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="Margin" Value="0"/>
+        <Setter Property="Foreground" Value="{DynamicResource PrimaryForeground}"/>
     </Style>
-    
-    <Style Selector="ListBox:pointerover">
-        <Setter Property="BorderBrush" Value="{DynamicResource HoverGradient}"></Setter>
+
+    <Style Selector="ListBoxItem">
+        <!-- Item base styling -->
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Padding" Value="8"/>
+        <Setter Property="Margin" Value="2"/>
+        <Setter Property="CornerRadius" Value="4"/>
+        <Setter Property="Template">
+            <ControlTemplate>
+                <ContentPresenter Name="PART_ContentPresenter"
+                                  Content="{TemplateBinding Content}"
+                                  Background="{TemplateBinding Background}"
+                                  CornerRadius="{TemplateBinding CornerRadius}"
+                                  Padding="{TemplateBinding Padding}"/>
+            </ControlTemplate>
+        </Setter>
+    </Style>
+
+    <Style Selector="ListBoxItem:pointerover">
+        <!-- Hover effect -->
+        <Setter Property="Background" Value="{DynamicResource HoverGradient}"/>
+    </Style>
+
+    <Style Selector="ListBoxItem:selected">
+        <!-- Selected state -->
+        <Setter Property="Background" Value="{DynamicResource ActiveGradient}"/>
+        <Setter Property="Foreground" Value="{DynamicResource PrimaryForeground}"/>
+    </Style>
+
+    <Style Selector="ListBoxItem:selected:pointerover">
+        <!-- Selected + hover state -->
+        <Setter Property="Background" Value="{DynamicResource ActiveHoverGradient}"/>
     </Style>
     
 </Styles>

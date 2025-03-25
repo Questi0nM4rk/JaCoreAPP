@@ -1,0 +1,117 @@
+﻿<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:controls="using:JaCoreUI.Controls">
+    
+    <!-- Preview Section -->
+    <Design.PreviewWith>
+        <Border Padding="20" Width="400" Height="250" Background="{DynamicResource PrimaryBackgroundGradient}">
+            <StackPanel Spacing="20">
+                <controls:SearchBox Watermark="Search items..." Width="350"/>
+                <controls:SearchBox SearchText="Sample query" Width="350"/>
+                <controls:SearchBox SearchText="Loading..." IsSearching="True" Width="350"/>
+            </StackPanel>
+        </Border>
+    </Design.PreviewWith>
+    
+    <!-- SearchBox Control Theme -->
+    <ControlTheme x:Key="{x:Type controls:SearchBox}" TargetType="controls:SearchBox">
+        <!-- Default Property Values -->
+        <Setter Property="Background" Value="{DynamicResource ElementBackgroundGradient}"/>
+        <Setter Property="Foreground" Value="{DynamicResource PrimaryForeground}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource DefaultBorderGradient}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="CornerRadius" Value="15"/>
+        <Setter Property="Margin" Value="0,0,0,10"/>
+        <Setter Property="Watermark" Value="Search..."/>
+        <Setter Property="Height" Value="40"/>
+        
+        <!-- Control Template -->
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Grid>
+                    <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}">
+                        <Grid ColumnDefinitions="Auto,*,Auto">
+                            <!-- Search Icon -->
+                            <TextBlock Grid.Column="0" 
+                                       Text="&#xe30c;" 
+                                       FontFamily="{DynamicResource Phosphor}"
+                                       VerticalAlignment="Center"
+                                       Margin="8,0,4,0"
+                                       Foreground="{TemplateBinding Foreground}"
+                                       Opacity="0.9"/>
+                            
+                            <!-- TextBox -->
+                            <TextBox Grid.Column="1"
+                                     Name="PART_TextBox"
+                                     Classes="SearchBox"
+                                     Text="{TemplateBinding SearchText, Mode=TwoWay}"
+                                     Watermark="{TemplateBinding Watermark}"
+                                     BorderBrush="Transparent"
+                                     CornerRadius="15"
+                                     VerticalContentAlignment="Center"
+                                     BorderThickness="0"
+                                     Background="Transparent"
+                                     VerticalAlignment="Center"
+                                     Padding="8, 0, 0, 0"/>
+                            
+                            <!-- Clear Button -->
+                            <Button Grid.Column="2"
+                                    Name="PART_ClearButton"
+                                    Content="&#xe4f6;"
+                                    FontFamily="{DynamicResource Phosphor}"
+                                    Background="Transparent"
+                                    Classes="icon-only"
+                                    BorderThickness="0"
+                                    Padding="12,5"
+                                    Opacity="0.6"
+                                    VerticalAlignment="Center"
+                                    IsVisible="{Binding #PART_TextBox.Text, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
+                        </Grid>
+                    </Border>
+                    
+                    <!-- Search Indicator -->
+                    <ProgressBar Name="PART_ProgressBar"
+                                 IsIndeterminate="True"
+                                 IsVisible="{TemplateBinding IsSearching}"
+                                 Height="2"
+                                 Width="250"
+                                 Foreground="{DynamicResource ActiveGradient}"
+                                 VerticalAlignment="Bottom"
+                                 Margin="0"/>
+                </Grid>
+            </ControlTemplate>
+        </Setter>
+        
+        <!-- State Styles -->
+        <Style Selector="^:pointerover">
+            <Setter Property="BorderBrush" Value="{DynamicResource HoverBorderGradient}"/>
+            <Setter Property="BorderThickness" Value="1.5"/>
+        </Style>
+        
+        <Style Selector="^:focus-within">
+            <Setter Property="BorderBrush" Value="{DynamicResource ActiveBorderGradient}"/>
+            <Setter Property="BorderThickness" Value="2.5"/>
+        </Style>
+        
+        <!-- Clear Button States -->
+        <Style Selector="^ /template/ Button#PART_ClearButton:pointerover">
+            <Setter Property="Opacity" Value="1.0"/>
+            <Setter Property="Foreground" Value="{DynamicResource PrimaryForeground}"/>
+        </Style>
+        
+        <Style Selector="^ /template/ Button#PART_ClearButton:pressed">
+            <Setter Property="RenderTransform" Value="scale(0.9)"/>
+        </Style>
+        
+        <!-- TextBox Styles -->
+        <Style Selector="^ /template/ TextBox#PART_TextBox">
+            <Setter Property="Foreground" Value="{DynamicResource PrimaryForeground}"/>
+            <Setter Property="CaretBrush" Value="{DynamicResource PrimaryForeground}"/>
+            <Setter Property="SelectionBrush" Value="{DynamicResource ActiveGradient}"/>
+            <Setter Property="SelectionForegroundBrush" Value="{DynamicResource PrimaryBackground}"/>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

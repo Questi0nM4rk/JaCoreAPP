@@ -2,6 +2,7 @@ using System;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
+using Avalonia.Metadata;
 using JaCoreUI.Data;
 using JaCoreUI.Factories;
 using JaCoreUI.Services;
@@ -15,6 +16,8 @@ using JaCoreUI.ViewModels.Template;
 using JaCoreUI.ViewModels.User;
 using JaCoreUI.Views.Shell;
 using Microsoft.Extensions.DependencyInjection;
+
+[assembly: XmlnsDefinition("https://github.com/avaloniaui", "JaCoreUI.Controls")]
 
 namespace JaCoreUI;
 
@@ -36,7 +39,7 @@ public partial class App : Application
 // Register ViewModels
         collection
             .AddSingleton<ShellViewModel>()
-            .AddTransient<DashboardViewModel>()
+            .AddTransient<DashBoardViewModel>()
             .AddTransient<RegisterViewModel>()
             .AddTransient<DevicesViewModel>()
             .AddTransient<DeviceCreationViewModel>()
@@ -50,9 +53,10 @@ public partial class App : Application
             .AddTransient<LoginViewModel>();
 
 // Register factory with correct generic parameters
-        collection.AddSingleton<Func<ApplicationPageNames, PageViewModel>>(provider => name => name switch
+        collection.AddSingleton<Func<ApplicationPageNames, PageViewModel>>(provider => name 
+        => name switch    
         {
-            ApplicationPageNames.Dashboard => provider.GetRequiredService<DashboardViewModel>(),
+            ApplicationPageNames.Dashboard => provider.GetRequiredService<DashBoardViewModel>(),
             ApplicationPageNames.Register => provider.GetRequiredService<RegisterViewModel>(),
             ApplicationPageNames.Devices => provider.GetRequiredService<DevicesViewModel>(),
             ApplicationPageNames.DeviceCreation => provider.GetRequiredService<DeviceCreationViewModel>(),

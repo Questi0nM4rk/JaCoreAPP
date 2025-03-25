@@ -3,24 +3,120 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="clr-namespace:JaCoreUI.ViewModels.Admin"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             mc:Ignorable="d" d:DesignWidth="1920" d:DesignHeight="1080"
              x:Class="JaCoreUI.Views.Admin.DashBoardView"
-             x:DataType="vm:DashboardViewModel">
-    
-    <Grid RowDefinitions="70, *">
-        <Border Padding="20" Background="{DynamicResource PrimaryBackgroundGradientUd}">
-            <TextBlock>Dashboard</TextBlock>
-            
-        </Border>
-        
-        <Border Grid.Row="1" Background="{DynamicResource PrimaryBackground}">
-            <Grid ColumnDefinitions="*, Auto">
-                
-                
+             x:DataType="vm:DashBoardViewModel"
+             Background="Transparent">
+
+    <Grid ColumnDefinitions="*, Auto" RowDefinitions="Auto, *">
+        <!-- Header -->
+        <Grid MaxHeight="100" Grid.ColumnSpan="2">
+            <Image Source="{SvgImage /Assets/Images/chembackground.svg}" Stretch="UniformToFill"
+                   Opacity="0.4" />
+            <Viewbox MaxHeight="130" MinHeight="30">
+                <StackPanel VerticalAlignment="Center">
+                    <Label Classes="h1" Content="Přehled" HorizontalAlignment="Center" Foreground="White" />
+                    <Label Classes="h3" Content="Hlavní přehled produkcí a zařízení" HorizontalAlignment="Center"
+                           Foreground="White" />
+                </StackPanel>
+            </Viewbox>
+        </Grid>
+
+        <!-- Productions Section -->
+        <Border Grid.Row="1" Grid.Column="0" Padding="20" Margin="15,15,10,15" Classes="floating">
+            <Grid RowDefinitions="Auto, Auto, *">
+                <Label Grid.Row="0" Classes="h1" Content="Aktivní Produkce"
+                       Foreground="{DynamicResource PrimaryForeground}" Padding="7" />
+
+                <SearchBox Grid.Row="1"
+                           Watermark="Vyhledej produkce..."
+                           Margin="0,10,0,10"
+                           MaxWidth="1200"
+                           MinWidth="400"
+                           HorizontalAlignment="Left"
+                           SearchDelay="500" 
+                           SearchFunction="{Binding SearchProductions}"
+                           Collection="{Binding Productions}"
+                           SearchText="{Binding ProductionSearchText, Mode=TwoWay}"
+                           />
+
+                <DataGrid Grid.Row="2"
+                          Margin="0,5,0,0"
+                          ItemsSource="{Binding Productions}"
+                          AutoGenerateColumns="False"
+                          GridLinesVisibility="Horizontal"
+                          BorderThickness="0"
+                          CanUserSortColumns="True"
+                          IsReadOnly="True">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Název" Width="*" Binding="{Binding Name, FallbackValue='N/A'}" />
+                        <DataGridTextColumn Header="Status" Width="*" Binding="{Binding Status, FallbackValue='N/A'}" />
+                        <DataGridTextColumn Header="Zahájeno" Width="*" Binding="{Binding StartDate, FallbackValue='N/A'}" />
+                        <DataGridTextColumn Header="Zodpovědná osoba" Width="*" Binding="{Binding AssignedTo, FallbackValue='N/A'}" />
+                        <DataGridTemplateColumn Header="Akce" Width="Auto">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal" Spacing="4" Margin="4">
+                                        <Button Content="Upravit" Classes="small"
+                                                Command="{Binding $parent[DataGrid].((vm:DashBoardViewModel)DataContext).EditProductionCommand, FallbackValue='Unknown'}"
+                                                CommandParameter="{Binding Id}" />
+
+                                        <Button Content="Detaily" Classes="small" 
+                                                Command="{Binding $parent[DataGrid].((vm:DashBoardViewModel)DataContext).ViewProductionDetailsCommand, FallbackValue='Unknown'}"
+                                                CommandParameter="{Binding Id}"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
             </Grid>
-            
         </Border>
-        
+
+        <!-- Devices Section -->
+        <Border Grid.Row="1" Grid.Column="1" MaxWidth="600"
+               Padding="20" Margin="15,15,15,15" Classes="floating">
+            <Grid RowDefinitions="Auto, Auto, *">
+                <Label Grid.Row="0" Classes="h1" Content="Zařízení" Foreground="{DynamicResource PrimaryForeground}"
+                       Padding="7" />
+
+                <SearchBox Grid.Row="1"
+                           Watermark="Vyhledej zařízení..."
+                           Margin="0,10,0,10"
+                           MinWidth="300"
+                           HorizontalAlignment="Left"
+                           SearchDelay="500"
+                           SearchFunction="{Binding SearchDevices}"
+                           Collection="{Binding Devices}"
+                           SearchText="{Binding DeviceSearchText, Mode=TwoWay}"
+                           />
+
+                <DataGrid Grid.Row="2"
+                          Margin="0,5,0,0"
+                          ItemsSource="{Binding Devices}"
+                          AutoGenerateColumns="False"
+                          GridLinesVisibility="Horizontal"
+                          BorderThickness="1"
+                          CanUserSortColumns="True"
+                          IsReadOnly="True">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Název" Width="*" Binding="{Binding Name, FallbackValue='N/A'}" />
+                        <DataGridTextColumn Header="Typ" Width="*" Binding="{Binding DeviceType, FallbackValue='N/A'}" />
+                        <DataGridTextColumn Header="Status" Width="*" Binding="{Binding Status, FallbackValue='N/A'}" />
+                        <DataGridTemplateColumn Header="Akce" Width="Auto">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal" Spacing="4" Margin="4">
+                                        <Button Content="Detaily" Classes="small" 
+                                                Command="{Binding $parent[DataGrid].((vm:DashBoardViewModel)DataContext).ViewDeviceDetailsCommand, FallbackValue='Unknown'}"
+                                                CommandParameter="{Binding Id}"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
+        </Border>
     </Grid>
-    
 </UserControl>

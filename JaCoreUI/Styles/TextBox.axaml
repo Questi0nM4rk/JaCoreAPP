@@ -13,7 +13,7 @@
 
     <!-- Add Styles Here -->
     <Style Selector="TextBox">
-        <Setter Property="BorderBrush" Value="{DynamicResource DefaultGradient}"></Setter>
+        <Setter Property="BorderBrush" Value="{DynamicResource PrimaryBorderBrush}"></Setter>
         <Setter Property="BorderThickness" Value="{DynamicResource PrimaryBorderThickness}"></Setter>
         <Setter Property="Background" Value="{DynamicResource PrimaryBackground}"></Setter>
         <Setter Property="Foreground" Value="{DynamicResource PrimaryForeground}"></Setter>
@@ -34,5 +34,17 @@
         <Setter Property="BorderThickness" Value="{DynamicResource PrimaryBorderThickness}"></Setter>
         <Setter Property="Background" Value="{DynamicResource PrimaryHoverBackground}"></Setter>
     </Style>
+    
+    <Style Selector="TextBox.SearchBox:focus /template/ Border#PART_BorderElement">
+        <Setter Property="BorderBrush" Value="Transparent"/>
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Background" Value="Transparent" />
+    </Style>
 
+    <Style Selector="TextBox.SearchBox:pointerover /template/ Border#PART_BorderElement">
+        <Setter Property="BorderBrush" Value="Transparent"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Background" Value="Transparent"/>
+    </Style>
+    
 </Styles>
