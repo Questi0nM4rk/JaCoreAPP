@@ -33,7 +33,7 @@ namespace JaCoreUI.Models.Productions.Base
         /// Optional reference to template production ID
         /// </summary>
         [ObservableProperty]
-        public partial Guid? TemplateId { get; set; }
+        public partial int? TemplateId { get; set; }
         
         /// <summary>
         /// Validates the entire production structure

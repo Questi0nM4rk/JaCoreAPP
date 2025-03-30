@@ -9,6 +9,7 @@
             <SolidColorBrush x:Key="PrimaryForeground">White</SolidColorBrush>
             <SolidColorBrush x:Key="PrimaryForegroundSubtle">#aaa</SolidColorBrush>
             <SolidColorBrush x:Key="PrimaryBackground">#6332ae</SolidColorBrush>
+            <SolidColorBrush x:Key="PrimaryBorderBrush">DarkGray</SolidColorBrush>
 
             <SolidColorBrush x:Key="DefaultButtonBackground">#1a1f37</SolidColorBrush>
             <SolidColorBrush x:Key="DefaultIconForeground">#582cff</SolidColorBrush>
@@ -26,16 +27,22 @@
                 <GradientStop Offset="0.35" Color="#2f309c"/>  <!-- Middle -->
                 <GradientStop Offset="0.86" Color="#191830"/>    <!-- Edge -->
             </RadialGradientBrush>
-
+            
+            <!-- Selected item gradient -->
+            <LinearGradientBrush x:Key="SelectedItemGradient" StartPoint="0%,0%" EndPoint="100%,100%">
+                <GradientStop Offset="0" Color="#80a1a6ac"/>
+                <GradientStop Offset="1" Color="#80848c97"/>
+            </LinearGradientBrush>
+            
             <!-- Floating Gradient -->
             <LinearGradientBrush x:Key="FloatingGradient" StartPoint="0%, 0%" EndPoint="100%, 100%">
-                <GradientStop Offset="0" Color="#080c27"/>
-                <GradientStop Offset="1" Color="#1b2051"/>
+                <GradientStop Offset="0" Color="#B2080c27"/>
+                <GradientStop Offset="1" Color="#B21b2051"/>
             </LinearGradientBrush>
             
             <!-- Element Background Gradient -->
             <LinearGradientBrush x:Key="ElementBackgroundGradient" StartPoint="0%, 0%" EndPoint="100%, 100%">
-               <GradientStop Offset="0" Color="#090e24"/> 
+               <GradientStop Offset="0" Color="#090DA7"/> 
                <GradientStop Offset="1" Color="#0d1643"/>
             </LinearGradientBrush>
             

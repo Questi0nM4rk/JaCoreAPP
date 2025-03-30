@@ -22,13 +22,10 @@ namespace JaCoreUI.Models.Elements.Device
         /// Type of device
         /// </summary>
         [ObservableProperty]
-        public partial string DeviceType { get; set; }
+        public partial string Category { get; set; }
         
-        /// <summary>
-        /// Serial number or unique identifier of physical device
-        /// </summary>
         [ObservableProperty]
-        public partial string SerialNumber { get; set; }
+        public partial DeviceCard? DeviceCard { get; set; }
         
         /// <summary>
         /// Additional device properties
@@ -41,6 +38,8 @@ namespace JaCoreUI.Models.Elements.Device
         /// </summary>
         [ObservableProperty]
         public partial int OrderIndex { get; set; }
+
+        public bool HasCard => DeviceCard != null;
         
         /// <summary>
         /// Validates all device operations

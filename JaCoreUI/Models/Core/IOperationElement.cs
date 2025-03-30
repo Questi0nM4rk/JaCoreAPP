@@ -10,7 +10,7 @@ namespace JaCoreUI.Models.Core
         /// <summary>
         /// Unique identifier
         /// </summary>
-        Guid Id { get; }
+        int Id { get; }
         
         /// <summary>
         /// Display name

@@ -13,13 +13,13 @@ namespace JaCoreUI.Models.UI
         /// </summary>
         [ObservableProperty]
         public partial bool IsChecked { get; set; }
-        
+
         /// <summary>
         /// Expected checked state for validation
         /// </summary>
         [ObservableProperty]
         public partial bool ExpectedValue { get; set; }
-        
+
         /// <summary>
         /// Validates the current checked state
         /// </summary>
@@ -27,7 +27,7 @@ namespace JaCoreUI.Models.UI
         {
             return !IsRequired || IsChecked == ExpectedValue;
         }
-        
+
         /// <summary>
         /// Creates a deep clone of this checkbox element
         /// </summary>

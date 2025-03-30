@@ -12,7 +12,7 @@ namespace JaCoreUI.Models.Core
         /// Unique identifier for the element
         /// </summary>
         [ObservableProperty]
-        public partial Guid Id { get; set; } = Guid.NewGuid();
+        public partial int Id { get; set; }
         
         /// <summary>
         /// Display name of the element

@@ -16,7 +16,7 @@ namespace JaCoreUI.Models.Elements.Device
         /// UI elements for this device operation
         /// </summary>
         [ObservableProperty]
-        public partial ObservableCollection<UIElement> UIElements { get; set; } = new();
+        public partial ObservableCollection<UIElement> UiElements { get; set; } = [];
         
         /// <summary>
         /// Position in the sequence of device operations
@@ -28,18 +28,18 @@ namespace JaCoreUI.Models.Elements.Device
         /// ID of the device this operation belongs to
         /// </summary>
         [ObservableProperty]
-        public partial Guid DeviceId { get; set; }
+        public partial int DeviceId { get; set; }
         
         /// <summary>
-        /// Whether this is a custom operation or predefined for the device
+        /// Whether this Operation is required when using the device
         /// </summary>
         [ObservableProperty]
-        public partial bool IsCustomOperation { get; set; }
+        public partial bool IsRequired { get; set; }
         
         /// <summary>
         /// Validates all UI elements in this device operation
         /// </summary>
-        public bool ValidateOperation() => UIElements.All(e => e.Validate());
+        public bool ValidateOperation() => UiElements.All(e => e.Validate());
         
         /// <summary>
         /// Updates completion status based on UI element validation

@@ -77,8 +77,8 @@ namespace JaCoreUI.Models.Productions.Template
                             Name = device.Name,
                             Description = device.Description,
                             OrderIndex = device.OrderIndex,
-                            DeviceType = device.DeviceType,
-                            SerialNumber = device.SerialNumber
+                            Category = device.Category,
+                            DeviceCard = device.DeviceCard,
                         };
                         
                         // Clone device operations
@@ -90,14 +90,13 @@ namespace JaCoreUI.Models.Productions.Template
                                 Description = devOp.Description,
                                 OrderIndex = devOp.OrderIndex,
                                 DeviceId = clonedDevice.Id,
-                                IsCustomOperation = devOp.IsCustomOperation
                             };
                             
                             // Clone UI elements
-                            foreach (var uiElement in devOp.UIElements)
+                            foreach (var uiElement in devOp.UiElements)
                             {
                                 var clonedElement = uiElement.Clone();
-                                clonedDevOp.UIElements.Add(clonedElement);
+                                clonedDevOp.UiElements.Add(clonedElement);
                             }
                             
                             clonedDevice.DeviceOperations.Add(clonedDevOp);

@@ -1,0 +1,130 @@
+﻿<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:controls="clr-namespace:JaCoreUI.Controls"
+                    x:ClassModifier="internal">
+    <Design.PreviewWith>
+        <Border Padding="100" Width="900" Height="900"
+                Background="{DynamicResource PrimaryBackgroundGradient}">
+
+            <StackPanel>
+                <Border Classes="floating" Margin="0" Padding="0" HorizontalAlignment="Left">
+                    <SideBar>
+                        <ListItem IconText="&#xe272;" Content="item1" />
+                        <ListItem IconText="&#xe272;" Content="item2" />
+                        <ListItem IconText="&#xe272;" Content="item3" />
+                        <ListItem IconText="&#xe272;" Content="item4" />
+                        <ListItem IconText="&#xe272;" Content="item5" />
+                        <ListItem IconText="&#xe272;" Content="item6" />
+                        <ListItem IconText="&#xe272;" Content="item7" />
+                    </SideBar>
+                </Border>
+            </StackPanel>
+        </Border>
+    </Design.PreviewWith>
+
+    <!-- ListBoxItem Control Theme -->
+    <ControlTheme x:Key="{x:Type ListItem}" TargetType="ListItem">
+        <Setter Property="Foreground" Value="{DynamicResource ButtonForeground}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource ButtonBorderBrush}" />
+        <Setter Property="BorderThickness" Value="{DynamicResource ButtonBorderThemeThickness}" />
+        <Setter Property="CornerRadius" Value="15" />
+        <Setter Property="Padding" Value="0,0,0,0" />
+        <Setter Property="Margin" Value="0,0,0,5" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="RenderTransform" Value="none" />
+        <Setter Property="Transitions">
+            <Transitions>
+                <TransformOperationsTransition Property="RenderTransform" Duration="0:0:.075" />
+            </Transitions>
+        </Setter>
+
+        <Setter Property="Template">
+            <ControlTemplate>
+                <ContentPresenter x:Name="PART_ContentPresenter"
+                                  Background="Transparent"
+                                  BorderBrush="{TemplateBinding BorderBrush}"
+                                  BorderThickness="{TemplateBinding BorderThickness}"
+                                  CornerRadius="{TemplateBinding CornerRadius}"
+                                  Content="{TemplateBinding Content}"
+                                  Padding="{TemplateBinding Padding}"
+                                  RecognizesAccessKey="True"
+                                  HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                  VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}">
+
+                    <ContentPresenter.ContentTemplate>
+                        <DataTemplate DataType="x:Object">
+                            <Grid>
+                                <StackPanel Orientation="Horizontal" ZIndex="2" Opacity="1">
+                                    <Border Background="{DynamicResource ElementBackgroundGradient}" Padding="5"
+                                            HorizontalAlignment="Center" VerticalAlignment="Center" CornerRadius="15"
+                                            Margin="5" Opacity="1">
+                                        <Label VerticalAlignment="Center" Opacity="1"
+                                               Foreground="{Binding $parent[controls:ListItem].Foreground}"
+                                               Classes="icon" Content="{Binding $parent[controls:ListItem].IconText}" />
+                                    </Border>
+                                    <Label VerticalAlignment="Center" FontSize="17" Margin="0" Padding="0,0,8,0"
+                                           FontWeight="Bold"
+                                           IsVisible="{Binding $parent[controls:SideBar].IsExpanded}"
+                                           Foreground="{Binding $parent[controls:ListItem].Foreground}"
+                                           Content="{Binding $parent[controls:ListItem].Content}" />
+                                </StackPanel>
+                            </Grid>
+                            
+                        </DataTemplate>
+                    </ContentPresenter.ContentTemplate>
+
+                </ContentPresenter>
+            </ControlTemplate>
+        </Setter>
+        
+        
+        <Style Selector="^:pressed">
+            <Setter Property="RenderTransform" Value="scale(0.93)" />
+        </Style>
+
+        <Style Selector="^:selected /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Background" Value="{DynamicResource SelectedItemGradient}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource ActiveBorderGradient}"/>
+        </Style>
+        
+        <Style Selector="^:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Background" Value="{DynamicResource HoverGradient}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource HoverBorderGradient}" />
+        </Style>
+
+        <Style Selector="^:pressed  /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Background" Value="{DynamicResource ButtonBackgroundPressed}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource ButtonBorderBrushPressed}" />
+            <Setter Property="Foreground" Value="{DynamicResource ButtonForegroundPressed}" />
+        </Style>
+
+        <Style Selector="^:disabled /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Background" Value="{DynamicResource ButtonBackgroundDisabled}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource ButtonBorderBrushDisabled}" />
+            <Setter Property="Foreground" Value="{DynamicResource ButtonForegroundDisabled}" />
+        </Style>
+
+        <Style Selector="^.accent">
+            <Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter">
+                <Setter Property="Background" Value="{DynamicResource AccentButtonBackground}" />
+                <Setter Property="BorderBrush" Value="{DynamicResource AccentButtonBorderBrush}" />
+                <Setter Property="Foreground" Value="{DynamicResource AccentButtonForeground}" />
+            </Style>
+
+            <Style Selector="^:pressed  /template/ ContentPresenter#PART_ContentPresenter">
+                <Setter Property="Background" Value="{DynamicResource AccentButtonBackgroundPressed}" />
+                <Setter Property="BorderBrush" Value="{DynamicResource AccentButtonBorderBrushPressed}" />
+                <Setter Property="Foreground" Value="{DynamicResource AccentButtonForegroundPressed}" />
+            </Style>
+
+            <Style Selector="^:disabled /template/ ContentPresenter#PART_ContentPresenter">
+                <Setter Property="Background" Value="{DynamicResource AccentButtonBackgroundDisabled}" />
+                <Setter Property="BorderBrush" Value="{DynamicResource AccentButtonBorderBrushDisabled}" />
+                <Setter Property="Foreground" Value="{DynamicResource AccentButtonForegroundDisabled}" />
+            </Style>
+
+        </Style>
+
+    </ControlTheme>
+</ResourceDictionary>
