@@ -2,7 +2,60 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:JaCoreUI.ViewModels.Device"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="JaCoreUI.Views.Device.DevicesView">
-    Welcome to Avalonia!
+             x:Class="JaCoreUI.Views.Device.DevicesView"
+             x:DataType="vm:DevicesViewModel">
+
+    <Grid RowDefinitions="Auto, *">
+        <!-- Header -->
+        <Grid MaxHeight="100">
+            <Image Source="{SvgImage /Assets/Images/chembackground.svg}" Stretch="UniformToFill"
+                   Opacity="0.6" />
+            <Viewbox MaxHeight="60" MinHeight="30">
+                <StackPanel VerticalAlignment="Center">
+                    <Label Classes="h1" Content="List Zařízení" HorizontalAlignment="Center" Foreground="White" />
+                </StackPanel>
+            </Viewbox>
+        </Grid>
+
+        <Border Grid.Row="1" Classes="floating" Padding="20" Margin="15">
+            <Grid RowDefinitions="Auto, Auto, *" Grid.ColumnDefinitions="*, Auto">
+                <SearchBox Grid.Row="0"
+                           Watermark="Vyhledej Zařízení..."
+                           Margin="0,10,0,30"
+                           MaxWidth="1200"
+                           MinWidth="400"
+                           HorizontalAlignment="Left"
+                           VerticalAlignment="Center"
+                           SearchDelay="500"/>
+
+                <IconButton Grid.Column="1" Grid.Row="0" Content="Nové Zařízení" IconText="&#xe3d4;" Margin="0 0 0 20"
+                            VerticalAlignment="Center"
+                            HorizontalAlignment="Center">
+                    
+                </IconButton>
+                
+                <DataGrid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" ItemsSource="{Binding Devices}" AutoGenerateColumns="False">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Sériové Číslo" Binding="{Binding  DeviceCard.SerialNumber, FallbackValue='Nemá kartu'}" Width="*" />
+                        <DataGridTextColumn Header="Název" Binding="{Binding Name}" Width="*" />
+                        <DataGridTextColumn Header="Kategorie" Binding="{Binding Category}" Width="*" />
+                        <DataGridTextColumn Header="Karta" Binding="{Binding HasCard}" Width="100" />
+                        <DataGridTemplateColumn Header="Akce" Width="Auto">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Content="Upravit"
+                                            Command="{Binding $parent[DataGrid].((vm:DevicesViewModel)DataContext).EditDeviceCommand, FallbackValue='Unknown'}"
+                                            CommandParameter="{Binding Id}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
+
+        </Border> 
+        
+    </Grid>
 </UserControl>

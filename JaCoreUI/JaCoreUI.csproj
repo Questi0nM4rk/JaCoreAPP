@@ -23,7 +23,10 @@
             <PrivateAssets Condition="'$(Configuration)' != 'Debug'">All</PrivateAssets>
         </PackageReference>
         <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+        <PackageReference Include="Irihi.Ursa" Version="1.9.0" />
+        <PackageReference Include="Irihi.Ursa.Themes.Semi" Version="1.9.0" />
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.0-preview.1.25080.5" />
+        <PackageReference Include="Semi.Avalonia" Version="11.2.1.5" />
     </ItemGroup>
 
     <ItemGroup>
@@ -103,6 +106,14 @@
         <DependentUpon>UserButton.axaml</DependentUpon>
         <SubType>Code</SubType>
       </Compile>
+      <Compile Update="Controls\ListItem.axaml.cs">
+        <DependentUpon>ListBoxItem.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
+      <Compile Update="Controls\SideBar.axaml.cs">
+        <DependentUpon>SideBar.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
     </ItemGroup>
 
     <ItemGroup>
@@ -110,7 +121,6 @@
       <AdditionalFiles Include="Controls\ComboBox.axaml" />
       <AdditionalFiles Include="Controls\ComboBoxItem.axaml" />
       <AdditionalFiles Include="Controls\IconButton.axaml" />
-      <AdditionalFiles Include="Controls\ListBoxItem.axaml" />
       <AdditionalFiles Include="Controls\TabControl.axaml" />
       <AdditionalFiles Include="Controls\TabItem.axaml" />
       <AdditionalFiles Include="Controls\ToggleButton.axaml" />

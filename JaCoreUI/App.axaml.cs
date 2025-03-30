@@ -5,6 +5,7 @@ using Avalonia.Markup.Xaml;
 using Avalonia.Metadata;
 using JaCoreUI.Data;
 using JaCoreUI.Factories;
+using JaCoreUI.Models.Elements.Device;
 using JaCoreUI.Services;
 using JaCoreUI.ViewModels;
 using JaCoreUI.ViewModels.Admin;
@@ -39,6 +40,9 @@ public partial class App : Application
 // Register ViewModels
         collection
             .AddSingleton<ShellViewModel>()
+            .AddSingleton<DeviceService>()
+            .AddSingleton<ApiService>()
+            .AddSingleton<CurrentPageService>()
             .AddTransient<DashBoardViewModel>()
             .AddTransient<RegisterViewModel>()
             .AddTransient<DevicesViewModel>()

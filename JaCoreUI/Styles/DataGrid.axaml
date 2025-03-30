@@ -37,17 +37,21 @@
 
   <!-- DataGrid Base Style -->
   <Style Selector="DataGrid">
+    <Setter Property="FocusAdorner" Value="{x:Null}"/>
+    <Setter Property="IsReadOnly" Value="True"/>
+    <Setter Property="AutoGenerateColumns" Value="False"/>
     <Setter Property="Background" Value="Transparent"/>
     <Setter Property="Foreground" Value="{DynamicResource PrimaryForeground}"/>
     <Setter Property="BorderThickness" Value="0"/>
     <Setter Property="CornerRadius" Value="15"/>
     <Setter Property="RowBackground" Value="Transparent"/>
+    <Setter Property="BorderBrush" Value="Transparent"/>
     <Setter Property="HorizontalGridLinesBrush" Value="{DynamicResource PrimaryBorderBrush}"/>
     <Setter Property="VerticalGridLinesBrush" Value="{DynamicResource PrimaryBorderBrush}"/>
     <Setter Property="CanUserResizeColumns" Value="True"/>
     <Setter Property="CanUserReorderColumns" Value="True"/>
     <Setter Property="CanUserSortColumns" Value="True"/>
-    <Setter Property="GridLinesVisibility" Value="Horizontal"/>
+    <Setter Property="GridLinesVisibility" Value="None"/>
     <Setter Property="HorizontalScrollBarVisibility" Value="Auto"/>
     <Setter Property="VerticalScrollBarVisibility" Value="Auto"/>
     <Setter Property="SelectionMode" Value="Extended"/>
@@ -61,7 +65,7 @@
     <Setter Property="Foreground" Value="{DynamicResource PrimaryForeground}"/>
     <Setter Property="FontWeight" Value="SemiBold"/>
     <Setter Property="Padding" Value="10 8"/>
-    <Setter Property="BorderBrush" Value="{DynamicResource PrimaryBorderBrush}"/>
+    <Setter Property="BorderBrush" Value="Transparent"/>
     <Setter Property="SeparatorBrush" Value="{DynamicResource PrimaryBorderBrush}"/>
     <Setter Property="HorizontalContentAlignment" Value="Left"/>
     <Setter Property="VerticalContentAlignment" Value="Center"/>
@@ -93,12 +97,27 @@
 
   <!-- Cell Style -->
   <Style Selector="DataGridCell">
+    <Setter Property="Focusable" Value="False"/>
+    <Setter Property="FocusAdorner" Value="{x:Null}"/>
+    <Setter Property="IsTabStop" Value="False"/>
     <Setter Property="Padding" Value="10 6"/>
     <Setter Property="BorderThickness" Value="0"/>
     <Setter Property="Background" Value="Transparent"/>
     <Setter Property="VerticalContentAlignment" Value="Center"/>
   </Style>
 
+  <Style Selector="DataGridCell > ContentPresenter">
+    <Setter Property="Margin" Value="0"/>
+    <Setter Property="Padding" Value="0"/>
+    <Setter Property="BorderThickness" Value="0"/>
+  </Style>
+  
+  <Style Selector="DataGridCell:selected">
+    <Setter Property="FocusAdorner" Value="{x:Null}"/>
+    <Setter Property="BorderThickness" Value="0"/>
+    <Setter Property="BorderBrush" Value="Transparent"/>
+  </Style>
+  
   <!-- Small Button Style for DataGrid Actions -->
   <Style Selector="Button.small">
     <Setter Property="Padding" Value="8 4"/>

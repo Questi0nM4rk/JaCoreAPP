@@ -2,7 +2,98 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:JaCoreUI.ViewModels.Device"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="JaCoreUI.Views.Device.DeviceCreationView">
-    Welcome to Avalonia!
+             x:Class="JaCoreUI.Views.Device.DeviceCreationView"
+             x:DataType="vm:DeviceCreationViewModel">
+
+    <Grid RowDefinitions="Auto, *">
+        <!-- Header -->
+        <Grid MaxHeight="100">
+            <Image Source="{SvgImage /Assets/Images/chembackground.svg}" Stretch="UniformToFill"
+                   Opacity="0.6" />
+            <Viewbox MaxHeight="60" MinHeight="30">
+                <StackPanel VerticalAlignment="Center">
+                    <Label Classes="h1" Content="Nové Zařízení" HorizontalAlignment="Center" Foreground="White" />
+                </StackPanel>
+            </Viewbox>
+        </Grid>
+
+        <!-- Main Content -->
+        <ScrollViewer Grid.Row="1">
+            <StackPanel>
+                <Border Classes="floating" Padding="20" Margin="15">
+                    <StackPanel>
+                        <!-- Device Information -->
+                        <Label Classes="h2" Margin="10,0,0,10" Content="Informace" />
+                        <StackPanel Orientation="Horizontal" Spacing="10">
+                            <Label Content="ID :" VerticalAlignment="Center" />
+                            <TextBox Text="{Binding CurrentDevice.Id}" Width="50" />
+
+                            <Label Content="Název :" VerticalAlignment="Center" />
+                            <TextBox Text="{Binding CurrentDevice.Name}" Width="200" />
+
+                            <Label Content="Kategorie :" VerticalAlignment="Center" />
+                            <DropDownButton Content="{Binding Categories}" Width="150"/>
+                        </StackPanel>
+
+                        <!-- Separator -->
+                        <Separator Background="{DynamicResource PrimaryBorderBrush}" Margin="0,40,0,40" />
+
+                        <!-- Device Operations -->
+                        <Label Classes="h2" Margin="10,0,0,10" Content="Operace zařízení" />
+                        <DataGrid ItemsSource="{Binding DeviceOperations}" AutoGenerateColumns="False">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Název" Binding="{Binding Name}" Width="*" />
+                                <DataGridTextColumn Header="Povinná" Binding="{Binding IsRequired}" Width="*" />
+                                <DataGridTemplateColumn Header="Akce" Width="Auto">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Button Content="Upravit"
+                                                    Command="{Binding $parent[DataGrid].((vm:DeviceCreationViewModel)DataContext).EditDeviceOperationCommand, FallbackValue='Unknown'}"
+                                                    CommandParameter="{Binding Id}" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
+
+                        <!-- Separator -->
+                        <Separator Background="{DynamicResource PrimaryBorderBrush}" Margin="0,40,0,40" />
+
+                        <!-- Events -->
+                        <Label Classes="h2" Margin="10,0,0,10" Content="Události" />
+                        <DataGrid ItemsSource="{Binding Events}" AutoGenerateColumns="False">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Typ" Binding="{Binding Type}" Width="*" />
+                                <DataGridTextColumn Header="Kdo" Binding="{Binding Who}" Width="*" />
+                                <DataGridTextColumn Header="Kdy" Binding="{Binding From}" Width="*" />
+                                <DataGridTextColumn Header="Popis" Binding="{Binding Description}" Width="*" />
+                                <DataGridTemplateColumn Header="Akce" Width="Auto">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Button Content="Upravit"
+                                                    Command="{Binding $parent[DataGrid].((vm:DeviceCreationViewModel)DataContext).EditEventCommand, FallbackValue='Unknown'}"
+                                                    CommandParameter="{Binding Id}" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </StackPanel>
+                </Border>
+
+                <!-- Footer -->
+                <Border Classes="floating" Margin="15" Padding="20">
+                    <Grid ColumnDefinitions="*, Auto">
+                        <Label Classes="h2" Content="Přidat kartu" VerticalAlignment="Center" />
+                        <Button Grid.Column="1" Command="{Binding AddCardCommand}" HorizontalAlignment="Right">
+                            <TextBlock FontFamily="{DynamicResource Phosphor}" FontSize="23"
+                                       Text="&#xe3d6;" />
+                        </Button>
+                    </Grid>
+                </Border>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
 </UserControl>

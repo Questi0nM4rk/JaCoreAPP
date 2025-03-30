@@ -1,5 +1,7 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using System;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using JaCoreUI.Controls;
 using JaCoreUI.Data;
 using JaCoreUI.Factories;
 using JaCoreUI.Services;
@@ -17,18 +19,29 @@ public partial class ShellViewModel : ObservableObject
     public partial ThemeService Theme { get; set; }
 
     [ObservableProperty]
-    public partial PageViewModel CurrentPage { get; set; }
+    public partial CurrentPageService CurrentPageService { get; set; }
 
-    public ShellViewModel(PageFactory pageFactory, ThemeService themeService)
+    [ObservableProperty]
+    public partial object? SelectedPage { get; set; }
+
+    partial void OnSelectedPageChanged(object? value)
+    {
+        if (value is not ListItem listItem)
+            throw new ArgumentException();
+
+        CurrentPageService.CurrentPage = (string)listItem.Content! switch
+        {
+            "Dashboard" => _pageFactory.GetPageViewModel(ApplicationPageNames.Dashboard),
+            "Zařízení" => _pageFactory.GetPageViewModel(ApplicationPageNames.Devices),
+            _ => CurrentPageService.CurrentPage
+        };
+    }
+
+    public ShellViewModel(PageFactory pageFactory, ThemeService themeService, CurrentPageService currentPageService)
     {
         Theme = themeService;
         _pageFactory = pageFactory;
-        CurrentPage = _pageFactory.GetPageViewModel(ApplicationPageNames.Dashboard);
-    }
-
-    [RelayCommand]
-    public void Home()
-    {
-        CurrentPage = _pageFactory.GetPageViewModel(ApplicationPageNames.Dashboard);
+        CurrentPageService = currentPageService;
+        CurrentPageService.CurrentPage = _pageFactory.GetPageViewModel(ApplicationPageNames.Devices);
     }
 }

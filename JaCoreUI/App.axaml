@@ -44,7 +44,8 @@
                 <MergeResourceInclude Source="/Controls/ToggleButton.axaml"/>
                 <MergeResourceInclude Source="/Controls/ComboBox.axaml"/>
                 <MergeResourceInclude Source="/Controls/ComboBoxItem.axaml"/>
-                <MergeResourceInclude Source="/Controls/ListBoxItem.axaml"/>
+                <MergeResourceInclude Source="/Controls/ListItem.axaml"/>
+                <MergeResourceInclude Source="/Controls/SideBar.axaml"/>
                 <MergeResourceInclude Source="/Controls/TabControl.axaml"/>
                 <MergeResourceInclude Source="/Controls/TabItem.axaml"/>
                 <MergeResourceInclude Source="/Controls/UserButton.axaml"/>

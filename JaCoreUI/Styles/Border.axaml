@@ -21,9 +21,9 @@
     
     <Style Selector="Border.floating">
         <Setter Property="Background" Value="{DynamicResource FloatingGradient}"/>
-        <Setter Property="Opacity" Value="0.6"/>
         <Setter Property="BoxShadow" Value="5 5 15 1 Black"/>
         <Setter Property="CornerRadius" Value="8"/>
         <Setter Property="Padding" Value="16"/>
     </Style>
+    
 </Styles>

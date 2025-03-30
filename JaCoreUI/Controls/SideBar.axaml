@@ -1,0 +1,34 @@
+﻿<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:controls="clr-namespace:JaCoreUI.Controls"
+                    x:ClassModifier="internal">
+
+    <ControlTheme x:Key="{x:Type controls:SideBar}" TargetType="controls:SideBar">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Padding" Value="10"/>
+        <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled" />
+        <Setter Property="HorizontalAlignment" Value="Center" />
+        <Setter Property="IsExpanded" Value="False" />
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Border Background="{TemplateBinding Background}"
+                        Padding="{TemplateBinding Padding}">
+                    <ItemsPresenter Name="PartItemsPresenter"
+                                    ItemsPanel="{TemplateBinding ItemsPanel}" />
+                </Border>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^:pointerover">
+            <Setter Property="IsExpanded" Value="True" />
+        </Style>
+        
+        <Style Selector="^[IsExpanded=True]">
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+        </Style>
+
+    </ControlTheme>
+
+    
+    
+</ResourceDictionary>

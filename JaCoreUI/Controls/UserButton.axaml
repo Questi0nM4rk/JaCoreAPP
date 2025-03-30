@@ -54,19 +54,15 @@
     </Setter>
     
     <Style Selector="^:pointerover /template/ ContentPresenter#PART_ContentPresenter">
-      <Setter Property="Background" Value="{DynamicResource ButtonBackgroundPointerOver}" />
-      <Setter Property="BorderBrush" Value="{DynamicResource ButtonBorderBrushPointerOver}" />
-      <Setter Property="Foreground" Value="{DynamicResource ButtonForegroundPointerOver}" />
+      <Setter Property="RenderTransform" Value="scale(0.95)" />
     </Style>
     
     <Style Selector="^:pressed">
-      <Setter Property="RenderTransform" Value="scale(0.95)" />
+      <Setter Property="RenderTransform" Value="scale(0.80)" />
     </Style>
 
     <Style Selector="^:pressed  /template/ ContentPresenter#PART_ContentPresenter">
-      <Setter Property="Background" Value="{DynamicResource ButtonBackgroundPressed}" />
-      <Setter Property="BorderBrush" Value="{DynamicResource ButtonBorderBrushPressed}" />
-      <Setter Property="Foreground" Value="{DynamicResource ButtonForegroundPressed}" />
+      <Setter Property="Opacity" Value="0.7" />
     </Style>
 
     <Style Selector="^:disabled /template/ ContentPresenter#PART_ContentPresenter">

@@ -3,6 +3,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm="clr-namespace:JaCoreUI.ViewModels.Shell"
+        xmlns:data="clr-namespace:JaCoreUI.Data"
         xmlns:svg="using:Avalonia.Svg.Skia"
         mc:Ignorable="d" d:DesignWidth="1024" d:DesignHeight="600"
         Width="1920" Height="1080"
@@ -28,10 +29,10 @@
             <!-- Second radial gradient -->
             <Border>
                 <Border.Background>
-                    <RadialGradientBrush Center="30%,70%" GradientOrigin="30%,70%" RadiusX="80%" RadiusY="80%"
+                    <RadialGradientBrush Center="40%,60%" GradientOrigin="50%,50%" RadiusX="60%" RadiusY="60%"
                                          SpreadMethod="Pad">
-                        <GradientStop Color="#FF69B4" Offset="0.0" />
-                        <GradientStop Color="#2F3436" Offset="1.0" />
+                        <GradientStop Color="#44AAFF" Offset="0.0" />
+                        <GradientStop Color="#2439AF" Offset="0.7" />
                     </RadialGradientBrush>
                 </Border.Background>
                 <!-- Semi-transparent to allow blending -->
@@ -43,7 +44,7 @@
                 <Border.Background>
                     <RadialGradientBrush Center="70%,30%" GradientOrigin="70%,30%" RadiusX="60%" RadiusY="60%"
                                          SpreadMethod="Pad">
-                        <GradientStop Color="#33CC33" Offset="0.0" />
+                        <GradientStop Color="#231AFF" Offset="0.0" />
                         <GradientStop Color="#2F3436" Offset="1.0" />
                     </RadialGradientBrush>
                 </Border.Background>
@@ -51,50 +52,52 @@
                 <Border.Opacity>0.5</Border.Opacity>
             </Border>
 
-            <!-- Fourth radial gradient -->
-            <Border>
-                <Border.Background>
-                    <RadialGradientBrush Center="50%,50%" GradientOrigin="50%,50%" RadiusX="120%" RadiusY="120%"
-                                         SpreadMethod="Pad">
-                        <GradientStop Color="#6666CC" Offset="0.3" />
-                        <GradientStop Color="#2F3436" Offset="1.0" />
-                    </RadialGradientBrush>
-                </Border.Background>
-                <!-- Semi-transparent to allow blending -->
-                <Border.Opacity>0.4</Border.Opacity>
-            </Border>
+
         </Grid>
 
-        <!-- Existing UI elements -->
-        <Grid ColumnDefinitions="Auto, *" Background="Transparent">
-            <Border Grid.ColumnSpan="1" Padding="10,15,20,10" Margin="5" Classes="floating">
+        <Grid>
+            <Border Grid.ColumnSpan="1" Margin="15"
+                    ZIndex="2" Padding="0,10,0,0"
+                    Classes="floating"
+                    HorizontalAlignment="Left">
                 <Grid RowDefinitions="*, Auto">
                     <StackPanel Spacing="15">
                         <StackPanel Orientation="Horizontal">
                             <svg:Svg Path="avares://JaCoreUI/Assets/Images/small_logo.svg" Width="80"
-                                     Margin="-10,0,-10,0"
+                                     Margin="0,0,-3,0"
                                      HorizontalAlignment="Left" />
-                            <Label Content="Chimy" Classes="h2" HorizontalAlignment="Center"
-                                   VerticalAlignment="Center" />
+                            <Label Content="Chimy" Classes="h2" HorizontalAlignment="Left"
+                                   Margin="5,0,80,0"
+                                   VerticalAlignment="Center"
+                                   IsVisible="{Binding IsPointerOver, RelativeSource={RelativeSource AncestorType=Border}}" />
+
                         </StackPanel>
 
-                        <Rectangle Height="2">
+                        <Rectangle Height="2" Margin="5,0,5,0">
                             <Rectangle.Fill>
                                 <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,0%">
                                     <GradientStop Offset="0" Color="DimGray" />
-                                    <GradientStop Offset="0.5" Color="Gray" />
+                                    <GradientStop Offset="0.5" Color="White" />
                                     <GradientStop Offset="1" Color="DimGray" />
                                 </LinearGradientBrush>
                             </Rectangle.Fill>
                         </Rectangle>
 
-                        <ListBox>
-
-                        </ListBox>
+                        <SideBar IsExpanded="{Binding IsPointerOver, RelativeSource={RelativeSource AncestorType=Border}}"
+                                 SelectedItem="{Binding SelectedPage}"
+                                 Margin="0,0,0,0">
+                            <ListItem IconText="&#xe272;" Content="Dashboard" />
+                            <ListItem IconText="&#xe272;" Content="Zařízení" />
+                            <ListItem IconText="&#xe272;" Content="Produkce" />
+                            <ListItem IconText="&#xe272;" Content="item4" />
+                            <ListItem IconText="&#xe272;" Content="item5" />
+                            <ListItem IconText="&#xe272;" Content="item6" />
+                            <ListItem IconText="&#xe272;" Content="item7" />
+                        </SideBar>
 
                     </StackPanel>
 
-                    <StackPanel Grid.Row="1" Orientation="Horizontal" Spacing="10">
+                    <!--<StackPanel Grid.Row="1" Orientation="Horizontal" Spacing="10">
 
                         <Button Classes="transparent">
                             <Label FontFamily="{DynamicResource Phosphor}" FontSize="23"
@@ -107,16 +110,17 @@
                                 Padding="15 5"
                                 MinWidth="120" />
 
-                    </StackPanel>
+                    </StackPanel>-->
                 </Grid>
             </Border>
+            
+            <Grid ColumnDefinitions="95, *" Background="Transparent">
+                <UserButton Grid.Column="1" HorizontalAlignment="Right" ZIndex="100" VerticalAlignment="Top"
+                            Margin="15" IconSource="avares://JaCoreUI/Assets/Images/usericon.svg" Content="John Doe" />
 
-            <UserButton Grid.Column="1" HorizontalAlignment="Right" ZIndex="100" VerticalAlignment="Top"
-                        Margin="15" IconSource="avares://JaCoreUI/Assets/Images/usericon.svg" Content="John Doe" />
-
-            <ContentControl Grid.Column="1" ZIndex="0" HorizontalAlignment="Stretch"
-                            VerticalAlignment="Stretch" Content="{Binding CurrentPage}" />
-
+                <ContentControl  Grid.Column="1" ZIndex="0" HorizontalAlignment="Stretch"
+                                VerticalAlignment="Stretch" Content="{Binding CurrentPageService.CurrentPage}" />
+            </Grid>
         </Grid>
     </Grid>
 </Window>
