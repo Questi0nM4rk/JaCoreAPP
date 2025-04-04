@@ -39,11 +39,34 @@ public static class RandomGenerator
 
 public class ApiService
 {
+
+    public ObservableCollection<Service> GetServices()
+    {
+        return
+        [
+            new Service()
+            {
+                Name = "TondaOpravy Sro.",
+            }
+        ];
+    }
+
+    public ObservableCollection<Supplier> GetSuppliers()
+    {
+        return 
+        [
+            new Supplier()
+            {
+                Name = "Tony Sro.",
+            }
+        ];
+    }
+    
     public ObservableCollection<Device> GetDevices()
     {
         // dummy load devices
         ObservableCollection<Device> devices = [];
-        for (var i = 1; i <= 13; i++)
+        for (var i = 0; i <= 13; i++)
         {
             var device = new Device
             {
@@ -54,29 +77,34 @@ public class ApiService
                 {
                     SerialNumber = RandomGenerator.GenerateRandomString(),
                     DateOfActivation = RandomGenerator.GenerateRandomDateTime(),
+                    Supplier = new Supplier()
+                    {
+                        Name = $"Supplier {i}",
+                        Contact = i % 2 != 0 ? $"Contact {i}" : null
+                    },
                     Events = [
                         new Event
                         {
-                            Id = 1,
+                            Id = 0,
                             Type = EventType.Operation,
                             Who = "User",
                             Description = "Navazit chemikalie",
                         },
                         new Event
                         {
-                            Id = 2,
+                            Id = 1,
                             Type = EventType.Malfunction,
                             Who = "System",
                         },
                         new Event
                         {
-                            Id = 3,
+                            Id = 2,
                             Type = EventType.Maintenance,
                             Who = "Administrator",
                         },
                         new Event
                         {
-                            Id = 4,
+                            Id = 3,
                             Type = EventType.Operation,
                             Who = "User",
                             Description = "Zmerit PH",
@@ -101,21 +129,21 @@ public class ApiService
                 DeviceId = deviceId,
                 Name = $"Operation 1 for Device {deviceId}",
                 IsRequired = true,
-                OrderIndex = 1
+                OrderIndex = 0
             },
             new DeviceOperation
             {
                 DeviceId = deviceId,
                 Name = $"Operation 2 for Device {deviceId}",
                 IsRequired = false,
-                OrderIndex = 2
+                OrderIndex = 1
             },
             new DeviceOperation
             {
                 DeviceId = deviceId,
                 Name = $"Operation 3 for Device {deviceId}",
                 IsRequired = false,
-                OrderIndex = 3
+                OrderIndex = 2
             }
         };
     }

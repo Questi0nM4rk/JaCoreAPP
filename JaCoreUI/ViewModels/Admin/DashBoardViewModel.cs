@@ -24,7 +24,7 @@ namespace JaCoreUI.ViewModels.Admin
         [ObservableProperty]
         public partial string DeviceSearchText { get; set; } = string.Empty;
 
-        public DashBoardViewModel() : base(ApplicationPageNames.Dashboard)
+        public DashBoardViewModel() : base(ApplicationPageNames.Dashboard, ApplicationPageNames.Dashboard)
         {
             InitializeDummyData();
         }

@@ -2,7 +2,7 @@
 
 namespace JaCoreUI.ViewModels.Production;
 
-public class ProductionsViewModel() : PageViewModel(ApplicationPageNames.Productions)
+public class ProductionsViewModel() : PageViewModel(ApplicationPageNames.Productions, ApplicationPageNames.Productions)
 {
     protected override void OnDesignTimeConstructor()
     {

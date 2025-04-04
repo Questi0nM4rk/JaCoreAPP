@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.ObjectModel;
+using System.Runtime.ConstrainedExecution;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using JaCoreUI.Controls;
@@ -13,8 +15,6 @@ namespace JaCoreUI.ViewModels.Shell;
 
 public partial class ShellViewModel : ObservableObject
 {
-    private readonly PageFactory _pageFactory;
-    
     [ObservableProperty]
     public partial ThemeService Theme { get; set; }
 
@@ -22,26 +22,46 @@ public partial class ShellViewModel : ObservableObject
     public partial CurrentPageService CurrentPageService { get; set; }
 
     [ObservableProperty]
-    public partial object? SelectedPage { get; set; }
+    public partial ListItem? SelectedPage { get; set; }
 
-    partial void OnSelectedPageChanged(object? value)
+    [ObservableProperty]
+    public partial ObservableCollection<ListItem> SideBarItems { get; set; } =
+    [
+        new (content: "Dashboard", iconText: "\ue2f4", ApplicationPageNames.Dashboard),
+        new (content: "Zařízení", iconText: "\ueba4", ApplicationPageNames.Devices),
+        new (content: "Produkce", iconText: "\ue0f4", ApplicationPageNames.Productions),
+        new (content: "Šablony prdukcí", iconText: "\ue0e4", ApplicationPageNames.Templates),
+    ];
+
+    partial void OnSelectedPageChanged(ListItem? value)
     {
-        if (value is not ListItem listItem)
-            throw new ArgumentException();
+        if (value is null)
+            throw new ArgumentNullException(nameof(value));
 
-        CurrentPageService.CurrentPage = (string)listItem.Content! switch
-        {
-            "Dashboard" => _pageFactory.GetPageViewModel(ApplicationPageNames.Dashboard),
-            "Zařízení" => _pageFactory.GetPageViewModel(ApplicationPageNames.Devices),
-            _ => CurrentPageService.CurrentPage
-        };
+        CurrentPageService.NavigateTo(value.ParentPage);
     }
 
-    public ShellViewModel(PageFactory pageFactory, ThemeService themeService, CurrentPageService currentPageService)
+    public ShellViewModel(ThemeService themeService, CurrentPageService currentPageService)
     {
         Theme = themeService;
-        _pageFactory = pageFactory;
         CurrentPageService = currentPageService;
-        CurrentPageService.CurrentPage = _pageFactory.GetPageViewModel(ApplicationPageNames.Devices);
+        CurrentPageService.NavigateTo(ApplicationPageNames.Dashboard);
+        SelectedPage = SideBarItems[0];
+    }
+
+    [RelayCommand]
+    public void GoBack()
+    {
+        CurrentPageService.GoBack();
+        
+        foreach (var item in SideBarItems)
+        {
+            if (CurrentPageService.CurrentPage!.SideBarSelectedPage != item.ParentPage)
+                continue;
+            
+            SelectedPage = item;
+            break;
+
+        }
     }
 }

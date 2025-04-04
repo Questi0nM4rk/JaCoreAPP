@@ -9,10 +9,11 @@ using JaCoreUI.Services;
 
 namespace JaCoreUI.ViewModels.Device;
 
-public partial class DevicesViewModel(PageFactory pageFactory, DeviceService deviceService,
+public partial class DevicesViewModel(DeviceService deviceService,
                                         ApiService apiService, CurrentPageService currentPageService)
-    : PageViewModel(ApplicationPageNames.Devices)
+    : PageViewModel(ApplicationPageNames.Devices, ApplicationPageNames.Devices)
 {
+    
     // Collection of devices to display in the DataGrid
     [ObservableProperty]
     public partial ObservableCollection<Models.Elements.Device.Device> Devices { get; set; } = apiService.GetDevices(); 
@@ -24,16 +25,16 @@ public partial class DevicesViewModel(PageFactory pageFactory, DeviceService dev
     {
         // needs to save the current device before rewriting it
         deviceService.CurrentDevice = Devices[id];
-        currentPageService.CurrentPage = pageFactory.GetPageViewModel(ApplicationPageNames.DeviceDetails);
+        currentPageService.NavigateTo(ApplicationPageNames.DeviceDetails);
     }
 
     // Command to handle editing a device
     [RelayCommand]
-    private void NewDevice()
+    private void CreateDev()
     {
         // needs to save the current device before rewriting it
         deviceService.CurrentDevice = new Models.Elements.Device.Device();
-        currentPageService.CurrentPage = pageFactory.GetPageViewModel(ApplicationPageNames.DeviceCreation);
+        currentPageService.NavigateTo(ApplicationPageNames.DeviceDetails);
     }
     protected override void OnDesignTimeConstructor()
     {

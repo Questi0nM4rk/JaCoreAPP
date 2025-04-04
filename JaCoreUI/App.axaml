@@ -50,6 +50,7 @@
                 <MergeResourceInclude Source="/Controls/TabItem.axaml"/>
                 <MergeResourceInclude Source="/Controls/UserButton.axaml"/>
                 <MergeResourceInclude Source="/Controls/SearchBox.axaml"/>
+                <MergeResourceInclude Source="/Controls/SeparatorLabel.axaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
         

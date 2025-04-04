@@ -35,7 +35,7 @@ public partial class DeviceCreationViewModel : PageViewModel
     [ObservableProperty]
     public partial ObservableCollection<Event> Events { get; set; } = new();
 
-    public DeviceCreationViewModel(DeviceService deviceService) : base(ApplicationPageNames.DeviceCreation)
+    public DeviceCreationViewModel(DeviceService deviceService) : base(ApplicationPageNames.DeviceCreation, ApplicationPageNames.Devices)
     {
         _deviceService = deviceService;
         CurrentDevice = _deviceService.CurrentDevice ?? throw new NullReferenceException();

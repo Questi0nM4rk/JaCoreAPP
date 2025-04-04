@@ -2,7 +2,7 @@
 
 namespace JaCoreUI.ViewModels.User;
 
-public class LoginViewModel() : PageViewModel(ApplicationPageNames.Login)
+public class LoginViewModel() : PageViewModel(ApplicationPageNames.Login, ApplicationPageNames.Login)
 {
     protected override void OnDesignTimeConstructor()
     {

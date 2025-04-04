@@ -17,9 +17,18 @@ public partial class DeviceCard : ObservableObject
     [ObservableProperty]
     public partial ObservableCollection<Event>? Events { get; set; }
     
+    [ObservableProperty]
+    public partial MetrologicalConformation? MetrologicalConformation { get; set; }
+    
+    [ObservableProperty]
+    public required partial Supplier Supplier { get; set; }
+    
+    [ObservableProperty]
+    public partial Service? Service { get; set; }
+    
 }
 
-public class MetrologicalConformation
+public record MetrologicalConformation
 {
     public string Level1 { get; set; } = string.Empty;
     public string Level2 { get; set; } = string.Empty;

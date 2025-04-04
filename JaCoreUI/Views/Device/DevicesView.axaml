@@ -3,21 +3,18 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="clr-namespace:JaCoreUI.ViewModels.Device"
+             xmlns:con="clr-namespace:JaCoreUI.Controls"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="JaCoreUI.Views.Device.DevicesView"
              x:DataType="vm:DevicesViewModel">
 
     <Grid RowDefinitions="Auto, *">
-        <!-- Header -->
-        <Grid MaxHeight="100">
-            <Image Source="{SvgImage /Assets/Images/chembackground.svg}" Stretch="UniformToFill"
-                   Opacity="0.6" />
-            <Viewbox MaxHeight="60" MinHeight="30">
-                <StackPanel VerticalAlignment="Center">
-                    <Label Classes="h1" Content="List Zařízení" HorizontalAlignment="Center" Foreground="White" />
-                </StackPanel>
-            </Viewbox>
-        </Grid>
+
+        <Viewbox MaxHeight="70" MinHeight="30" Margin="10">
+            <StackPanel VerticalAlignment="Center">
+                <Label Classes="h1" Content="List Zařízení" HorizontalAlignment="Center" Foreground="White" />
+            </StackPanel>
+        </Viewbox>
 
         <Border Grid.Row="1" Classes="floating" Padding="20" Margin="15">
             <Grid RowDefinitions="Auto, Auto, *" Grid.ColumnDefinitions="*, Auto">
@@ -29,14 +26,18 @@
                            HorizontalAlignment="Left"
                            VerticalAlignment="Center"
                            SearchDelay="500"/>
-
-                <IconButton Grid.Column="1" Grid.Row="0" Content="Nové Zařízení" IconText="&#xe3d4;" Margin="0 0 0 20"
-                            VerticalAlignment="Center"
-                            HorizontalAlignment="Center">
-                    
-                </IconButton>
                 
-                <DataGrid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" ItemsSource="{Binding Devices}" AutoGenerateColumns="False">
+                <!-- <Button Grid.Column="1" Grid.Row="0" Content="add" Command="{Binding CreateDevCommand}"/> -->
+
+                <con:IconButton Grid.Column="1" Grid.Row="0" Content="Nové Zařízení" IconText="&#xe3d4;"
+                                Margin="0 0 0 20"
+                                Background="{DynamicResource ElementBackgroundGradient}"
+                                Command="{Binding CreateDevCommand}"
+                                VerticalAlignment="Center"
+                                IsEnabled="True"
+                                HorizontalAlignment="Center" />
+                
+                <DataGrid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" ItemsSource="{Binding Devices}">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Sériové Číslo" Binding="{Binding  DeviceCard.SerialNumber, FallbackValue='Nemá kartu'}" Width="*" />
                         <DataGridTextColumn Header="Název" Binding="{Binding Name}" Width="*" />

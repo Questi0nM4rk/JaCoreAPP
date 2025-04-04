@@ -9,15 +9,11 @@
 
     <Grid RowDefinitions="Auto, *">
         <!-- Header -->
-        <Grid MaxHeight="100">
-            <Image Source="{SvgImage /Assets/Images/chembackground.svg}" Stretch="UniformToFill"
-                   Opacity="0.6" />
-            <Viewbox MaxHeight="60" MinHeight="30">
-                <StackPanel VerticalAlignment="Center">
-                    <Label Classes="h1" Content="Nové Zařízení" HorizontalAlignment="Center" Foreground="White" />
-                </StackPanel>
-            </Viewbox>
-        </Grid>
+        <Viewbox MaxHeight="60" MinHeight="30" Margin="10">
+            <StackPanel VerticalAlignment="Center">
+                <Label Classes="h1" Content="Nové Zařízení" HorizontalAlignment="Center" Foreground="White" />
+            </StackPanel>
+        </Viewbox>
 
         <!-- Main Content -->
         <ScrollViewer Grid.Row="1">
@@ -26,15 +22,29 @@
                     <StackPanel>
                         <!-- Device Information -->
                         <Label Classes="h2" Margin="10,0,0,10" Content="Informace" />
-                        <StackPanel Orientation="Horizontal" Spacing="10">
+                        <StackPanel Orientation="Horizontal" Spacing="10" MaxHeight="50">
                             <Label Content="ID :" VerticalAlignment="Center" />
-                            <TextBox Text="{Binding CurrentDevice.Id}" Width="50" />
+                            <TextBox Text="{Binding CurrentDevice.Id}"
+                                     IsReadOnly="True"
+                                     Width="50"
+                                     HorizontalAlignment="Center"
+                                     VerticalAlignment="Center"/>
 
                             <Label Content="Název :" VerticalAlignment="Center" />
-                            <TextBox Text="{Binding CurrentDevice.Name}" Width="200" />
+                            <TextBox Text="{Binding CurrentDevice.Name, Mode=TwoWay}"
+                                     Width="200"
+                                     HorizontalAlignment="Center"
+                                     VerticalAlignment="Center"
+                                     Margin="0 0 40 0"/>
 
                             <Label Content="Kategorie :" VerticalAlignment="Center" />
-                            <DropDownButton Content="{Binding Categories}" Width="150"/>
+                            <ComboBox ItemsSource="{Binding Categories}"
+                                      SelectedItem="{Binding SelectedCategory, Mode=TwoWay}"
+                                      VerticalAlignment="Center"
+                                      HorizontalAlignment="Center"
+                                      Width="150"
+                                      Margin="5"
+                                      Padding="10"/>
                         </StackPanel>
 
                         <!-- Separator -->
@@ -42,7 +52,7 @@
 
                         <!-- Device Operations -->
                         <Label Classes="h2" Margin="10,0,0,10" Content="Operace zařízení" />
-                        <DataGrid ItemsSource="{Binding CurrentDevice.DeviceOperations}" AutoGenerateColumns="False">
+                        <DataGrid ItemsSource="{Binding CurrentDevice.DeviceOperations}">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="Název" Binding="{Binding Name}" Width="*" />
                                 <DataGridTextColumn Header="Povinná" Binding="{Binding IsRequired}" Width="*" />
@@ -51,7 +61,7 @@
                                         <DataTemplate>
                                             <Button Content="Upravit"
                                                     Command="{Binding $parent[DataGrid].((vm:DeviceDetailsViewModel)DataContext).EditDeviceOperationCommand, FallbackValue='Unknown'}"
-                                                    CommandParameter="{Binding Id}" />
+                                                    CommandParameter="{Binding OrderIndex}" />
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>
@@ -63,7 +73,7 @@
 
                         <!-- Events -->
                         <Label Classes="h2" Margin="10,0,0,10" Content="Události" />
-                        <DataGrid ItemsSource="{Binding CurrentDevice.DeviceCard.Events, FallbackValue='{Binding $parent[DataGrid].((vm:DeviceDetailsViewModel)DataContext).FallbackEvents}'}" AutoGenerateColumns="False">
+                        <DataGrid ItemsSource="{Binding CurrentDevice.DeviceCard.Events}">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="Typ" Binding="{Binding Type}" Width="*" />
                                 <DataGridTextColumn Header="Kdo" Binding="{Binding Who}" Width="*" />
@@ -83,15 +93,157 @@
                     </StackPanel>
                 </Border>
 
-                <!-- Footer -->
-                <Border Classes="floating" Margin="15" Padding="20">
+                <!-- Card -->
+                <Border Classes="floating" Margin="15" Padding="20"
+                        IsVisible="{Binding !CurrentDevice.HasCard}"
+                        IsEnabled="{Binding !CurrentDevice.HasCard}">
                     <Grid ColumnDefinitions="*, Auto">
                         <Label Classes="h2" Content="Přidat kartu" VerticalAlignment="Center" />
                         <Button Grid.Column="1" Command="{Binding AddCardCommand}" HorizontalAlignment="Right">
                             <TextBlock FontFamily="{DynamicResource Phosphor}" FontSize="23"
-                                       Text="&#xe3d6;" />
+                                       Text="&#xe3d6;"/>
                         </Button>
                     </Grid>
+                </Border>
+
+                <Border Classes="floating" Margin="15" Padding="20"
+                        IsVisible="{Binding CurrentDevice.HasCard}"
+                        IsEnabled="{Binding CurrentDevice.HasCard}">
+                    <StackPanel Spacing="10">
+                        <Label Classes="h2"
+                               Margin="0 0 0 15"
+                               Content="Karta Zařízení" />
+
+                        <StackPanel Orientation="Horizontal"
+                                    MaxHeight="50"
+                                    Margin="10"
+                                    Spacing="10">
+
+                            <Label Content="Sériové Číslo : "
+                                   VerticalAlignment="Center" />
+                            <TextBox Text="{Binding CurrentDevice.DeviceCard.SerialNumber}"
+                                     IsReadOnly="True"
+                                     Width="130"
+                                     Margin="0 0 30 0 " />
+
+                            <Label Content="Datum Aktivace : "
+                                   VerticalAlignment="Center" />
+                            <DatePicker SelectedDate="{Binding CurrentDevice.DeviceCard.DateOfActivation}" />
+                        </StackPanel>
+
+                        <SeparatorLabel Text="Dodavatel" />
+
+                        <StackPanel Orientation="Horizontal"
+                                    Margin="10"
+                                    Spacing="10"
+                                    MaxHeight="50">
+                            <Label Content="Název : " VerticalAlignment="Center" />
+
+                            <TextBox Text="{Binding CurrentDevice.DeviceCard.Supplier.Name}"
+                                     IsReadOnly="True"
+                                     Width="170"
+                                     Margin="0 0 30 0 " />
+
+                            <Label Content="Kontakt: " VerticalAlignment="Center" />
+
+                            <TextBox Text="{Binding CurrentDevice.DeviceCard.Supplier.Name}"
+                                     IsReadOnly="True"
+                                     Width="150"
+                                     IsEnabled="{Binding CurrentDevice.DeviceCard.Supplier.HasContact}"
+                                     IsVisible="{Binding CurrentDevice.DeviceCard.Supplier.HasContact}" />
+
+                            <IconButton Content="Přidat Kontakt"
+                                        IconText="&#xe3d4;"
+                                        IsEnabled="{Binding !CurrentDevice.DeviceCard.Supplier.HasContact}"
+                                        IsVisible="{Binding !CurrentDevice.DeviceCard.Supplier.HasContact}" />
+                        </StackPanel>
+
+                        <SeparatorLabel Text="Servis" />
+
+                        <StackPanel Orientation="Horizontal"
+                                    Margin="10"
+                                    Spacing="10"
+                                    MaxHeight="50">
+                            <Label Content="Název : " VerticalAlignment="Center" />
+
+                            <TextBox Text="{Binding CurrentDevice.DeviceCard.Service.Name}"
+                                     IsReadOnly="True"
+                                     Width="170"
+                                     Margin="0 0 30 0 " />
+
+                            <Label Content="Kontakt: " VerticalAlignment="Center" />
+
+                            <TextBox Text="{Binding CurrentDevice.DeviceCard.Service.Name}"
+                                     IsReadOnly="True"
+                                     Width="150"
+                                     IsEnabled="{Binding CurrentDevice.DeviceCard.Service.HasContact}"
+                                     IsVisible="{Binding CurrentDevice.DeviceCard.Service.HasContact}" />
+
+                            <IconButton Content="Přidat Kontakt"
+                                        IconText="&#xe3d4;"
+                                        IsEnabled="{Binding !CurrentDevice.DeviceCard.Service.HasContact}"
+                                        IsVisible="{Binding !CurrentDevice.DeviceCard.Service.HasContact}" />
+                        </StackPanel>
+                        
+                        <SeparatorLabel Text="Poslední Servis" />
+
+                        <StackPanel Orientation="Horizontal"
+                                    Margin="10"
+                                    Spacing="10"
+                                    MaxHeight="50">
+                            <Label Content="Čas : " VerticalAlignment="Center" />
+
+                            <DatePicker SelectedDate="{Binding LastService.From}"
+                                     Margin="0 0 30 0 " />
+                        </StackPanel>
+                        
+                        <Grid ColumnDefinitions="Auto, *" Margin="10">
+                        
+                            <Label Content="Doplnění : " VerticalAlignment="Center" Margin="0 0 10 0" />
+
+                            <TextBox Grid.Column="1" Text="{Binding LastService.Description}"/>
+     
+                        </Grid>
+                        
+                        <SeparatorLabel Text="Poslední Kalibrace" />
+
+                        <StackPanel Orientation="Horizontal"
+                                    Margin="10"
+                                    Spacing="10"
+                                    MaxHeight="50">
+                            <Label Content="Čas : " VerticalAlignment="Center" />
+
+                            <DatePicker SelectedDate="{Binding LastCalibration.From}"
+                                        Margin="0 0 30 0 " />
+                        </StackPanel> 
+
+                        <Grid ColumnDefinitions="Auto, *" Margin="10">
+                        
+                            <Label Content="Doplnění : " VerticalAlignment="Center" Margin="0 0 10 0" />
+
+                            <TextBox Grid.Column="1" Text="{Binding LastCalibration.Description}"/>
+     
+                        </Grid>
+                        
+                        <SeparatorLabel Text="Metrologické Potvrzení"/>
+                        
+                        <Grid ColumnDefinitions="Auto, *" Margin="10">
+                            <Label Content="Level 1 : " VerticalAlignment="Center" Margin="0 0 10 0" />
+                            <TextBox Grid.Column="1" Text="{Binding CurrentDevice.DeviceCard.MetrologicalConformation.Level1, Mode=TwoWay}"/>
+                        </Grid>
+                        <Grid ColumnDefinitions="Auto, *" Margin="10">
+                            <Label Content="Level 2 : " VerticalAlignment="Center" Margin="0 0 10 0" />
+                            <TextBox Grid.Column="1" Text="{Binding CurrentDevice.DeviceCard.MetrologicalConformation.Level2, Mode=TwoWay}"/>
+                        </Grid>
+                        <Grid ColumnDefinitions="Auto, *" Margin="10">
+                            <Label Content="Level 3 : " VerticalAlignment="Center" Margin="0 0 10 0" />
+                            <TextBox Grid.Column="1" Text="{Binding CurrentDevice.DeviceCard.MetrologicalConformation.Level3, Mode=TwoWay}"/>
+                        </Grid>
+                        <Grid ColumnDefinitions="Auto, *" Margin="10">
+                            <Label Content="Level 4 : " VerticalAlignment="Center" Margin="0 0 10 0" />
+                            <TextBox Grid.Column="1" Text="{Binding CurrentDevice.DeviceCard.MetrologicalConformation.Level4, Mode=TwoWay}"/>
+                        </Grid>
+                    </StackPanel>
                 </Border>
             </StackPanel>
         </ScrollViewer>

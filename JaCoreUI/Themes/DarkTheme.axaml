@@ -34,10 +34,17 @@
                 <GradientStop Offset="1" Color="#80848c97"/>
             </LinearGradientBrush>
             
+
+            <!-- Sidebar Gradient -->
+            <LinearGradientBrush x:Key="SideBarGradient" StartPoint="0%, 0%" EndPoint="100%, 100%">
+                <GradientStop Offset="0" Color="#F2080c27"/>
+                <GradientStop Offset="1" Color="#F21b2051"/>
+            </LinearGradientBrush>
+            
             <!-- Floating Gradient -->
             <LinearGradientBrush x:Key="FloatingGradient" StartPoint="0%, 0%" EndPoint="100%, 100%">
-                <GradientStop Offset="0" Color="#B2080c27"/>
-                <GradientStop Offset="1" Color="#B21b2051"/>
+                <GradientStop Offset="0" Color="#D8080c27"/>
+                <GradientStop Offset="1" Color="#D81b2051"/>
             </LinearGradientBrush>
             
             <!-- Element Background Gradient -->

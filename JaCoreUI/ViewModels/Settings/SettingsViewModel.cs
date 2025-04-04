@@ -3,7 +3,7 @@ using JaCoreUI.Data;
 
 namespace JaCoreUI.ViewModels.Settings;
 
-public partial class SettingsViewModel() : PageViewModel(ApplicationPageNames.Settings)
+public partial class SettingsViewModel() : PageViewModel(ApplicationPageNames.Settings, ApplicationPageNames.Settings)
 {
     protected override void OnDesignTimeConstructor()
     {

@@ -2,7 +2,6 @@
 
 public enum ApplicationPageNames
 {
-    Unknown = 0,
     Dashboard = 1,
     Register,
     

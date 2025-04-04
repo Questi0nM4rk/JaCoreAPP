@@ -28,23 +28,18 @@ public partial class DeviceDetailsViewModel : PageViewModel
         "Category 4",
         "Category 5"
     ];
-
+    
     [ObservableProperty]
-    public partial ObservableCollection<Event> FallbackEvents { get; set; } = [
-        new Event
-        {
-            Id = 0,
-            Type = EventType.Service,
-            Who = "Nemá Kartu",
-            Description = "Nemá Kartu",
-        },
-    ];
+    public partial Event LastCalibration { get; set; }
     
+    [ObservableProperty]
+    public partial Event LastService { get; set; }
     
-    public DeviceDetailsViewModel(DeviceService deviceService) : base(ApplicationPageNames.DeviceCreation)
+    public DeviceDetailsViewModel(DeviceService deviceService) : base(ApplicationPageNames.DeviceCreation, ApplicationPageNames.Devices)
     {
         _deviceService = deviceService;
         CurrentDevice = _deviceService.CurrentDevice ?? throw new NullReferenceException();
+        SideBarSelectedPage = ApplicationPageNames.Devices;
     }
 
     [RelayCommand]
