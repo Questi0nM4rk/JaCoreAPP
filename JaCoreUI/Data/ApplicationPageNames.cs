@@ -4,19 +4,17 @@ public enum ApplicationPageNames
 {
     Dashboard = 1,
     Register,
-    
+
     Devices,
-    DeviceCreation,
     DeviceDetails,
-    
+
     Productions,
-    ProductionCreation,
+    ProductionDetails,
     ProductionWork,
-    
+
     Templates,
     TemplateDetails,
-    
+
     Login,
-    Settings = 12,
-    
+    Settings = 12
 }

@@ -3,7 +3,6 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm="clr-namespace:JaCoreUI.ViewModels.Shell"
-        xmlns:data="clr-namespace:JaCoreUI.Data"
         xmlns:svg="using:Avalonia.Svg.Skia"
         mc:Ignorable="d" d:DesignWidth="1024" d:DesignHeight="600"
         Width="1920" Height="1080"
@@ -54,7 +53,7 @@
 
 
         </Grid>
-        
+
         <!-- Header -->
         <Grid MaxHeight="200" Height="160" Grid.ColumnSpan="2" VerticalAlignment="Top">
             <Image Source="{SvgImage /Assets/Images/chembackground.svg}" Stretch="UniformToFill"
@@ -90,10 +89,11 @@
                             </Rectangle.Fill>
                         </Rectangle>
 
-                        <SideBar IsExpanded="{Binding IsPointerOver, RelativeSource={RelativeSource AncestorType=Border}}"
-                                 SelectedItem="{Binding SelectedPage, Mode=TwoWay}"
-                                 ItemsSource="{Binding SideBarItems}"
-                                 Margin="0,0,0,0"/>
+                        <SideBar
+                            IsExpanded="{Binding IsPointerOver, RelativeSource={RelativeSource AncestorType=Border}}"
+                            SelectedItem="{Binding SelectedPage, Mode=TwoWay}"
+                            ItemsSource="{Binding SideBarItems}"
+                            Margin="0,0,0,0" />
 
                     </StackPanel>
 
@@ -113,16 +113,17 @@
                     </StackPanel>-->
                 </Grid>
             </Border>
-            
+
             <Grid ColumnDefinitions="95, *" Background="Transparent">
                 <UserButton Grid.Column="1" HorizontalAlignment="Right" ZIndex="100" VerticalAlignment="Top"
                             Margin="15" IconSource="avares://JaCoreUI/Assets/Images/usericon.svg" Content="John Doe" />
 
-                <IconButton Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="30" ZIndex="100" CornerRadius="15"
-                            IconText="&#xe51a;"  Content=""
-                            Command="{Binding GoBackCommand}"/>
-                
-                <ContentControl  Grid.Column="1" ZIndex="0" HorizontalAlignment="Stretch"
+                <IconButton Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="30" ZIndex="100"
+                            CornerRadius="15"
+                            IconText="&#xe51a;" Content=""
+                            Command="{Binding GoBackCommand}" />
+
+                <ContentControl Grid.Column="1" ZIndex="0" HorizontalAlignment="Stretch"
                                 VerticalAlignment="Stretch" Content="{Binding CurrentPageService.CurrentPage}" />
             </Grid>
         </Grid>

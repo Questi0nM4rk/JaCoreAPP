@@ -25,9 +25,10 @@ public class ListItem : ListBoxItem
         get => GetValue(IconTextProperty);
         set => SetValue(IconTextProperty, value);
     }
-    
-    public static readonly StyledProperty<ApplicationPageNames> ParentPageProperty  = AvaloniaProperty.Register<ListItem, ApplicationPageNames>(
-        nameof(IconText));
+
+    public static readonly StyledProperty<ApplicationPageNames> ParentPageProperty =
+        AvaloniaProperty.Register<ListItem, ApplicationPageNames>(
+            nameof(IconText));
 
     public ApplicationPageNames ParentPage
     {

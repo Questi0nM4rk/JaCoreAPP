@@ -2,41 +2,28 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System.Collections.ObjectModel;
+using System.Linq;
 using JaCoreUI.Data;
 using JaCoreUI.Factories;
-using JaCoreUI.Models.Elements.Device;
 using JaCoreUI.Services;
+using DeviceService = JaCoreUI.Services.Device.DeviceService;
 
 namespace JaCoreUI.ViewModels.Device;
 
-public partial class DevicesViewModel(DeviceService deviceService,
-                                        ApiService apiService, CurrentPageService currentPageService)
-    : PageViewModel(ApplicationPageNames.Devices, ApplicationPageNames.Devices)
+public partial class DevicesViewModel : PageViewModel
 {
-    
-    // Collection of devices to display in the DataGrid
-    [ObservableProperty]
-    public partial ObservableCollection<Models.Elements.Device.Device> Devices { get; set; } = apiService.GetDevices(); 
+    [ObservableProperty] public partial DeviceService DeviceService { get; set; }
 
-
-    // Command to handle editing a device
-    [RelayCommand]
-    private void EditDevice(int id)
+    public DevicesViewModel(DeviceService deviceService) : base(ApplicationPageNames.Devices,
+        ApplicationPageNames.Devices)
     {
-        // needs to save the current device before rewriting it
-        deviceService.CurrentDevice = Devices[id];
-        currentPageService.NavigateTo(ApplicationPageNames.DeviceDetails);
+        DeviceService = deviceService;
     }
 
-    // Command to handle editing a device
-    [RelayCommand]
-    private void CreateDev()
-    {
-        // needs to save the current device before rewriting it
-        deviceService.CurrentDevice = new Models.Elements.Device.Device();
-        currentPageService.NavigateTo(ApplicationPageNames.DeviceDetails);
-    }
-    protected override void OnDesignTimeConstructor()
+    public IRelayCommand NewDeviceCommand => DeviceService.NewDeviceCommand;
+    public IRelayCommand DeviceDetailsCommand => DeviceService.DeviceDetailsCommand;
+
+protected override void OnDesignTimeConstructor()
     {
         throw new NotImplementedException();
     }

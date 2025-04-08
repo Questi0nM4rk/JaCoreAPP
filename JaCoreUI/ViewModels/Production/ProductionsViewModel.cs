@@ -8,4 +8,9 @@ public class ProductionsViewModel() : PageViewModel(ApplicationPageNames.Product
     {
         throw new System.NotImplementedException();
     }
+
+    public override bool Validate()
+    {
+        throw new System.NotImplementedException();
+    }
 }

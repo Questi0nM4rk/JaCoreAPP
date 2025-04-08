@@ -8,4 +8,9 @@ public class TemplatesViewModel() : PageViewModel(ApplicationPageNames.Templates
     {
         throw new System.NotImplementedException();
     }
+
+    public override bool Validate()
+    {
+        throw new System.NotImplementedException();
+    }
 }

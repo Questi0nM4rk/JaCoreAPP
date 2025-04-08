@@ -16,14 +16,15 @@ public class ViewLocator : IDataTemplate
             .Replace("ViewModels", "Views")
             .Replace("ViewModel", "View");
         var viewType = Type.GetType(viewName);
-        if (viewType == null)
-        {
-            return new TextBlock { Text = $"View Not Found: {viewName}" };
-        }
+        if (viewType == null) return new TextBlock { Text = $"View Not Found: {viewName}" };
+
         var control = (Control)Activator.CreateInstance(viewType)!;
         control.DataContext = data;
         return control;
     }
 
-    public bool Match(object? data) => data is PageViewModel;
+    public bool Match(object? data)
+    {
+        return data is PageViewModel;
+    }
 }

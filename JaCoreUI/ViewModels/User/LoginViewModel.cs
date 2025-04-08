@@ -8,4 +8,9 @@ public class LoginViewModel() : PageViewModel(ApplicationPageNames.Login, Applic
     {
         throw new System.NotImplementedException();
     }
+
+    public override bool Validate()
+    {
+        throw new System.NotImplementedException();
+    }
 }

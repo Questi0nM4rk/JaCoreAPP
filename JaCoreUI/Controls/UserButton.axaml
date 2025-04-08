@@ -2,101 +2,105 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:svg="using:Avalonia.Svg.Skia"
                     x:ClassModifier="internal">
-  <Design.PreviewWith>
-    <Border Padding="20" Background="{DynamicResource PrimaryBackgroundGradient}" Width="500">
-      <StackPanel Spacing="20" HorizontalAlignment="Center">
-        <UserButton IconSource="avares://JaCoreUI/Assets/Images/usericon.svg" Content="John Doe" />
-        <Button Content="test"/>
-      </StackPanel>
-    </Border>
-  </Design.PreviewWith>
+    <Design.PreviewWith>
+        <Border Padding="20" Background="{DynamicResource PrimaryBackgroundGradient}" Width="500">
+            <StackPanel Spacing="20" HorizontalAlignment="Center">
+                <UserButton IconSource="avares://JaCoreUI/Assets/Images/usericon.svg" Content="John Doe" />
+                <Button Content="test" />
+            </StackPanel>
+        </Border>
+    </Design.PreviewWith>
 
-  <ControlTheme x:Key="{x:Type UserButton}" TargetType="UserButton">
-    <Setter Property="Background" Value="{DynamicResource ElementBackgroundGradient}" />
-    <Setter Property="Foreground" Value="{DynamicResource ButtonForeground}" />
-    <Setter Property="BorderBrush" Value="{DynamicResource ButtonBorderBrush}" />
-    <Setter Property="BorderThickness" Value="{DynamicResource ButtonBorderThemeThickness}" />
-    <Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}" />
-    <Setter Property="Padding" Value="{DynamicResource ButtonPadding}" />
-    <Setter Property="HorizontalAlignment" Value="Left" />
-    <Setter Property="VerticalAlignment" Value="Center" />
-    <Setter Property="RenderTransform" Value="none" />
-    <Setter Property="Transitions">
-      <Transitions>
-        <TransformOperationsTransition Property="RenderTransform" Duration="0:0:.075" />
-      </Transitions>
-    </Setter>
+    <ControlTheme x:Key="{x:Type UserButton}" TargetType="UserButton">
+        <Setter Property="Background" Value="{DynamicResource ElementBackgroundGradient}" />
+        <Setter Property="Foreground" Value="{DynamicResource ButtonForeground}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource ButtonBorderBrush}" />
+        <Setter Property="BorderThickness" Value="{DynamicResource ButtonBorderThemeThickness}" />
+        <Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}" />
+        <Setter Property="Padding" Value="{DynamicResource ButtonPadding}" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="RenderTransform" Value="none" />
+        <Setter Property="Transitions">
+            <Transitions>
+                <TransformOperationsTransition Property="RenderTransform" Duration="0:0:.075" />
+            </Transitions>
+        </Setter>
 
-    <Setter Property="Template">
-      <ControlTemplate>
-        <ContentPresenter x:Name="PART_ContentPresenter"
-                          Background="{TemplateBinding Background}"
-                          BorderBrush="{TemplateBinding BorderBrush}"
-                          BorderThickness="{TemplateBinding BorderThickness}"
-                          CornerRadius="30"
-                          Content="{TemplateBinding Content}"
-                          Padding="{TemplateBinding Padding}"
-                          RecognizesAccessKey="True"
-                          HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
-                          VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}">
-          
-          <ContentPresenter.ContentTemplate>
-              <DataTemplate DataType="x:Object">
-                <StackPanel Orientation="Horizontal" Spacing="6">
-                  <svg:Svg Height="32" VerticalAlignment="Center" HorizontalAlignment="Center" Path="{Binding $parent[UserButton].IconSource}"/>
-                  <ContentControl VerticalAlignment="Center" Padding="3" Foreground="{Binding $parent[UserButton].Foreground}" DataContext="{Binding $parent[UserButton].DataContext}" Content="{Binding $parent[UserButton].Content}" />
-                </StackPanel>
-              </DataTemplate>
-            </ContentPresenter.ContentTemplate>
-          
-        </ContentPresenter>
-      </ControlTemplate>
-    </Setter>
-    
-    <Style Selector="^:pointerover /template/ ContentPresenter#PART_ContentPresenter">
-      <Setter Property="RenderTransform" Value="scale(0.95)" />
-    </Style>
-    
-    <Style Selector="^:pressed">
-      <Setter Property="RenderTransform" Value="scale(0.80)" />
-    </Style>
+        <Setter Property="Template">
+            <ControlTemplate>
+                <ContentPresenter x:Name="PART_ContentPresenter"
+                                  Background="{TemplateBinding Background}"
+                                  BorderBrush="{TemplateBinding BorderBrush}"
+                                  BorderThickness="{TemplateBinding BorderThickness}"
+                                  CornerRadius="30"
+                                  Content="{TemplateBinding Content}"
+                                  Padding="{TemplateBinding Padding}"
+                                  RecognizesAccessKey="True"
+                                  HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                  VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}">
 
-    <Style Selector="^:pressed  /template/ ContentPresenter#PART_ContentPresenter">
-      <Setter Property="Opacity" Value="0.7" />
-    </Style>
+                    <ContentPresenter.ContentTemplate>
+                        <DataTemplate DataType="x:Object">
+                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                <svg:Svg Height="32" VerticalAlignment="Center" HorizontalAlignment="Center"
+                                         Path="{Binding $parent[UserButton].IconSource}" />
+                                <ContentControl VerticalAlignment="Center" Padding="3"
+                                                Foreground="{Binding $parent[UserButton].Foreground}"
+                                                DataContext="{Binding $parent[UserButton].DataContext}"
+                                                Content="{Binding $parent[UserButton].Content}" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </ContentPresenter.ContentTemplate>
 
-    <Style Selector="^:disabled /template/ ContentPresenter#PART_ContentPresenter">
-      <Setter Property="Background" Value="{DynamicResource ButtonBackgroundDisabled}" />
-      <Setter Property="BorderBrush" Value="{DynamicResource ButtonBorderBrushDisabled}" />
-      <Setter Property="Foreground" Value="{DynamicResource ButtonForegroundDisabled}" />
-    </Style>
+                </ContentPresenter>
+            </ControlTemplate>
+        </Setter>
 
-    <Style Selector="^.accent">
-      <Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter">
-        <Setter Property="Background" Value="{DynamicResource AccentButtonBackground}" />
-        <Setter Property="BorderBrush" Value="{DynamicResource AccentButtonBorderBrush}" />
-        <Setter Property="Foreground" Value="{DynamicResource AccentButtonForeground}" />
-      </Style>
+        <Style Selector="^:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="RenderTransform" Value="scale(0.95)" />
+        </Style>
 
-      <Style Selector="^:pointerover /template/ ContentPresenter#PART_ContentPresenter">
-        <Setter Property="Background" Value="{DynamicResource AccentButtonBackgroundPointerOver}" />
-        <Setter Property="BorderBrush" Value="{DynamicResource AccentButtonBorderBrushPointerOver}" />
-        <Setter Property="Foreground" Value="{DynamicResource AccentButtonForegroundPointerOver}" />
-      </Style>
+        <Style Selector="^:pressed">
+            <Setter Property="RenderTransform" Value="scale(0.80)" />
+        </Style>
 
-      <Style Selector="^:pressed  /template/ ContentPresenter#PART_ContentPresenter">
-        <Setter Property="Background" Value="{DynamicResource AccentButtonBackgroundPressed}" />
-        <Setter Property="BorderBrush" Value="{DynamicResource AccentButtonBorderBrushPressed}" />
-        <Setter Property="Foreground" Value="{DynamicResource AccentButtonForegroundPressed}" />
-      </Style>
+        <Style Selector="^:pressed  /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Opacity" Value="0.7" />
+        </Style>
 
-      <Style Selector="^:disabled /template/ ContentPresenter#PART_ContentPresenter">
-        <Setter Property="Background" Value="{DynamicResource AccentButtonBackgroundDisabled}" />
-        <Setter Property="BorderBrush" Value="{DynamicResource AccentButtonBorderBrushDisabled}" />
-        <Setter Property="Foreground" Value="{DynamicResource AccentButtonForegroundDisabled}" />
-      </Style>
-      
-    </Style>
-    
-  </ControlTheme>
+        <Style Selector="^:disabled /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Background" Value="{DynamicResource ButtonBackgroundDisabled}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource ButtonBorderBrushDisabled}" />
+            <Setter Property="Foreground" Value="{DynamicResource ButtonForegroundDisabled}" />
+        </Style>
+
+        <Style Selector="^.accent">
+            <Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter">
+                <Setter Property="Background" Value="{DynamicResource AccentButtonBackground}" />
+                <Setter Property="BorderBrush" Value="{DynamicResource AccentButtonBorderBrush}" />
+                <Setter Property="Foreground" Value="{DynamicResource AccentButtonForeground}" />
+            </Style>
+
+            <Style Selector="^:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+                <Setter Property="Background" Value="{DynamicResource AccentButtonBackgroundPointerOver}" />
+                <Setter Property="BorderBrush" Value="{DynamicResource AccentButtonBorderBrushPointerOver}" />
+                <Setter Property="Foreground" Value="{DynamicResource AccentButtonForegroundPointerOver}" />
+            </Style>
+
+            <Style Selector="^:pressed  /template/ ContentPresenter#PART_ContentPresenter">
+                <Setter Property="Background" Value="{DynamicResource AccentButtonBackgroundPressed}" />
+                <Setter Property="BorderBrush" Value="{DynamicResource AccentButtonBorderBrushPressed}" />
+                <Setter Property="Foreground" Value="{DynamicResource AccentButtonForegroundPressed}" />
+            </Style>
+
+            <Style Selector="^:disabled /template/ ContentPresenter#PART_ContentPresenter">
+                <Setter Property="Background" Value="{DynamicResource AccentButtonBackgroundDisabled}" />
+                <Setter Property="BorderBrush" Value="{DynamicResource AccentButtonBorderBrushDisabled}" />
+                <Setter Property="Foreground" Value="{DynamicResource AccentButtonForegroundDisabled}" />
+            </Style>
+
+        </Style>
+
+    </ControlTheme>
 </ResourceDictionary>

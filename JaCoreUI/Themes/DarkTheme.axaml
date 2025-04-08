@@ -16,7 +16,7 @@
 
             <SolidColorBrush x:Key="ActiveButtonBackground">#582cff</SolidColorBrush>
             <SolidColorBrush x:Key="ActiveButtonForeground">White</SolidColorBrush>
-            
+
             <!-- Background Gradient -->
             <RadialGradientBrush x:Key="PrimaryBackgroundGradient"
                                  Center="50%,50%"
@@ -24,106 +24,106 @@
                                  RadiusX="75%"
                                  RadiusY="65%">
                 <GradientStop Offset="0" Color="#4750f6" />    <!-- Center -->
-                <GradientStop Offset="0.35" Color="#2f309c"/>  <!-- Middle -->
-                <GradientStop Offset="0.86" Color="#191830"/>    <!-- Edge -->
+                <GradientStop Offset="0.35" Color="#2f309c" />  <!-- Middle -->
+                <GradientStop Offset="0.86" Color="#191830" />    <!-- Edge -->
             </RadialGradientBrush>
-            
+
             <!-- Selected item gradient -->
             <LinearGradientBrush x:Key="SelectedItemGradient" StartPoint="0%,0%" EndPoint="100%,100%">
-                <GradientStop Offset="0" Color="#80a1a6ac"/>
-                <GradientStop Offset="1" Color="#80848c97"/>
+                <GradientStop Offset="0" Color="#80a1a6ac" />
+                <GradientStop Offset="1" Color="#80848c97" />
             </LinearGradientBrush>
-            
+
 
             <!-- Sidebar Gradient -->
             <LinearGradientBrush x:Key="SideBarGradient" StartPoint="0%, 0%" EndPoint="100%, 100%">
-                <GradientStop Offset="0" Color="#F2080c27"/>
-                <GradientStop Offset="1" Color="#F21b2051"/>
+                <GradientStop Offset="0" Color="#F2080c27" />
+                <GradientStop Offset="1" Color="#F21b2051" />
             </LinearGradientBrush>
-            
+
             <!-- Floating Gradient -->
             <LinearGradientBrush x:Key="FloatingGradient" StartPoint="0%, 0%" EndPoint="100%, 100%">
-                <GradientStop Offset="0" Color="#D8080c27"/>
-                <GradientStop Offset="1" Color="#D81b2051"/>
+                <GradientStop Offset="0" Color="#D8080c27" />
+                <GradientStop Offset="1" Color="#D81b2051" />
             </LinearGradientBrush>
-            
+
             <!-- Element Background Gradient -->
             <LinearGradientBrush x:Key="ElementBackgroundGradient" StartPoint="0%, 0%" EndPoint="100%, 100%">
-               <GradientStop Offset="0" Color="#090DA7"/> 
-               <GradientStop Offset="1" Color="#0d1643"/>
+                <GradientStop Offset="0" Color="#090DA7" />
+                <GradientStop Offset="1" Color="#0d1643" />
             </LinearGradientBrush>
-            
+
 
             <!-- Elements Border -->
-            
+
             <SolidColorBrush x:Key="PrimaryHoverForeground">#E8DFF6</SolidColorBrush>
-            
+
             <LinearGradientBrush x:Key="ActiveBorderGradient" StartPoint="0%, 0%" EndPoint="100%, 100%">
                 <GradientStop Offset="0" Color="#6382e6" />
                 <GradientStop Offset="0.53" Color="#b8b1f2" />
                 <GradientStop Offset="1" Color="#6382e6" />
             </LinearGradientBrush>
-            
+
             <LinearGradientBrush x:Key="HoverBorderGradient" StartPoint="0%, 0%" EndPoint="100%, 100%">
-                <GradientStop Offset="0" Color="#ded2f1"/>
-                <GradientStop Offset="0.53" Color="#c7b2e7"/>
-                <GradientStop Offset="1" Color="#ded2f1"/>
+                <GradientStop Offset="0" Color="#ded2f1" />
+                <GradientStop Offset="0.53" Color="#c7b2e7" />
+                <GradientStop Offset="1" Color="#ded2f1" />
             </LinearGradientBrush>
-            
+
             <LinearGradientBrush x:Key="DefaultBorderGradient" StartPoint="0%, 0%" EndPoint="100%, 100%">
-                <GradientStop Offset="0" Color="#a9a4aa"/>
-                <GradientStop Offset="0.53" Color="#b5adb6"/>
-                <GradientStop Offset="1" Color="#c1b6c2"/>
+                <GradientStop Offset="0" Color="#a9a4aa" />
+                <GradientStop Offset="0.53" Color="#b5adb6" />
+                <GradientStop Offset="1" Color="#c1b6c2" />
             </LinearGradientBrush>
 
             <LinearGradientBrush x:Key="ActiveGradientText" StartPoint="0%, 0%" EndPoint="100%, 0%">
-                <GradientStop Offset="0" Color="#7C59CD"></GradientStop>
-                <GradientStop Offset="1" Color="#7C59AB"></GradientStop>
+                <GradientStop Offset="0" Color="#7C59CD" />
+                <GradientStop Offset="1" Color="#7C59AB" />
             </LinearGradientBrush>
 
             <LinearGradientBrush x:Key="ActiveGradient" StartPoint="0%, 0%" EndPoint="100%, 0%">
-                <GradientStop Offset="0" Color="#6633DD"></GradientStop>
-                <GradientStop Offset="1" Color="#431B9F"></GradientStop>
+                <GradientStop Offset="0" Color="#6633DD" />
+                <GradientStop Offset="1" Color="#431B9F" />
             </LinearGradientBrush>
 
             <LinearGradientBrush x:Key="ActiveHoverGradient" StartPoint="0%, 0%" EndPoint="100%, 0%">
-                <GradientStop Offset="0" Color="#6633DD"></GradientStop>
-                <GradientStop Offset="1" Color="#6633AD"></GradientStop>
+                <GradientStop Offset="0" Color="#6633DD" />
+                <GradientStop Offset="1" Color="#6633AD" />
             </LinearGradientBrush>
 
             <LinearGradientBrush x:Key="HoverGradient" StartPoint="0%, 0%" EndPoint="100%, 0%">
-                <GradientStop Offset="0" Color="#6633DD"></GradientStop>
-                <GradientStop Offset="1" Color="#431B9F"></GradientStop>
+                <GradientStop Offset="0" Color="#6633DD" />
+                <GradientStop Offset="1" Color="#431B9F" />
             </LinearGradientBrush>
 
             <LinearGradientBrush x:Key="SuccessGradient" StartPoint="0%, 0%" EndPoint="100%, 0%">
-                <GradientStop Offset="0" Color="#00ff00"></GradientStop>
-                <GradientStop Offset="1" Color="#009900"></GradientStop>
+                <GradientStop Offset="0" Color="#00ff00" />
+                <GradientStop Offset="1" Color="#009900" />
             </LinearGradientBrush>
 
             <LinearGradientBrush x:Key="SuccessHoverGradient" StartPoint="0%, 0%" EndPoint="100%, 0%">
-                <GradientStop Offset="0" Color="#44ff44"></GradientStop>
-                <GradientStop Offset="1" Color="#55cc55"></GradientStop>
+                <GradientStop Offset="0" Color="#44ff44" />
+                <GradientStop Offset="1" Color="#55cc55" />
             </LinearGradientBrush>
 
             <LinearGradientBrush x:Key="AlertGradient" StartPoint="0%, 0%" EndPoint="100%, 0%">
-                <GradientStop Offset="0" Color="#ffff00"></GradientStop>
-                <GradientStop Offset="1" Color="#ff8800"></GradientStop>
+                <GradientStop Offset="0" Color="#ffff00" />
+                <GradientStop Offset="1" Color="#ff8800" />
             </LinearGradientBrush>
 
             <LinearGradientBrush x:Key="AlertHoverGradient" StartPoint="0%, 0%" EndPoint="100%, 0%">
-                <GradientStop Offset="0" Color="#ffff00"></GradientStop>
-                <GradientStop Offset="1" Color="#ffff00"></GradientStop>
+                <GradientStop Offset="0" Color="#ffff00" />
+                <GradientStop Offset="1" Color="#ffff00" />
             </LinearGradientBrush>
 
             <LinearGradientBrush x:Key="DangerGradient" StartPoint="0%, 0%" EndPoint="100%, 0%">
-                <GradientStop Offset="0" Color="#ff0000"></GradientStop>
-                <GradientStop Offset="1" Color="#aa0000"></GradientStop>
+                <GradientStop Offset="0" Color="#ff0000" />
+                <GradientStop Offset="1" Color="#aa0000" />
             </LinearGradientBrush>
 
             <LinearGradientBrush x:Key="DangerHoverGradient" StartPoint="0%, 0%" EndPoint="100%, 0%">
-                <GradientStop Offset="0" Color="#ff4444"></GradientStop>
-                <GradientStop Offset="1" Color="#bb1111"></GradientStop>
+                <GradientStop Offset="0" Color="#ff4444" />
+                <GradientStop Offset="1" Color="#bb1111" />
             </LinearGradientBrush>
 
         </ResourceDictionary>

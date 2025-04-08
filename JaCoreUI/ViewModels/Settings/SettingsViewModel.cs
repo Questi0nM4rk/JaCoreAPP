@@ -9,4 +9,9 @@ public partial class SettingsViewModel() : PageViewModel(ApplicationPageNames.Se
     {
         throw new System.NotImplementedException();
     }
+
+    public override bool Validate()
+    {
+        throw new System.NotImplementedException();
+    }
 }

@@ -3,135 +3,130 @@
         xmlns:local="using:JaCoreUI.Data"
         xmlns:data="clr-namespace:JaCoreUI.Data">
 
-  <!-- Preview with sample data -->
-  <Design.PreviewWith>
-    <Border Padding="20" Width="600" Height="300" Background="{DynamicResource PrimaryBackgroundGradient}">
-      <Border Classes="floating">
-        <DataGrid x:DataType="data:DataGridDesignData">
-          <DataGrid.DataContext>
-            <local:DataGridDesignData />
-          </DataGrid.DataContext>
-          <DataGrid.ItemsSource>
-            <Binding Path="SampleItems" />
-          </DataGrid.ItemsSource>
-          <DataGrid.Columns>
-            <DataGridTextColumn Header="Name" Width="*" Binding="{Binding Name}" />
-            <DataGridTextColumn Header="Status" Width="*" Binding="{Binding Status}" />
-            <DataGridTextColumn Header="Last Updated" Width="*" Binding="{Binding LastUpdated}" />
-            <DataGridTemplateColumn Header="Actions" Width="Auto">
-              <DataGridTemplateColumn.CellTemplate>
-                <DataTemplate>
-                  <StackPanel Orientation="Horizontal" Spacing="4" Margin="4">
-                    <Button Content="Edit" Classes="small" />
-                    <Button Content="Delete" Classes="small danger" />
-                  </StackPanel>
-                </DataTemplate>
-              </DataGridTemplateColumn.CellTemplate>
-            </DataGridTemplateColumn>
-          </DataGrid.Columns>
-        </DataGrid>
-      </Border>
+    <!-- Preview with sample data -->
+    <Design.PreviewWith>
+        <Border Padding="20" Width="600" Height="300" Background="{DynamicResource PrimaryBackgroundGradient}">
+            <Border Classes="floating">
+                <DataGrid x:DataType="data:DataGridDesignData">
+                    <DataGrid.DataContext>
+                        <local:DataGridDesignData />
+                    </DataGrid.DataContext>
+                    <DataGrid.ItemsSource>
+                        <Binding Path="SampleItems" />
+                    </DataGrid.ItemsSource>
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Name" Width="*" Binding="{Binding Name}" />
+                        <DataGridTextColumn Header="Status" Width="*" Binding="{Binding Status}" />
+                        <DataGridTextColumn Header="Last Updated" Width="*" Binding="{Binding LastUpdated}" />
+                        <DataGridTemplateColumn Header="Actions" Width="Auto">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal" Spacing="4" Margin="4">
+                                        <Button Content="Edit" Classes="small" />
+                                        <Button Content="Delete" Classes="small danger" />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Border>
 
-    </Border>
-  </Design.PreviewWith>
+        </Border>
+    </Design.PreviewWith>
 
-  <!-- DataGrid Base Style -->
-  <Style Selector="DataGrid">
-    <Setter Property="FocusAdorner" Value="{x:Null}"/>
-    <Setter Property="IsReadOnly" Value="True"/>
-    <Setter Property="AutoGenerateColumns" Value="False"/>
-    <Setter Property="Background" Value="Transparent"/>
-    <Setter Property="Foreground" Value="{DynamicResource PrimaryForeground}"/>
-    <Setter Property="BorderThickness" Value="0"/>
-    <Setter Property="CornerRadius" Value="15"/>
-    <Setter Property="RowBackground" Value="Transparent"/>
-    <Setter Property="BorderBrush" Value="Transparent"/>
-    <Setter Property="HorizontalGridLinesBrush" Value="{DynamicResource PrimaryBorderBrush}"/>
-    <Setter Property="VerticalGridLinesBrush" Value="{DynamicResource PrimaryBorderBrush}"/>
-    <Setter Property="CanUserResizeColumns" Value="True"/>
-    <Setter Property="CanUserReorderColumns" Value="True"/>
-    <Setter Property="CanUserSortColumns" Value="True"/>
-    <Setter Property="GridLinesVisibility" Value="None"/>
-    <Setter Property="HorizontalScrollBarVisibility" Value="Auto"/>
-    <Setter Property="VerticalScrollBarVisibility" Value="Auto"/>
-    <Setter Property="SelectionMode" Value="Extended"/>
-    <Setter Property="HeadersVisibility" Value="Column"/>
-  </Style>
-  
-  <!-- Column Header Style -->
-  <Style Selector="DataGridColumnHeader">
-    <Setter Property="Background" Value="Transparent"/>
-    <Setter Property="CornerRadius" Value="15"/>
-    <Setter Property="Foreground" Value="{DynamicResource PrimaryForeground}"/>
-    <Setter Property="FontWeight" Value="SemiBold"/>
-    <Setter Property="Padding" Value="10 8"/>
-    <Setter Property="BorderBrush" Value="Transparent"/>
-    <Setter Property="SeparatorBrush" Value="{DynamicResource PrimaryBorderBrush}"/>
-    <Setter Property="HorizontalContentAlignment" Value="Left"/>
-    <Setter Property="VerticalContentAlignment" Value="Center"/>
-    <Setter Property="AreSeparatorsVisible" Value="False"/>
-  </Style>
+    <!-- DataGrid Base Style -->
+    <Style Selector="DataGrid">
+        <Setter Property="IsReadOnly" Value="True" />
+        <Setter Property="AutoGenerateColumns" Value="False" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{DynamicResource PrimaryForeground}" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="CornerRadius" Value="15" />
+        <Setter Property="RowBackground" Value="Transparent" />
+        <Setter Property="BorderBrush" Value="Transparent" />
+        <Setter Property="HorizontalGridLinesBrush" Value="{DynamicResource PrimaryBorderBrush}" />
+        <Setter Property="VerticalGridLinesBrush" Value="{DynamicResource PrimaryBorderBrush}" />
+        <Setter Property="CanUserResizeColumns" Value="True" />
+        <Setter Property="CanUserReorderColumns" Value="True" />
+        <Setter Property="CanUserSortColumns" Value="True" />
+        <Setter Property="GridLinesVisibility" Value="None" />
+        <Setter Property="HorizontalScrollBarVisibility" Value="Auto" />
+        <Setter Property="VerticalScrollBarVisibility" Value="Auto" />
+        <Setter Property="SelectionMode" Value="Extended" />
+        <Setter Property="HeadersVisibility" Value="Column" />
+    </Style>
 
-  <!-- Column Header Hover -->
-  <Style Selector="DataGridColumnHeader:pointerover">
-    <Setter Property="Background" Value="{DynamicResource PrimaryHoverBackground}"/>
-  </Style>
+    <!-- Column Header Style -->
+    <Style Selector="DataGridColumnHeader">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="CornerRadius" Value="15" />
+        <Setter Property="Foreground" Value="{DynamicResource PrimaryForeground}" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="Padding" Value="10 8" />
+        <Setter Property="BorderBrush" Value="Transparent" />
+        <Setter Property="SeparatorBrush" Value="{DynamicResource PrimaryBorderBrush}" />
+        <Setter Property="HorizontalContentAlignment" Value="Left" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="AreSeparatorsVisible" Value="False" />
+    </Style>
 
-  <!-- Row Style -->
-  <Style Selector="DataGridRow">
-    <Setter Property="Padding" Value="0"/>
-    <Setter Property="MinHeight" Value="32"/>
-    <Setter Property="Foreground" Value="{DynamicResource PrimaryForeground}"/>
-  </Style>
+    <!-- Column Header Hover -->
+    <Style Selector="DataGridColumnHeader:pointerover">
+        <Setter Property="Background" Value="{DynamicResource PrimaryHoverBackground}" />
+    </Style>
 
-  <!-- Row Hover -->
-  <Style Selector="DataGridRow:pointerover">
-    <Setter Property="Background" Value="{DynamicResource PrimaryHoverBackground}"/>
-  </Style>
+    <!-- Row Style -->
+    <Style Selector="DataGridRow">
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="MinHeight" Value="32" />
+        <Setter Property="Foreground" Value="{DynamicResource PrimaryForeground}" />
+    </Style>
 
-  <!-- Row Selected -->
-  <Style Selector="DataGridRow:selected">
-    <Setter Property="Background" Value="{DynamicResource ActiveGradient}"/>
-    <Setter Property="Foreground" Value="{DynamicResource PrimaryHoverForeground}"/>
-  </Style>
+    <!-- Row Hover -->
+    <Style Selector="DataGridRow:pointerover">
+        <Setter Property="Background" Value="{DynamicResource PrimaryHoverBackground}" />
+    </Style>
 
-  <!-- Cell Style -->
-  <Style Selector="DataGridCell">
-    <Setter Property="Focusable" Value="False"/>
-    <Setter Property="FocusAdorner" Value="{x:Null}"/>
-    <Setter Property="IsTabStop" Value="False"/>
-    <Setter Property="Padding" Value="10 6"/>
-    <Setter Property="BorderThickness" Value="0"/>
-    <Setter Property="Background" Value="Transparent"/>
-    <Setter Property="VerticalContentAlignment" Value="Center"/>
-  </Style>
+    <!-- Row Selected -->
+    <Style Selector="DataGridRow:selected">
+        <Setter Property="Background" Value="{DynamicResource ActiveGradient}" />
+        <Setter Property="Foreground" Value="{DynamicResource PrimaryHoverForeground}" />
+    </Style>
 
-  <Style Selector="DataGridCell > ContentPresenter">
-    <Setter Property="Margin" Value="0"/>
-    <Setter Property="Padding" Value="0"/>
-    <Setter Property="BorderThickness" Value="0"/>
-  </Style>
-  
-  <Style Selector="DataGridCell:selected">
-    <Setter Property="FocusAdorner" Value="{x:Null}"/>
-    <Setter Property="BorderThickness" Value="0"/>
-    <Setter Property="BorderBrush" Value="Transparent"/>
-  </Style>
-  
-  <!-- Small Button Style for DataGrid Actions -->
-  <Style Selector="Button.small">
-    <Setter Property="Padding" Value="8 4"/>
-    <Setter Property="FontSize" Value="12"/>
-    <Setter Property="CornerRadius" Value="4"/>
-    <Setter Property="MinWidth" Value="60"/>
-  </Style>
+    <!-- Cell Style -->
+    <Style Selector="DataGridCell">
+        <Setter Property="Padding" Value="10 6" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+    </Style>
 
-  <!-- Danger Button Style -->
-  <Style Selector="Button.danger">
-    <Setter Property="Background" Value="{DynamicResource DangerGradient}"/>
-    <Setter Property="Foreground" Value="White"/>
-  </Style>
-  <Style Selector="Button.danger:pointerover">
-    <Setter Property="Background" Value="{DynamicResource DangerHoverGradient}"/>
-  </Style>
+    <Style Selector="DataGridCell > ContentPresenter">
+        <Setter Property="Margin" Value="0" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="BorderThickness" Value="0" />
+    </Style>
+
+    <Style Selector="DataGridCell:selected">
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="BorderBrush" Value="Transparent" />
+    </Style>
+
+    <!-- Small Button Style for DataGrid Actions -->
+    <Style Selector="Button.small">
+        <Setter Property="Padding" Value="8 4" />
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="CornerRadius" Value="4" />
+        <Setter Property="MinWidth" Value="60" />
+    </Style>
+
+    <!-- Danger Button Style -->
+    <Style Selector="Button.danger">
+        <Setter Property="Background" Value="{DynamicResource DangerGradient}" />
+        <Setter Property="Foreground" Value="White" />
+    </Style>
+    <Style Selector="Button.danger:pointerover">
+        <Setter Property="Background" Value="{DynamicResource DangerHoverGradient}" />
+    </Style>
 </Styles>

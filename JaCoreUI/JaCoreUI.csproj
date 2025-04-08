@@ -10,125 +10,121 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="ActiproSoftware.Controls.Avalonia" Version="25.1.1" />
-        <PackageReference Include="Avalonia" Version="11.2.5" />
-        <PackageReference Include="Avalonia.Controls.DataGrid" Version="11.2.5" />
-        <PackageReference Include="Avalonia.Desktop" Version="11.2.5" />
-        <PackageReference Include="Avalonia.Svg.Skia" Version="11.2.0.2" />
-        <PackageReference Include="Avalonia.Themes.Fluent" Version="11.2.5" />
-        <PackageReference Include="Avalonia.Fonts.Inter" Version="11.2.5" />
+        <PackageReference Include="ActiproSoftware.Controls.Avalonia" Version="25.1.1"/>
+        <PackageReference Include="Avalonia" Version="11.2.5"/>
+        <PackageReference Include="Avalonia.Controls.DataGrid" Version="11.2.5"/>
+        <PackageReference Include="Avalonia.Desktop" Version="11.2.5"/>
+        <PackageReference Include="Avalonia.Svg.Skia" Version="11.2.0.2"/>
+        <PackageReference Include="Avalonia.Themes.Fluent" Version="11.2.5"/>
+        <PackageReference Include="Avalonia.Fonts.Inter" Version="11.2.5"/>
         <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
         <PackageReference Include="Avalonia.Diagnostics" Version="11.2.5">
             <IncludeAssets Condition="'$(Configuration)' != 'Debug'">None</IncludeAssets>
             <PrivateAssets Condition="'$(Configuration)' != 'Debug'">All</PrivateAssets>
         </PackageReference>
-        <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
-        <PackageReference Include="Irihi.Ursa" Version="1.9.0" />
-        <PackageReference Include="Irihi.Ursa.Themes.Semi" Version="1.9.0" />
-        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.0-preview.1.25080.5" />
-        <PackageReference Include="Semi.Avalonia" Version="11.2.1.5" />
+        <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0"/>
+        <PackageReference Include="Irihi.Ursa" Version="1.9.0"/>
+        <PackageReference Include="Irihi.Ursa.Themes.Semi" Version="1.9.0"/>
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.0-preview.1.25080.5"/>
+        <PackageReference Include="Semi.Avalonia" Version="11.2.1.5"/>
     </ItemGroup>
 
     <ItemGroup>
-        <Folder Include="Assets\" />
-        <Folder Include="Themes\" />
-        <Folder Include="ViewModels\Debug\" />
-        <Folder Include="ViewModels\Employee\" />
-        <Folder Include="Views\Debug\" />
-        <Folder Include="Views\Settings\" />
+        <Folder Include="Assets\"/>
+        <Folder Include="Themes\"/>
+        <Folder Include="ViewModels\Debug\"/>
+        <Folder Include="ViewModels\Employee\"/>
+        <Folder Include="Views\Debug\"/>
+        <Folder Include="Views\Settings\"/>
     </ItemGroup>
 
     <ItemGroup>
-      <None Remove="Assets\Images\applogo.svg" />
-      <AvaloniaResource Include="Assets\Images\applogo.svg" />
-      <None Remove="Assets\Images\biglogo.svg" />
-      <AvaloniaResource Include="Assets\Images\biglogo.svg" />
-      <None Remove="Assets\Fonts\NotoSansJP.ttf" />
-      <AvaloniaResource Include="Assets\Fonts\NotoSansJP.ttf" />
-      <None Remove="Assets\Fonts\Phosphor.ttf" />
-      <None Remove="Assets\Fonts\Phosphor-Fill.ttf" />
-      <None Remove="Assets\Images\usericon.svg" />
-      <AvaloniaResource Include="Assets\Images\usericon.svg" />
-      <None Remove="Assets\Images\template.svg" />
-      <None Remove="Assets\Images\background.svg" />
-      <None Remove="Assets\Images\compound.svg" />
-      <AvaloniaResource Include="Assets\Images\chembackground.svg" />
-      <None Remove="Assets\Images\chembackground.svg" />
-      <AvaloniaResource Include="Assets\Images\chembackground.svg" />
-      <None Remove="Assets\Images\small_logo.svg" />
-      <AvaloniaResource Include="Assets\Images\small_logo.svg" />
+        <None Remove="Assets\Images\applogo.svg"/>
+        <AvaloniaResource Include="Assets\Images\applogo.svg"/>
+        <None Remove="Assets\Images\biglogo.svg"/>
+        <AvaloniaResource Include="Assets\Images\biglogo.svg"/>
+        <None Remove="Assets\Fonts\NotoSansJP.ttf"/>
+        <AvaloniaResource Include="Assets\Fonts\NotoSansJP.ttf"/>
+        <None Remove="Assets\Fonts\Phosphor.ttf"/>
+        <None Remove="Assets\Fonts\Phosphor-Fill.ttf"/>
+        <None Remove="Assets\Images\usericon.svg"/>
+        <AvaloniaResource Include="Assets\Images\usericon.svg"/>
+        <None Remove="Assets\Images\template.svg"/>
+        <None Remove="Assets\Images\background.svg"/>
+        <None Remove="Assets\Images\compound.svg"/>
+        <AvaloniaResource Include="Assets\Images\chembackground.svg"/>
+        <None Remove="Assets\Images\chembackground.svg"/>
+        <AvaloniaResource Include="Assets\Images\chembackground.svg"/>
+        <None Remove="Assets\Images\small_logo.svg"/>
+        <AvaloniaResource Include="Assets\Images\small_logo.svg"/>
     </ItemGroup>
 
     <ItemGroup>
-      <Compile Update="Controls\IconButton.axaml.cs">
-        <DependentUpon>IconButton.axaml</DependentUpon>
-        <SubType>Code</SubType>
-      </Compile>
-      <Compile Update="Controls\IconButton.axaml.cs">
-        <DependentUpon>IconButton.axaml</DependentUpon>
-        <SubType>Code</SubType>
-      </Compile>
-      <Compile Update="Views\Admin\DashBoardView.axaml.cs">
-        <DependentUpon>DashBoardView.axaml</DependentUpon>
-        <SubType>Code</SubType>
-      </Compile>
-      <Compile Update="Views\Device\DeviceCreationView.axaml.cs">
-        <DependentUpon>DeviceCreationView.axaml</DependentUpon>
-        <SubType>Code</SubType>
-      </Compile>
-      <Compile Update="Views\Device\DeviceDetailsView.axaml.cs">
-        <DependentUpon>DeviceDetailsView.axaml</DependentUpon>
-        <SubType>Code</SubType>
-      </Compile>
-      <Compile Update="Views\Device\DevicesView.axaml.cs">
-        <DependentUpon>DevicesView.axaml</DependentUpon>
-        <SubType>Code</SubType>
-      </Compile>
-      <Compile Update="Views\Production\ProductionsView.axaml.cs">
-        <DependentUpon>ProductionsView.axaml</DependentUpon>
-        <SubType>Code</SubType>
-      </Compile>
-      <Compile Update="Views\Template\TemplateDetailsView.axaml.cs">
-        <DependentUpon>TemplateDetailsView.axaml</DependentUpon>
-        <SubType>Code</SubType>
-      </Compile>
-      <Compile Update="Views\Template\TemplatesView.axaml.cs">
-        <DependentUpon>TemplatesView.axaml</DependentUpon>
-        <SubType>Code</SubType>
-      </Compile>
-      <Compile Update="Views\Shell\ShellView.axaml.cs">
-        <DependentUpon>MainWindow.axaml</DependentUpon>
-        <SubType>Code</SubType>
-      </Compile>
-      <Compile Update="Controls\UserButton.axaml.cs">
-        <DependentUpon>UserButton.axaml</DependentUpon>
-        <SubType>Code</SubType>
-      </Compile>
-      <Compile Update="Controls\ListItem.axaml.cs">
-        <DependentUpon>ListBoxItem.axaml</DependentUpon>
-        <SubType>Code</SubType>
-      </Compile>
-      <Compile Update="Controls\SideBar.axaml.cs">
-        <DependentUpon>SideBar.axaml</DependentUpon>
-        <SubType>Code</SubType>
-      </Compile>
+        <Compile Update="Controls\IconButton.axaml.cs">
+            <DependentUpon>IconButton.axaml</DependentUpon>
+            <SubType>Code</SubType>
+        </Compile>
+        <Compile Update="Controls\IconButton.axaml.cs">
+            <DependentUpon>IconButton.axaml</DependentUpon>
+            <SubType>Code</SubType>
+        </Compile>
+        <Compile Update="Views\Admin\DashBoardView.axaml.cs">
+            <DependentUpon>DashBoardView.axaml</DependentUpon>
+            <SubType>Code</SubType>
+        </Compile>
+        <Compile Update="Views\Device\DeviceDetailsView.axaml.cs">
+            <DependentUpon>DeviceDetailsView.axaml</DependentUpon>
+            <SubType>Code</SubType>
+        </Compile>
+        <Compile Update="Views\Device\DevicesView.axaml.cs">
+            <DependentUpon>DevicesView.axaml</DependentUpon>
+            <SubType>Code</SubType>
+        </Compile>
+        <Compile Update="Views\Production\ProductionsView.axaml.cs">
+            <DependentUpon>ProductionsView.axaml</DependentUpon>
+            <SubType>Code</SubType>
+        </Compile>
+        <Compile Update="Views\Template\TemplateDetailsView.axaml.cs">
+            <DependentUpon>TemplateDetailsView.axaml</DependentUpon>
+            <SubType>Code</SubType>
+        </Compile>
+        <Compile Update="Views\Template\TemplatesView.axaml.cs">
+            <DependentUpon>TemplatesView.axaml</DependentUpon>
+            <SubType>Code</SubType>
+        </Compile>
+        <Compile Update="Views\Shell\ShellView.axaml.cs">
+            <DependentUpon>MainWindow.axaml</DependentUpon>
+            <SubType>Code</SubType>
+        </Compile>
+        <Compile Update="Controls\UserButton.axaml.cs">
+            <DependentUpon>UserButton.axaml</DependentUpon>
+            <SubType>Code</SubType>
+        </Compile>
+        <Compile Update="Controls\ListItem.axaml.cs">
+            <DependentUpon>ListBoxItem.axaml</DependentUpon>
+            <SubType>Code</SubType>
+        </Compile>
+        <Compile Update="Controls\SideBar.axaml.cs">
+            <DependentUpon>SideBar.axaml</DependentUpon>
+            <SubType>Code</SubType>
+        </Compile>
     </ItemGroup>
 
     <ItemGroup>
-      <AdditionalFiles Include="Controls\CheckBox.axaml" />
-      <AdditionalFiles Include="Controls\ComboBox.axaml" />
-      <AdditionalFiles Include="Controls\ComboBoxItem.axaml" />
-      <AdditionalFiles Include="Controls\IconButton.axaml" />
-      <AdditionalFiles Include="Controls\TabControl.axaml" />
-      <AdditionalFiles Include="Controls\TabItem.axaml" />
-      <AdditionalFiles Include="Controls\ToggleButton.axaml" />
+        <AdditionalFiles Include="Controls\CheckBox.axaml"/>
+        <AdditionalFiles Include="Controls\ComboBox.axaml"/>
+        <AdditionalFiles Include="Controls\ComboBoxItem.axaml"/>
+        <AdditionalFiles Include="Controls\IconButton.axaml"/>
+        <AdditionalFiles Include="Controls\TabControl.axaml"/>
+        <AdditionalFiles Include="Controls\TabItem.axaml"/>
+        <AdditionalFiles Include="Controls\ToggleButton.axaml"/>
     </ItemGroup>
 
     <ItemGroup>
-      <AvaloniaResource Include="Assets\Fonts\Phosphor-Fill.ttf" />
+        <AvaloniaResource Include="Assets\Fonts\Phosphor-Fill.ttf"/>
     </ItemGroup>
 
     <ItemGroup>
-      <AvaloniaResource Include="Assets\Fonts\Phosphor.ttf" />
+        <AvaloniaResource Include="Assets\Fonts\Phosphor.ttf"/>
     </ItemGroup>
 </Project>

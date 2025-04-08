@@ -70,24 +70,24 @@
                                            Content="{Binding $parent[controls:ListItem].Content}" />
                                 </StackPanel>
                             </Grid>
-                            
+
                         </DataTemplate>
                     </ContentPresenter.ContentTemplate>
 
                 </ContentPresenter>
             </ControlTemplate>
         </Setter>
-        
-        
+
+
         <Style Selector="^:pressed">
             <Setter Property="RenderTransform" Value="scale(0.93)" />
         </Style>
 
         <Style Selector="^:selected /template/ ContentPresenter#PART_ContentPresenter">
-            <Setter Property="Background" Value="{DynamicResource SelectedItemGradient}"/>
-            <Setter Property="BorderBrush" Value="{DynamicResource ActiveBorderGradient}"/>
+            <Setter Property="Background" Value="{DynamicResource SelectedItemGradient}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource ActiveBorderGradient}" />
         </Style>
-        
+
         <Style Selector="^:pointerover /template/ ContentPresenter#PART_ContentPresenter">
             <Setter Property="Background" Value="{DynamicResource HoverGradient}" />
             <Setter Property="BorderBrush" Value="{DynamicResource HoverBorderGradient}" />

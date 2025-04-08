@@ -2,35 +2,35 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <Design.PreviewWith>
         <Border Padding="20" Background="{DynamicResource PrimaryBackgroundGradient}">
-            
+
             <StackPanel>
-                <Button Content="test"/>
-                <Button Content="test"/>
-                <Separator/>
-                <Button Content="test"/>
-                <Button Content="test"/>
-                <Separator/>
-                <Button Content="test"/>
-                <Button Content="test"/>
+                <Button Content="test" />
+                <Button Content="test" />
+                <Separator />
+                <Button Content="test" />
+                <Button Content="test" />
+                <Separator />
+                <Button Content="test" />
+                <Button Content="test" />
                 <Rectangle Height="1" Width="100">
                     <Rectangle.Fill>
                         <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,0%">
-                            <GradientStop Offset="0" Color="Black"/>
-                            <GradientStop Offset="0.5" Color="White"/>
-                            <GradientStop Offset="1" Color="Black"/>
+                            <GradientStop Offset="0" Color="Black" />
+                            <GradientStop Offset="0.5" Color="White" />
+                            <GradientStop Offset="1" Color="Black" />
                         </LinearGradientBrush>
                     </Rectangle.Fill>
                 </Rectangle>
-                <Button Content="test"/>
-                <Button Content="test"/>
-                <Separator/>
+                <Button Content="test" />
+                <Button Content="test" />
+                <Separator />
             </StackPanel>
-            
+
         </Border>
     </Design.PreviewWith>
 
     <Style Selector="Separator">
-        <Setter Property="Background" Value="{DynamicResource SeparatorGradient}"/>
-        <Setter Property="VerticalAlignment" Value="Stretch"/>
+        <Setter Property="Background" Value="{DynamicResource SeparatorGradient}" />
+        <Setter Property="VerticalAlignment" Value="Stretch" />
     </Style>
 </Styles>

@@ -10,7 +10,8 @@
 
     <Grid ColumnDefinitions="*, Auto" RowDefinitions="Auto, *">
 
-        <Viewbox Grid.Column="0" Grid.ColumnSpan="2" MaxHeight="70" MinHeight="30" Margin="10" HorizontalAlignment="Center" VerticalAlignment="Center">
+        <Viewbox Grid.Column="0" Grid.ColumnSpan="2" MaxHeight="70" MinHeight="30" Margin="10"
+                 HorizontalAlignment="Center" VerticalAlignment="Center">
             <StackPanel VerticalAlignment="Center">
                 <Label Classes="h1" Content="Přehled" HorizontalAlignment="Center" Foreground="White" />
             </StackPanel>
@@ -29,31 +30,27 @@
                            MaxWidth="1200"
                            MinWidth="400"
                            HorizontalAlignment="Left"
-                           SearchDelay="500" 
-                           SearchFunction="{Binding SearchProductions}"
-                           Collection="{Binding Productions}"
-                           SearchText="{Binding ProductionSearchText, Mode=TwoWay}"
-                           />
+                           SearchDelay="500"
+                           Collection="{Binding ProductionService.Productions}"
+                           SearchText="{Binding ProductionSearchText, Mode=TwoWay}" />
 
                 <DataGrid Grid.Row="2"
                           Margin="0,5,0,0"
-                          ItemsSource="{Binding Productions}">
+                          ItemsSource="{Binding ProductionService.Productions}">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Název" Width="*" Binding="{Binding Name, FallbackValue='N/A'}" />
-                        <DataGridTextColumn Header="Status" Width="*" Binding="{Binding Status, FallbackValue='N/A'}" />
-                        <DataGridTextColumn Header="Zahájeno" Width="*" Binding="{Binding StartDate, FallbackValue='N/A'}" />
-                        <DataGridTextColumn Header="Zodpovědná osoba" Width="*" Binding="{Binding AssignedTo, FallbackValue='N/A'}" />
+                        <DataGridTextColumn Header="Status" Width="*" Binding="{Binding IsCompleted, FallbackValue='N/A'}" />
+                        <DataGridTextColumn Header="Zahájeno" Width="*"
+                                            Binding="{Binding CreatedAt, FallbackValue='N/A'}" />
+                        <DataGridTextColumn Header="Zodpovědná osoba" Width="*"
+                                            Binding="{Binding CreatedBy, FallbackValue='N/A'}" />
                         <DataGridTemplateColumn Header="Akce" Width="Auto">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal" Spacing="4" Margin="4">
                                         <Button Content="Upravit" Classes="small"
-                                                Command="{Binding $parent[DataGrid].((vm:DashBoardViewModel)DataContext).EditProductionCommand, FallbackValue='Unknown'}"
+                                                Command="{Binding $parent[DataGrid].((vm:DashBoardViewModel)DataContext).ProductionDetailsCommand, FallbackValue='Unknown'}"
                                                 CommandParameter="{Binding Id}" />
-
-                                        <Button Content="Detaily" Classes="small" 
-                                                Command="{Binding $parent[DataGrid].((vm:DashBoardViewModel)DataContext).ViewProductionDetailsCommand, FallbackValue='Unknown'}"
-                                                CommandParameter="{Binding Id}"/>
                                     </StackPanel>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
@@ -65,7 +62,7 @@
 
         <!-- Devices Section -->
         <Border Grid.Row="1" Grid.Column="1" MaxWidth="600"
-               Padding="20" Margin="15,15,15,15" Classes="floating">
+                Padding="20" Margin="15,15,15,15" Classes="floating">
             <Grid RowDefinitions="Auto, Auto, *">
                 <Label Grid.Row="0" Classes="h1" Content="Zařízení" Foreground="{DynamicResource PrimaryForeground}"
                        Padding="7" />
@@ -76,25 +73,22 @@
                            MinWidth="300"
                            HorizontalAlignment="Left"
                            SearchDelay="500"
-                           SearchFunction="{Binding SearchDevices}"
-                           Collection="{Binding Devices}"
-                           SearchText="{Binding DeviceSearchText, Mode=TwoWay}"
-                           />
+                           Collection="{Binding DeviceService.Devices}"
+                           SearchText="{Binding DeviceSearchText, Mode=TwoWay}" />
 
                 <DataGrid Grid.Row="2"
                           Margin="0,5,0,0"
-                          ItemsSource="{Binding Devices}">
+                          ItemsSource="{Binding DeviceService.Devices}">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Název" Width="*" Binding="{Binding Name, FallbackValue='N/A'}" />
-                        <DataGridTextColumn Header="Typ" Width="*" Binding="{Binding DeviceType, FallbackValue='N/A'}" />
-                        <DataGridTextColumn Header="Status" Width="*" Binding="{Binding Status, FallbackValue='N/A'}" />
+                        <DataGridTextColumn Header="Typ" Width="*" Binding="{Binding Category, FallbackValue='N/A'}" />
                         <DataGridTemplateColumn Header="Akce" Width="Auto">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal" Spacing="4" Margin="4">
-                                        <Button Content="Detaily" Classes="small" 
-                                                Command="{Binding $parent[DataGrid].((vm:DashBoardViewModel)DataContext).ViewDeviceDetailsCommand, FallbackValue='Unknown'}"
-                                                CommandParameter="{Binding Id}"/>
+                                        <Button Content="Detaily" Classes="small"
+                                                Command="{Binding $parent[DataGrid].((vm:DashBoardViewModel)DataContext).DeviceDetailsCommand, FallbackValue='Unknown'}"
+                                                CommandParameter="{Binding Id}" />
                                     </StackPanel>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>

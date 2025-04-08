@@ -1,48 +1,47 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using JaCoreUI.Models.UI.Base;
 
-namespace JaCoreUI.Models.UI
+namespace JaCoreUI.Models.UI;
+
+/// <summary>
+/// Checkbox UI element
+/// </summary>
+public partial class CheckBoxElement : UIElement
 {
     /// <summary>
-    /// Checkbox UI element
+    /// Current checked state
     /// </summary>
-    public partial class CheckBoxElement : UIElement
+    [ObservableProperty]
+    public partial bool IsChecked { get; set; }
+
+    /// <summary>
+    /// Expected checked state for validation
+    /// </summary>
+    [ObservableProperty]
+    public partial bool ExpectedValue { get; set; }
+
+    /// <summary>
+    /// Validates the current checked state
+    /// </summary>
+    public override bool Validate()
     {
-        /// <summary>
-        /// Current checked state
-        /// </summary>
-        [ObservableProperty]
-        public partial bool IsChecked { get; set; }
+        return !IsRequired || IsChecked == ExpectedValue;
+    }
 
-        /// <summary>
-        /// Expected checked state for validation
-        /// </summary>
-        [ObservableProperty]
-        public partial bool ExpectedValue { get; set; }
-
-        /// <summary>
-        /// Validates the current checked state
-        /// </summary>
-        public override bool Validate()
+    /// <summary>
+    /// Creates a deep clone of this checkbox element
+    /// </summary>
+    public override UIElement Clone()
+    {
+        return new CheckBoxElement
         {
-            return !IsRequired || IsChecked == ExpectedValue;
-        }
-
-        /// <summary>
-        /// Creates a deep clone of this checkbox element
-        /// </summary>
-        public override UIElement Clone()
-        {
-            return new CheckBoxElement
-            {
-                Name = Name,
-                Description = Description,
-                IsRequired = IsRequired,
-                IsReadOnly = IsReadOnly,
-                Label = Label,
-                HelpText = HelpText,
-                ExpectedValue = ExpectedValue
-            };
-        }
+            Name = Name,
+            Description = Description,
+            IsRequired = IsRequired,
+            IsReadOnly = IsReadOnly,
+            Label = Label,
+            HelpText = HelpText,
+            ExpectedValue = ExpectedValue
+        };
     }
 }

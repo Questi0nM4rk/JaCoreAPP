@@ -1,65 +1,61 @@
 <Application xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:vm="clr-namespace:JaCoreUI.ViewModels.Admin"
-             xmlns:v="clr-namespace:JaCoreUI.Views.Admin"
-             xmlns:converters="using:Avalonia.Data.Converters"
              xmlns:local="clr-namespace:JaCoreUI"
-             xmlns:svg="using:Avalonia.Svg.Skia"
              x:Class="JaCoreUI.App"
              RequestedThemeVariant="Dark">
-    
+
     <!-- <Application.DataTemplates> -->
     <!--     <local:ViewLocator></local:ViewLocator> -->
     <!-- </Application.DataTemplates> -->
-    
+
     <Application.Styles>
         <FluentTheme>
             <Style Selector="Window">
-                <Setter Property="FontFamily" Value="{DynamicResource DefaultFontFamily}"></Setter>
+                <Setter Property="FontFamily" Value="{DynamicResource DefaultFontFamily}" />
             </Style>
-            <StyleInclude Source="avares://Avalonia.Controls.DataGrid/Themes/Fluent.xaml"/>
-            <StyleInclude Source="Styles/Buttons.axaml"/>
-            <StyleInclude Source="Styles/General.axaml"/>
-            <StyleInclude Source="Styles/Labels.axaml"/>
-            <StyleInclude Source="Styles/ListBox.axaml"/>
-            <StyleInclude Source="Styles/TextBlock.axaml"/>
-            <StyleInclude Source="Styles/TextBox.axaml"/>
-            <StyleInclude Source="Styles/DataGrid.axaml"/>
-            <StyleInclude Source="Styles/Border.axaml"/>
-            <StyleInclude Source="Styles/Separator.axaml"/>
+            <StyleInclude Source="avares://Avalonia.Controls.DataGrid/Themes/Fluent.xaml" />
+            <StyleInclude Source="Styles/Buttons.axaml" />
+            <StyleInclude Source="Styles/General.axaml" />
+            <StyleInclude Source="Styles/Labels.axaml" />
+            <StyleInclude Source="Styles/ListBox.axaml" />
+            <StyleInclude Source="Styles/TextBlock.axaml" />
+            <StyleInclude Source="Styles/TextBox.axaml" />
+            <StyleInclude Source="Styles/DataGrid.axaml" />
+            <StyleInclude Source="Styles/Border.axaml" />
+            <StyleInclude Source="Styles/Separator.axaml" />
         </FluentTheme>
     </Application.Styles>
-    
+
     <Application.DataTemplates>
-        <local:ViewLocator/>
+        <local:ViewLocator />
     </Application.DataTemplates>
-             
+
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <MergeResourceInclude Source="/Themes/DarkTheme.axaml" />
                 <MergeResourceInclude Source="/Themes/LightTheme.axaml" />
-                <MergeResourceInclude Source="/Controls/IconButton.axaml"/>
-                <MergeResourceInclude Source="/Controls/CheckBox.axaml"/>
-                <MergeResourceInclude Source="/Controls/ToggleButton.axaml"/>
-                <MergeResourceInclude Source="/Controls/ComboBox.axaml"/>
-                <MergeResourceInclude Source="/Controls/ComboBoxItem.axaml"/>
-                <MergeResourceInclude Source="/Controls/ListItem.axaml"/>
-                <MergeResourceInclude Source="/Controls/SideBar.axaml"/>
-                <MergeResourceInclude Source="/Controls/TabControl.axaml"/>
-                <MergeResourceInclude Source="/Controls/TabItem.axaml"/>
-                <MergeResourceInclude Source="/Controls/UserButton.axaml"/>
-                <MergeResourceInclude Source="/Controls/SearchBox.axaml"/>
-                <MergeResourceInclude Source="/Controls/SeparatorLabel.axaml"/>
+                <MergeResourceInclude Source="/Controls/IconButton.axaml" />
+                <MergeResourceInclude Source="/Controls/CheckBox.axaml" />
+                <MergeResourceInclude Source="/Controls/ToggleButton.axaml" />
+                <MergeResourceInclude Source="/Controls/ComboBox.axaml" />
+                <MergeResourceInclude Source="/Controls/ComboBoxItem.axaml" />
+                <MergeResourceInclude Source="/Controls/ListItem.axaml" />
+                <MergeResourceInclude Source="/Controls/SideBar.axaml" />
+                <MergeResourceInclude Source="/Controls/TabControl.axaml" />
+                <MergeResourceInclude Source="/Controls/TabItem.axaml" />
+                <MergeResourceInclude Source="/Controls/UserButton.axaml" />
+                <MergeResourceInclude Source="/Controls/SearchBox.axaml" />
+                <MergeResourceInclude Source="/Controls/SeparatorLabel.axaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
-        
+
         <FontFamily x:Key="Phosphor">/Assets/Fonts/Phosphor.ttf#Phosphor</FontFamily>
         <FontFamily x:Key="PhosphorFill">/Assets/Fonts/Phosphor-Fill.ttf#Phosphor-Fill</FontFamily>
 
         <FontFamily x:Key="DefaultFontFamily">/Assets/Fonts/NotoSansJP.ttf</FontFamily>
-        
+
     </Application.Resources>
-    
-             
+
+
 </Application>

@@ -3,26 +3,22 @@
     <Design.PreviewWith>
         <Border Padding="20" Background="{DynamicResource PrimaryBackgroundGradient}" Width="900" Height="900">
             <StackPanel Spacing="15" HorizontalAlignment="Center" Width="150">
-                <Button Classes="SideButton">
-                    
-                </Button>
-                
-                <Separator/>
-                
-                <UserButton/>
-                
-                <Separator/>
-                
-                <Button Classes="IconButton">
-                    
-                </Button>
+                <Button Classes="SideButton" />
+
+                <Separator />
+
+                <UserButton />
+
+                <Separator />
+
+                <Button Classes="IconButton" />
             </StackPanel>
         </Border>
     </Design.PreviewWith>
 
-    
+
     <Style Selector="Button.SideButton">
-        <Setter Property="HorizontalAlignment" Value="Stretch"/>
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
     </Style>
-    
+
 </Styles>

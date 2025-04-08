@@ -4,5 +4,4 @@ namespace JaCoreUI.ViewModels;
 
 public class ViewModelBase : ObservableObject
 {
-    
 }
