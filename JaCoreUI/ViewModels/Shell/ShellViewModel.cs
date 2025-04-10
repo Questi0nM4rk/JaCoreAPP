@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Runtime.ConstrainedExecution;
+using System.Threading.Tasks;
+using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using JaCoreUI.Controls;
 using JaCoreUI.Data;
 using JaCoreUI.Factories;
+using JaCoreUI.Models.UI;
 using JaCoreUI.Services;
 using JaCoreUI.ViewModels.Admin;
 using JaCoreUI.ViewModels.Settings;
@@ -37,21 +40,32 @@ public partial class ShellViewModel : ObservableObject
         if (value is null)
             throw new ArgumentNullException(nameof(value));
 
-        CurrentPageService.NavigateTo(value.ParentPage);
+        Dispatcher.UIThread.Post(async void () =>
+        {
+            try
+            {
+                await CurrentPageService.NavigateTo(value.ParentPage);
+            }
+            catch (Exception e)
+            {
+                await ErrorDialog.ShowWithButtonsAsync(message: $"Něco se nepovedlo: {e.Message}",
+                                                       title:"Error");
+            }
+        });
     }
 
     public ShellViewModel(ThemeService themeService, CurrentPageService currentPageService)
     {
         Theme = themeService;
         CurrentPageService = currentPageService;
-        CurrentPageService.NavigateTo(ApplicationPageNames.Dashboard);
+        
         SelectedPage = SideBarItems[0];
     }
 
     [RelayCommand]
-    public void GoBack()
+    public async Task GoBack()
     {
-        CurrentPageService.GoBack();
+        await CurrentPageService.GoBack();
 
         foreach (var item in SideBarItems)
         {

@@ -6,9 +6,9 @@ namespace JaCoreUI.Models.Device;
 
 public partial class DeviceCard : ObservableObject
 {
-    [ObservableProperty] public required partial string SerialNumber { get; set; }
+    [ObservableProperty] public partial string? SerialNumber { get; set; }
 
-    [ObservableProperty] public required partial DateTimeOffset? DateOfActivation { get; set; }
+    [ObservableProperty] public partial DateTimeOffset? DateOfActivation { get; set; }
 
     [ObservableProperty] public partial ObservableCollection<Event>? Events { get; set; }
 

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -9,8 +10,29 @@ namespace JaCoreUI.Models.Device;
 /// <summary>
 /// Represents a physical device that can perform operations
 /// </summary>
-public partial class Device : ProductionElement, IOperationElement
+public partial class Device : ObservableObject, IOperationElement
 {
+    /// <summary>
+    /// Unique identifier for the element
+    /// </summary>
+    [ObservableProperty]
+    public partial int Id { get; set; }
+
+    /// <summary>
+    /// Display name of the element
+    /// </summary>
+    [ObservableProperty]
+    public partial string? Name { get; set; }
+
+    /// <summary>
+    /// Optional description or notes
+    /// </summary>
+    [ObservableProperty]
+    public partial string? Description { get; set; }
+    
+    [ObservableProperty]
+    public partial DateTimeOffset? CreatedAt { get; set; }
+    
     /// <summary>
     /// Operations specific to this device
     /// </summary>
@@ -39,6 +61,8 @@ public partial class Device : ProductionElement, IOperationElement
 
     public bool HasCard => DeviceCard != null;
 
+    public bool IsCompleted { get; set; }
+    
     /// <summary>
     /// Validates all device operations
     /// </summary>

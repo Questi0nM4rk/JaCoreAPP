@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using JaCoreUI.Models.Device;
+using JaCoreUI.Models.UI;
 using DeviceCard = JaCoreUI.Models.Device.DeviceCard;
 using DeviceOperation = JaCoreUI.Models.Device.DeviceOperation;
 
@@ -53,26 +55,25 @@ public partial class DeviceApiService : ObservableObject
         _devices = CreateDevices();
     }
 
-    public ObservableCollection<Service> GetServices()
+    public ObservableCollection<Service> GetServices(int page = 0, int count = 10)
     {
-        return _services;
+        return new ObservableCollection<Service>(_services.Skip(page * count).Take(count));
     }
 
-    public ObservableCollection<Supplier> GetSuppliers()
+    public ObservableCollection<Supplier> GetSuppliers(int page = 0, int count = 10)
     {
-        return _suppliers;
+        return new ObservableCollection<Supplier>(_suppliers.Skip(page * count).Take(count));
     }
 
-    public ObservableCollection<Category> GetCategories()
+    public ObservableCollection<Category> GetCategories(int page = 0, int count = 10)
     {
-        return _categories;
+        return new ObservableCollection<Category>(_categories.Skip(page * count).Take(count));
     }
 
-    public ObservableCollection<Models.Device.Device> GetDevices()
+    public ObservableCollection<Models.Device.Device> GetDevices(int page = 0, int count = 10)
     {
-        return _devices;
+        return new ObservableCollection<Models.Device.Device>(_devices.Skip(page * count).Take(count));
     }
-
 
     private ObservableCollection<Service> CreateServices()
     {
@@ -108,7 +109,7 @@ public partial class DeviceApiService : ObservableObject
     {
         var categories = new ObservableCollection<Category>();
 
-        for (var i = 1; i <= 10; i++)
+        for (var i = 1; i <= 20; i++)
             categories.Add(new Category()
             {
                 Id = i,
@@ -122,7 +123,7 @@ public partial class DeviceApiService : ObservableObject
     {
         // dummy load devices
         ObservableCollection<Models.Device.Device> devices = [];
-        for (var i = 0; i <= 21; i++)
+        for (var i = 0; i <= 50; i++)
         {
             var device = new Models.Device.Device
             {
@@ -210,24 +211,51 @@ public partial class DeviceApiService : ObservableObject
     
     // ==============================================
 
-    public Models.Device.Device GetDevice(int deviceId)
+    public async Task<bool> UpdateDevice(Models.Device.Device device)
+    {
+        var remDev = _devices.FirstOrDefault(x => x.Id == device.Id);
+       
+        if (remDev == null)
+        {
+            await ErrorDialog.ShowWithButtonsAsync(message: "No device found for deletion");
+            return false;
+        }
+               
+        _devices.Remove(remDev);
+        _devices.Add(device);
+        return true;
+    }
+    
+    public async Task<bool> DeleteDevice(int deviceId)
+    {
+        var device = _devices.FirstOrDefault(x => x.Id == deviceId);
+
+        if (device == null)
+        {
+            await ErrorDialog.ShowWithButtonsAsync(message: "No device found for deletion");
+            return false;
+        }
+        
+        _devices.Remove(device);
+        return true;
+    }
+    
+    public async Task<Models.Device.Device?> GetDevice(int deviceId)
     {
         var device = _devices.FirstOrDefault(d => d.Id == deviceId);
-        
-        if (device == null)
-            throw new Exception($"Device with id {deviceId} not found"); // Further in, make it check the DB for the device with that ID
-        
-        return device;
+
+        // Further in, make it check the DB for the device with that ID
+        return device ?? null;
     }
 
-    public Models.Device.Device NewDevice()
+    public async Task<Models.Device.Device> NewDevice()
     {
         // Further into the app, this needs to check with the API / DB for the index, so some call that will send new device request to the db and returns it.
 
         return new Models.Device.Device()
         {
             Id = _devices.Count,
-            Name = "Nové Zařízení",
+            Name = null,
             IsCompleted = false,
             CreatedAt = DateTime.Now,
         };

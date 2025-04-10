@@ -13,10 +13,6 @@ namespace JaCoreUI.ViewModels.Device;
 
 public partial class DeviceDetailsViewModel : PageViewModel
 {
-    [ObservableProperty] public partial Models.Device.Device CurrentDevice { get; set; }
-
-    [ObservableProperty] public partial ObservableCollection<Category> Categories { get; set; }
-
     [ObservableProperty] public partial Event? LastCalibration { get; set; }
 
     [ObservableProperty] public partial Event? LastService { get; set; }
@@ -26,9 +22,6 @@ public partial class DeviceDetailsViewModel : PageViewModel
     public DeviceDetailsViewModel(DeviceService deviceService) : base(ApplicationPageNames.DeviceDetails,
         ApplicationPageNames.Devices)
     {
-        CurrentDevice = deviceService.CurrentDevice ?? throw new NullReferenceException();
-        Categories = deviceService.Categories;
-        
         DeviceService = deviceService;
 
         LastCalibration = GetLastCalibration();
@@ -55,15 +48,20 @@ public partial class DeviceDetailsViewModel : PageViewModel
         Console.WriteLine("Adding new card");
     }
 
+    public IRelayCommand SaveDeviceCommand => DeviceService.SaveDeviceCommand;
+
     private Event? GetLastCalibration()
     {
-        if (!CurrentDevice.HasCard)
+        if (DeviceService.TempDevice == null)
+            return null;
+        
+        if (!DeviceService.TempDevice.HasCard)
             return null;
 
-        if (!CurrentDevice.DeviceCard!.HasEvents)
+        if (!DeviceService.TempDevice.DeviceCard!.HasEvents)
             return null;
 
-        var lastCal = CurrentDevice.DeviceCard!.Events!
+        var lastCal = DeviceService.TempDevice.DeviceCard!.Events!
             .Where(e => e.Type == EventType.Calibration)
             .OrderByDescending(e => e.From)
             .FirstOrDefault();
@@ -73,13 +71,16 @@ public partial class DeviceDetailsViewModel : PageViewModel
 
     private Event? GetLastService()
     {
-        if (!CurrentDevice.HasCard)
+        if (DeviceService.TempDevice == null)
+            return null;
+        
+        if (!DeviceService.TempDevice.HasCard)
             return null;
 
-        if (!CurrentDevice.DeviceCard!.HasService)
+        if (!DeviceService.TempDevice.DeviceCard!.HasService)
             return null;
 
-        var lastService = CurrentDevice.DeviceCard!.Events!
+        var lastService = DeviceService.TempDevice.DeviceCard!.Events!
             .Where(e => e.Type == EventType.Service)
             .OrderByDescending(e => e.From)
             .FirstOrDefault();
@@ -94,6 +95,18 @@ public partial class DeviceDetailsViewModel : PageViewModel
 
     public override bool Validate()
     {
-        return !string.IsNullOrEmpty(CurrentDevice.Name);
+        if (DeviceService.TempDevice == null)
+            throw new ArgumentNullException(nameof(DeviceService.TempDevice));
+        
+        if (string.IsNullOrEmpty(DeviceService.TempDevice.Name))
+            return false;
+
+        if (DeviceService.TempDevice.DeviceCard == null)
+            return true;
+        
+        if (DeviceService.TempDevice.DeviceCard.SerialNumber == null)
+            return false;
+
+        return true;
     }
 }

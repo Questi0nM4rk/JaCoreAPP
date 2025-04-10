@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using JaCoreUI.Data;
@@ -16,6 +17,8 @@ public partial class ProductionService : ObservableObject
     
     public Models.Productions.Base.Production? CurrentProduction { get; set; }
 
+    public Models.Productions.Base.Production? TempProduction { get; set; }
+    
     [ObservableProperty] public partial ObservableCollection<Models.Productions.Base.Production> Productions { get; set; }
     
 
@@ -26,22 +29,27 @@ public partial class ProductionService : ObservableObject
         _currentPageService = currentPageService;
         _productionApiService = productionApiService;
     }
-    
+
+    [RelayCommand]
+    private async Task SaveProduction()
+    {
+        
+    }
     
     [RelayCommand]
-    private void ProductionDetails(int id)
+    private async Task ProductionDetails(int id)
     {
         var production = Productions.FirstOrDefault(p => p.Id == id);
 
         CurrentProduction = production ?? throw new ArgumentNullException(nameof(production));
-        _currentPageService.NavigateTo(ApplicationPageNames.ProductionDetails);
+        await _currentPageService.NavigateTo(ApplicationPageNames.ProductionDetails);
     }
         
     [RelayCommand]
-    private void NewDevice(int id)
+    private async Task NewDevice(int id)
     {
         CurrentProduction = _productionApiService.NewProduction();
         Productions.Add(CurrentProduction);
-        _currentPageService.NavigateTo(ApplicationPageNames.DeviceDetails);
+        await _currentPageService.NavigateTo(ApplicationPageNames.DeviceDetails);
     }
 }

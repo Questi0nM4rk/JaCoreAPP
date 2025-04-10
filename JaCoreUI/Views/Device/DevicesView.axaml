@@ -27,7 +27,7 @@
                            VerticalAlignment="Center"
                            SearchDelay="500" />
 
-                <con:IconButton Grid.Column="1" Grid.Row="0" Content="Nové Zařízení" IconText="&#xe3d4;"
+                <IconButton Grid.Column="1" Grid.Row="0" Content="Nové Zařízení" IconText="&#xe3d4;"
                                 Margin="0 0 0 20"
                                 Background="{DynamicResource ElementBackgroundGradient}"
                                 Command="{Binding NewDeviceCommand}"

@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using JaCoreUI.Data;
 using JaCoreUI.Factories;
+using JaCoreUI.Models.UI;
 using JaCoreUI.Services.User;
 using JaCoreUI.ViewModels;
+using MsBox.Avalonia.Enums;
 
 namespace JaCoreUI.Services.Navigation;
 
@@ -23,26 +26,47 @@ public partial class CurrentPageService(PageFactory pageFactory, UserService use
     public bool CanGoBack => NavigationHistory.Count > 1;
 
     [RelayCommand(CanExecute = nameof(CanGoBack))]
-    public void GoBack()
+    public async Task GoBack()
     {
         if (!CanGoBack) return;
 
         if (CurrentPage is null)
             throw new NullReferenceException("CurrentPage is null");
 
-        CurrentPage.Validate();
+        if (!CurrentPage.Validate())
+        {
+            var result = await ErrorDialog.ShowWithButtonsAsync(
+                "You have unsaved changes. Discard changes and continue?", 
+                "Unsaved Changes",
+                ButtonEnum.YesNo);
+        
+            if (result == ButtonResult.No)
+            {
+                return;
+            }
+        }
 
         NavigationHistory.RemoveAt(NavigationHistory.Count - 1);
         CurrentPage = NavigationHistory.LastOrDefault(defaultValue: pageFactory.GetPageViewModel(ApplicationPageNames.Dashboard));
     }
 
     [RelayCommand]
-    public void NavigateTo(ApplicationPageNames name)
+    public async Task NavigateTo(ApplicationPageNames name)
     {
-        if (CurrentPage is null)
-            CurrentPage = pageFactory.GetPageViewModel(ApplicationPageNames.Dashboard);
+        CurrentPage ??= pageFactory.GetPageViewModel(ApplicationPageNames.Dashboard);
         
-        CurrentPage.Validate();
+        if (!CurrentPage.Validate())
+        {
+            var result = await ErrorDialog.ShowWithButtonsAsync(
+                "You have unsaved changes. Discard changes and continue?", 
+                "Unsaved Changes",
+                ButtonEnum.YesNo);
+        
+            if (result == ButtonResult.No)
+            {
+                return;
+            }
+        }
 
         var page = pageFactory.GetPageViewModel(name);
         NavigationHistory.Add(page);
