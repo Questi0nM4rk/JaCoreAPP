@@ -7,16 +7,24 @@
              x:Class="JaCoreUI.Views.Device.DeviceDetailsView"
              x:DataType="vm:DeviceDetailsViewModel">
 
-    <Grid RowDefinitions="Auto, *">
+    <Grid RowDefinitions="Auto, Auto, *">
         <!-- Header -->
         <Viewbox MaxHeight="60" MinHeight="30" Margin="10">
             <StackPanel VerticalAlignment="Center">
                 <Label Classes="h1" Content="Nové Zařízení" HorizontalAlignment="Center" Foreground="White" />
             </StackPanel>
         </Viewbox>
+        
+        <!-- Loading indicator -->
+        <ProgressBar Grid.Row="1" 
+                    IsIndeterminate="True" 
+                    IsVisible="{Binding IsLoading}"
+                    HorizontalAlignment="Stretch"
+                    Height="4"
+                    Margin="15,0,15,0"/>
 
         <!-- Main Content -->
-        <ScrollViewer Grid.Row="1">
+        <ScrollViewer Grid.Row="2">
             <StackPanel>
                 <Border Classes="floating" Padding="20" Margin="15">
                     <StackPanel>
@@ -56,17 +64,23 @@
                                 </StackPanel>
                             
                             <IconButton Grid.Column="1"  IconText="&#xeaf4;" Content="Uložit Zařízení"
-                                        Command="{Binding SaveDeviceCommand}"/>
+                                        Command="{Binding SaveDeviceCommand}"
+                                        IsEnabled="{Binding !IsSaving}"/>
                             </Grid>
                             
+                            <!-- Saving indicator -->
+                            <ProgressBar IsIndeterminate="True" 
+                                        IsVisible="{Binding IsSaving}"
+                                        HorizontalAlignment="Stretch"
+                                        Height="4"
+                                        Margin="0,10,0,0"/>
 
-                            
                             <!-- Separator -->
                             <Separator Background="{DynamicResource PrimaryBorderBrush}" Margin="0,40,0,40" />
 
                             <!-- Device Operations -->
                             <Label Classes="h2" Margin="10,0,0,10" Content="Operace zařízení" />
-                            <DataGrid MaxHeight="500" ItemsSource="{Binding DeviceService.TempDevice.DeviceOperations}">
+                            <DataGrid MaxHeight="500" ItemsSource="{Binding DeviceOperations}">
                                 <DataGrid.Columns>
                                     <DataGridTextColumn Header="Název" Binding="{Binding Name}" Width="*" />
                                     <DataGridTextColumn Header="Povinná" Binding="{Binding IsRequired}" Width="*" />
@@ -74,7 +88,7 @@
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate>
                                                 <Button Content="Upravit"
-                                                        Command="{Binding $parent[DataGrid].((vm:DeviceDetailsViewModel)DataContext).EditDeviceOperationCommand, FallbackValue='Unknown'}"
+                                                        Command="{Binding $parent[DataGrid].((vm:DeviceDetailsViewModel)DataContext).EditDeviceOperationCommand}"
                                                         CommandParameter="{Binding OrderIndex}" />
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>
@@ -87,7 +101,7 @@
 
                             <!-- Events -->
                             <Label Classes="h2" Margin="10,0,0,10" Content="Události" />
-                            <DataGrid ItemsSource="{Binding DeviceService.TempDevice.DeviceCard.Events}">
+                            <DataGrid ItemsSource="{Binding Events}">
                                 <DataGrid.Columns>
                                     <DataGridTextColumn Header="Typ" Binding="{Binding Type}" Width="*" />
                                     <DataGridTextColumn Header="Kdo" Binding="{Binding Who}" Width="*" />

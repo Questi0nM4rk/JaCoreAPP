@@ -1,6 +1,9 @@
 BatchProcess3/
 BatchProcess3/*
 
+JaCoreAPI/
+JaCoreAPI/*
+
 # .NET build artifacts
 bin/
 obj/

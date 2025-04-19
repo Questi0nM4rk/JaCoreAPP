@@ -17,29 +17,42 @@
         </Viewbox>
 
         <Border Grid.Row="1" Classes="floating" Padding="20" Margin="15">
-            <Grid RowDefinitions="Auto, *" ColumnDefinitions="*, Auto">
-                <SearchBox Grid.Row="0"
-                           Watermark="Vyhledej Zařízení..."
-                           Margin="0,10,0,30"
-                           MaxWidth="1200"
-                           MinWidth="400"
-                           HorizontalAlignment="Left"
-                           VerticalAlignment="Center"
-                           SearchDelay="500" />
+            <Grid RowDefinitions="Auto, *, Auto" ColumnDefinitions="*, Auto">
+                <Grid Grid.Row="0" Grid.ColumnSpan="2" ColumnDefinitions="*, Auto">
+                    <con:SearchBox Grid.Column="0"
+                               SearchText="{Binding SearchQuery}"
+                               Watermark="Vyhledej Zařízení..."
+                               Margin="0,10,0,30"
+                               MaxWidth="1200"
+                               MinWidth="400"
+                               HorizontalAlignment="Left"
+                               VerticalAlignment="Center"
+                               SearchDelay="500" />
 
-                <IconButton Grid.Column="1" Grid.Row="0" Content="Nové Zařízení" IconText="&#xe3d4;"
+                    <IconButton Grid.Column="1" Content="Nové Zařízení" IconText="&#xe3d4;"
                                 Margin="0 0 0 20"
                                 Background="{DynamicResource ElementBackgroundGradient}"
                                 Command="{Binding NewDeviceCommand}"
                                 VerticalAlignment="Center"
-                                IsEnabled="True"
+                                IsEnabled="{Binding !IsLoading}"
                                 HorizontalAlignment="Center" />
+                </Grid>
 
-                <!-- <Border Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Background="Aqua"> -->
-                <DataGrid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" ItemsSource="{Binding  DeviceService.Devices}">
+                <!-- Loading indicator -->
+                <ProgressBar Grid.Row="0" Grid.ColumnSpan="2" 
+                            IsIndeterminate="True" 
+                            IsVisible="{Binding IsLoading}"
+                            HorizontalAlignment="Stretch"
+                            Height="4"
+                            Margin="0,0,0,4"
+                            VerticalAlignment="Bottom"/>
+
+                <DataGrid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" 
+                         ItemsSource="{Binding DeviceService.Devices}"
+                         IsEnabled="{Binding !IsLoading}">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Sériové Číslo"
-                                            Binding="{Binding  DeviceCard.SerialNumber, FallbackValue='Nemá kartu'}"
+                                            Binding="{Binding DeviceCard.SerialNumber, FallbackValue='Nemá kartu'}"
                                             Width="*" />
                         <DataGridTextColumn Header="Název" Binding="{Binding Name}" Width="*" />
                         <DataGridTextColumn Header="Kategorie" Binding="{Binding Category.Name}" Width="*" />
@@ -48,17 +61,29 @@
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <Button Content="Upravit"
-                                            Command="{Binding $parent[DataGrid].((vm:DevicesViewModel)DataContext).DeviceDetailsCommand, FallbackValue='Unknown'}"
+                                            Command="{Binding $parent[DataGrid].((vm:DevicesViewModel)DataContext).DeviceDetailsCommand}"
                                             CommandParameter="{Binding Id}" />
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
                     </DataGrid.Columns>
                 </DataGrid>
-                <!-- </Border> -->
+
+                <!-- Pagination Controls -->
+                <StackPanel Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" 
+                           Orientation="Horizontal" 
+                           HorizontalAlignment="Center"
+                           Margin="0,10,0,0">
+                    <Button Content="Previous" 
+                           Command="{Binding LoadPreviousPageCommand}"
+                           IsEnabled="{Binding CurrentPage, Converter={StaticResource NumberGreaterThanZeroConverter}}"/>
+                    <TextBlock Text="{Binding CurrentPage, StringFormat='Page {0}'}" 
+                              VerticalAlignment="Center"
+                              Margin="10,0"/>
+                    <Button Content="Next" 
+                           Command="{Binding LoadNextPageCommand}"/>
+                </StackPanel>
             </Grid>
-
         </Border>
-
     </Grid>
 </UserControl>

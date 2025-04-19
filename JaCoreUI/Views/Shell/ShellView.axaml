@@ -65,7 +65,8 @@
                     ZIndex="2" Padding="0,10,0,0"
                     Classes="floating"
                     Background="{DynamicResource SideBarGradient}"
-                    HorizontalAlignment="Left">
+                    HorizontalAlignment="Left"
+                    IsVisible="{Binding IsAuthenticated}">
                 <Grid RowDefinitions="*, Auto">
                     <StackPanel Spacing="15">
                         <StackPanel Orientation="Horizontal">
@@ -115,13 +116,43 @@
             </Border>
 
             <Grid ColumnDefinitions="95, *" Background="Transparent">
-                <UserButton Grid.Column="1" HorizontalAlignment="Right" ZIndex="100" VerticalAlignment="Top"
-                            Margin="15" IconSource="avares://JaCoreUI/Assets/Images/usericon.svg" Content="John Doe" />
+                <!-- User profile button - Only shown when authenticated -->
+                <StackPanel Grid.Column="1" HorizontalAlignment="Right" ZIndex="100" VerticalAlignment="Top"
+                            Margin="15" Orientation="Horizontal" Spacing="10" IsVisible="{Binding IsAuthenticated}">
+                    
+                    <!-- User profile button with flyout -->
+                    <Button Classes="accent">
+                        <Button.Flyout>
+                            <Flyout>
+                                <StackPanel Width="200" Spacing="10">
+                                    <TextBlock Text="{Binding CurrentUser.DisplayName, FallbackValue='User'}" 
+                                             FontWeight="Bold" 
+                                             HorizontalAlignment="Center"/>
+                                    <TextBlock Text="{Binding CurrentUser.Email, FallbackValue='user@example.com'}" 
+                                             Opacity="0.7"
+                                             HorizontalAlignment="Center"/>
+                                    <Separator Margin="0,5"/>
+                                    <Button Content="Odhlásit se" 
+                                          Command="{Binding LogoutCommand}"
+                                          HorizontalAlignment="Stretch"/>
+                                </StackPanel>
+                            </Flyout>
+                        </Button.Flyout>
+                        
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <PathIcon Data="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zm0 8.625a2.625 2.625 0 100-5.25 2.625 2.625 0 000 5.25z M15.375 8.25a3.375 3.375 0 116.75 0 3.375 3.375 0 01-6.75 0zM7.5 19.5a6 6 0 0111.25-3 7.5 7.5 0 10-11.25 3z" />
+                            <TextBlock Text="{Binding CurrentUser.DisplayName, FallbackValue='User'}" 
+                                     VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
 
+                <!-- Back button - Only shown when authenticated -->
                 <IconButton Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="30" ZIndex="100"
                             CornerRadius="15"
                             IconText="&#xe51a;" Content=""
-                            Command="{Binding GoBackCommand}" />
+                            Command="{Binding GoBackCommand}"
+                            IsVisible="{Binding IsAuthenticated}" />
 
                 <ContentControl Grid.Column="1" ZIndex="0" HorizontalAlignment="Stretch"
                                 VerticalAlignment="Stretch" Content="{Binding CurrentPageService.CurrentPage}" />

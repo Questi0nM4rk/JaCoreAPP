@@ -6,7 +6,9 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using JaCoreUI.Data;
 using JaCoreUI.Models.Device;
+using JaCoreUI.Models.UI;
 using JaCoreUI.Services.Api;
+using MsBox.Avalonia.Enums;
 
 namespace JaCoreUI.Services.Production;
 
@@ -24,16 +26,35 @@ public partial class ProductionService : ObservableObject
 
     public ProductionService(ProductionApiService productionApiService, Navigation.CurrentPageService currentPageService)
     {
-        Productions = productionApiService.GetProductions();
+        Productions = new ObservableCollection<Models.Productions.Base.Production>();
         
         _currentPageService = currentPageService;
         _productionApiService = productionApiService;
+        
+        LoadProductionsAsync();
+    }
+
+    private async void LoadProductionsAsync()
+    {
+        try
+        {
+            var productions = await _productionApiService.GetProductionsAsync();
+            
+            foreach (var production in productions)
+            {
+                Productions.Add(production);
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading productions: {ex.Message}");
+        }
     }
 
     [RelayCommand]
     private async Task SaveProduction()
     {
-        
+        await ErrorDialog.ShowWithButtonsAsync("Save production", "Save production", ButtonEnum.Ok);
     }
     
     [RelayCommand]
@@ -48,8 +69,23 @@ public partial class ProductionService : ObservableObject
     [RelayCommand]
     private async Task NewDevice(int id)
     {
-        CurrentProduction = _productionApiService.NewProduction();
-        Productions.Add(CurrentProduction);
-        await _currentPageService.NavigateTo(ApplicationPageNames.DeviceDetails);
+        var newProduction = new Models.Productions.Template.TemplateProduction
+        {
+            Name = "New Production",
+            Description = "Description",
+            CreatedAt = DateTime.Now,
+            ModifiedAt = DateTime.Now
+        };
+        
+        try 
+        {
+            CurrentProduction = await _productionApiService.CreateProductionAsync(newProduction);
+            Productions.Add(CurrentProduction);
+            await _currentPageService.NavigateTo(ApplicationPageNames.DeviceDetails);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error creating production: {ex.Message}");
+        }
     }
 }

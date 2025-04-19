@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
@@ -17,11 +18,13 @@ using JaCoreUI.ViewModels.Shell;
 using JaCoreUI.ViewModels.Template;
 using JaCoreUI.ViewModels.User;
 using JaCoreUI.Views.Shell;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using CurrentPageService = JaCoreUI.Services.Navigation.CurrentPageService;
 using DeviceService = JaCoreUI.Services.Device.DeviceService;
 using ProductionService = JaCoreUI.Services.Production.ProductionService;
 using ThemeService = JaCoreUI.Services.Theme.ThemeService;
+using AuthService = JaCoreUI.Services.User.AuthService;
 
 [assembly: XmlnsDefinition("https://github.com/avaloniaui", "JaCoreUI.Controls")]
 
@@ -38,17 +41,37 @@ public partial class App : Application
     {
         var collection = new ServiceCollection();
 
-// Register services
+        // Build configuration
+        var configuration = new ConfigurationBuilder()
+            .SetBasePath(Directory.GetCurrentDirectory())
+            .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+            .Build();
+
+        // Register configuration
+        collection.AddSingleton<IConfiguration>(configuration);
+
+        // Register API services first (dependencies)
         collection
-            .AddSingleton<ThemeService>().AddSingleton<DeviceService>()
             .AddSingleton<DeviceApiService>()
             .AddSingleton<ProductionApiService>()
-            .AddSingleton<ProductionService>()
-            .AddSingleton<UserService>()
-            .AddSingleton<UserApiService>()
-            .AddSingleton<CurrentPageService>();
+            .AddSingleton<UserApiService>();
 
-// Register ViewModels
+        // Register core services
+        collection
+            .AddSingleton<AuthService>()
+            .AddSingleton<ThemeService>();
+
+        // Register PageFactory before services that depend on it
+        collection.AddSingleton<PageFactory>();
+            
+        // Register application services
+        collection
+            .AddSingleton<DeviceService>()
+            .AddSingleton<UserService>()
+            .AddSingleton<CurrentPageService>()
+            .AddSingleton<ProductionService>();
+
+        // Register ViewModels
         collection
             .AddSingleton<ShellViewModel>();
             
@@ -65,7 +88,7 @@ public partial class App : Application
             .AddTransient<TemplateDetailsViewModel>()
             .AddTransient<LoginViewModel>();
 
-// Register factory with correct generic parameters
+        // Register factory with correct generic parameters
         collection.AddSingleton<Func<ApplicationPageNames, PageViewModel>>(provider => name
             => name switch
             {
@@ -83,11 +106,9 @@ public partial class App : Application
                 _ => throw new InvalidOperationException()
             });
 
-        collection.AddSingleton<PageFactory>();
-
         // Build the service provider
         var services = collection.BuildServiceProvider();
-
+        
         switch (ApplicationLifetime)
         {
             case IClassicDesktopStyleApplicationLifetime desktop:

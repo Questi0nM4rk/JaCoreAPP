@@ -16,5 +16,6 @@ public enum ApplicationPageNames
     TemplateDetails,
 
     Login,
-    Settings = 12
+    Settings = 12,
+    Admin = 13
 }

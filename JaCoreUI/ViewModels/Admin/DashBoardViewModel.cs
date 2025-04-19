@@ -24,7 +24,7 @@ public partial class DashBoardViewModel(ProductionService productionService, Dev
     [ObservableProperty] public partial string DeviceSearchText { get; set; } = string.Empty;
 
     public IRelayCommand ProductionDetailsCommand => ProductionService.ProductionDetailsCommand;
-    public IRelayCommand DeviceDetailsCommand => DeviceService.DeviceDetailsCommand;
+    public IRelayCommand DeviceDetailsCommand => DeviceService.OpenDeviceCommand;
     
     protected override void OnDesignTimeConstructor()
     {

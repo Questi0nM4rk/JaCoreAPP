@@ -13,9 +13,9 @@ using MsBox.Avalonia.Enums;
 
 namespace JaCoreUI.Services.Navigation;
 
-public partial class CurrentPageService(PageFactory pageFactory, UserService userService) : ObservableObject
+public partial class CurrentPageService : ObservableObject
 {
-    private readonly UserService _userService = userService;
+    private readonly PageFactory _pageFactory;
     
     [ObservableProperty] public partial ObservableCollection<PageViewModel> NavigationHistory { get; set; } = new();
 
@@ -24,6 +24,11 @@ public partial class CurrentPageService(PageFactory pageFactory, UserService use
     public partial PageViewModel? CurrentPage { get; private set; }
 
     public bool CanGoBack => NavigationHistory.Count > 1;
+
+    public CurrentPageService(PageFactory pageFactory)
+    {
+        _pageFactory = pageFactory;
+    }
 
     [RelayCommand(CanExecute = nameof(CanGoBack))]
     public async Task GoBack()
@@ -47,13 +52,13 @@ public partial class CurrentPageService(PageFactory pageFactory, UserService use
         }
 
         NavigationHistory.RemoveAt(NavigationHistory.Count - 1);
-        CurrentPage = NavigationHistory.LastOrDefault(defaultValue: pageFactory.GetPageViewModel(ApplicationPageNames.Dashboard));
+        CurrentPage = NavigationHistory.LastOrDefault(defaultValue: _pageFactory.GetPageViewModel(ApplicationPageNames.Dashboard));
     }
 
     [RelayCommand]
     public async Task NavigateTo(ApplicationPageNames name)
     {
-        CurrentPage ??= pageFactory.GetPageViewModel(ApplicationPageNames.Dashboard);
+        CurrentPage ??= _pageFactory.GetPageViewModel(ApplicationPageNames.Dashboard);
         
         if (!CurrentPage.Validate())
         {
@@ -68,7 +73,7 @@ public partial class CurrentPageService(PageFactory pageFactory, UserService use
             }
         }
 
-        var page = pageFactory.GetPageViewModel(name);
+        var page = _pageFactory.GetPageViewModel(name);
         NavigationHistory.Add(page);
         CurrentPage = page;
     }
