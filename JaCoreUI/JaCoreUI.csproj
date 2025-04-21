@@ -135,6 +135,6 @@
 
     <ItemGroup>
       <ProjectReference Include="..\JaCore.Common\JaCore.Common.csproj" />
-      <ProjectReference Include="..\JaCore.Api\JaCore.Api.csproj" />
+      <ProjectReference Include="..\JaCore.ApiO\JaCore.ApiO.csproj" />
     </ItemGroup>
 </Project>

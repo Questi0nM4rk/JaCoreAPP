@@ -1,15 +1,19 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-#
+# Visual Studio Version 17
+VisualStudioVersion = 17.12.35707.178 d17.12
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JaCoreUI", "JaCoreUI\JaCoreUI.csproj", "{279BFE96-D7F0-4845-B9EA-ED9A4621D180}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JaCore.Api", "JaCore.Api\JaCore.Api.csproj", "{C49D6532-D131-4282-8A14-1D8C2036A87F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JaCore.ApiO", "JaCore.ApiO\JaCore.ApiO.csproj", "{C49D6532-D131-4282-8A14-1D8C2036A87F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JaCore.Api.Tests", "JaCore.Api.Tests\JaCore.Api.Tests.csproj", "{B0D660E6-7676-428E-8450-407E7F2265AB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JaCore.Api.IntegrationTests", "JaCore.Api.IntegrationTests\JaCore.Api.IntegrationTests.csproj", "{A011A1B3-0CD5-4E98-AB8E-803234773498}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JaCore.Common", "JaCore.Common\JaCore.Common.csproj", "{36037A60-30F3-4689-BB43-5BEFDC0B17F6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JaCore.Api", "JaCore.Api\JaCore.Api.csproj", "{08C47D79-B49B-4CE3-BF8B-300812F2E353}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -37,5 +41,12 @@ Global
 		{36037A60-30F3-4689-BB43-5BEFDC0B17F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{36037A60-30F3-4689-BB43-5BEFDC0B17F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{36037A60-30F3-4689-BB43-5BEFDC0B17F6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{08C47D79-B49B-4CE3-BF8B-300812F2E353}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{08C47D79-B49B-4CE3-BF8B-300812F2E353}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{08C47D79-B49B-4CE3-BF8B-300812F2E353}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{08C47D79-B49B-4CE3-BF8B-300812F2E353}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
 	EndGlobalSection
 EndGlobal

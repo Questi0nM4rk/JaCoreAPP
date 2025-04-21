@@ -12,16 +12,6 @@ public static class ApiConstants
     public const string ApiRoutePrefix = "api";
 
     /// <summary>
-    /// Version prefix for API routes, following the base prefix (e.g., api/v1)
-    /// </summary>
-    public const string ApiVersionPrefix = "v1";
-
-    /// <summary>
-    /// Full base route for API endpoints, combining prefix and version
-    /// </summary>
-    public const string BaseRoute = ApiRoutePrefix + "/" + ApiVersionPrefix;
-    
-    /// <summary>
     /// Route pattern templates for standard API operations
     /// </summary>
     public static class Routes
@@ -107,5 +97,15 @@ public static class ApiConstants
         /// Debug role for system diagnostics
         /// </summary>
         public const string Debug = "Debug";
+    }
+
+        public static class JwtConfigKeys
+    {
+        public const string Section = "Jwt";
+        public const string Secret = "Jwt:Secret";
+        public const string Issuer = "Jwt:Issuer";
+        public const string Audience = "Jwt:Audience";
+        public const string AccessExpiryMinutes = "Jwt:AccessExpiryMinutes";
+        public const string RefreshExpiryDays = "Jwt:RefreshExpiryDays";
     }
 }
