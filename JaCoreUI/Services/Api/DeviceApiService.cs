@@ -95,8 +95,7 @@ public class DeviceApiService : ApiClientBase
                 IsCompleted = device.IsCompleted
             };
             
-            var createdDto = await PostAsync<JaCore.Api.Dtos.Device.CreateDeviceDto, JaCore.Api.Dtos.Device.DeviceDto>("Device", createDto);
-            if (createdDto == null) throw new ApiException(ApiErrorType.Unknown, "API did not return the created device.");
+            var createdDto = await PostAsync<JaCore.Api.Dtos.Device.CreateDeviceDto, JaCore.Api.Dtos.Device.DeviceDto>("Device", createDto) ?? throw new ApiException(ApiErrorType.Unknown, "API did not return the created device.");
             return MapFromDto(createdDto);
         }
         catch (ApiException) { throw; }
@@ -186,8 +185,7 @@ public class DeviceApiService : ApiClientBase
         try
         {
             var createDto = new JaCore.Api.Dtos.Device.CreateCategoryDto { Name = category.Name ?? string.Empty };
-            var dto = await PostAsync<JaCore.Api.Dtos.Device.CreateCategoryDto, JaCore.Api.Dtos.Device.CategoryDto>("Category", createDto);
-            if (dto == null) throw new ApiException(ApiErrorType.Unknown, "API did not return the created category.");
+            var dto = await PostAsync<JaCore.Api.Dtos.Device.CreateCategoryDto, JaCore.Api.Dtos.Device.CategoryDto>("Category", createDto) ?? throw new ApiException(ApiErrorType.Unknown, "API did not return the created category.");
             return new Category { Id = dto.Id, Name = dto.Name ?? string.Empty };
         }
         catch (ApiException) { throw; }

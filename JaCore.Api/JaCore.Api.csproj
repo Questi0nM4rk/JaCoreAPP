@@ -1,17 +1,61 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
+    <TargetFramework>net9.0</TargetFramework> <!-- Target .NET 9 -->
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>your-unique-guid-for-secrets</UserSecretsId> <!-- Add your unique ID -->
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.1" />
+    <!-- Core ASP.NET Core & Identity -->
+    <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.4" /> <!-- Use current .NET 9 preview -->
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="9.0.0-preview.3.24172.13" />
+
+    <!-- EF Core -->
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.0-preview.3.24172.4" /> <!-- Or Npgsql, Pomelo.EntityFrameworkCore.MySql, etc. -->
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.0-preview.3.24172.4">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+
+    <!-- API Versioning & Swagger -->
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.1.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer" Version="5.1.0" />
+    <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" Version="9.0.4" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
+
+    <!-- Optional: Logging (Example: Serilog) -->
+    <PackageReference Include="Serilog.AspNetCore" Version="8.0.1" />
+    <PackageReference Include="Serilog.Sinks.Console" Version="5.0.1" />
+
   </ItemGroup>
 
+  <!-- Testing Visibility -->
   <ItemGroup>
-    <Folder Include="Controllers\" />
+    <InternalsVisibleTo Include="JaCore.Api.Tests" />
+    <InternalsVisibleTo Include="JaCore.Api.IntegrationTests" />
+  </ItemGroup>
+
+  <!-- Create Folders -->
+  <ItemGroup>
+    <Folder Include="Data\Migrations\" />
+    <Folder Include="DTOs\Authentication\" />
+    <Folder Include="DTOs\Users\" />
+    <Folder Include="Entities\Auth\" />
+    <Folder Include="Entities\Identity\" />
+    <Folder Include="Extensions\" />
+    <Folder Include="Helpers\" />
+    <Folder Include="Middleware\" />
+    <Folder Include="Services\Abstractions\" />
+    <Folder Include="Services\Authentication\" />
+    <Folder Include="Services\Users\" />
+    <Folder Include="Controllers\Authentication\" />
+    <Folder Include="Controllers\Users\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\JaCore.Common\JaCore.Common.csproj" />
   </ItemGroup>
 
 </Project>

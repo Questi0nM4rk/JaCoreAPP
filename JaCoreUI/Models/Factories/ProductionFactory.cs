@@ -35,10 +35,7 @@ public partial class ProductionFactory
     /// </summary>
     public PreparationProduction CreatePreparationFromTemplate(Guid templateId)
     {
-        var template = _repository.GetTemplateProduction(templateId);
-        if (template == null)
-            throw new ArgumentException("Template not found");
-
+        var template = _repository.GetTemplateProduction(templateId) ?? throw new ArgumentException("Template not found");
         return template.CreatePreparationProduction();
     }
 
@@ -47,10 +44,7 @@ public partial class ProductionFactory
     /// </summary>
     public WorkProduction CreateWorkFromPreparation(Guid preparationId, string assignedTo)
     {
-        var preparation = _repository.GetPreparationProduction(preparationId);
-        if (preparation == null)
-            throw new ArgumentException("Preparation not found");
-
+        var preparation = _repository.GetPreparationProduction(preparationId) ?? throw new ArgumentException("Preparation not found");
         var work = preparation.CreateWorkProduction();
         work.AssignedTo = assignedTo;
         work.StartDate = DateTime.Now;
