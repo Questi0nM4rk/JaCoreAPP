@@ -19,10 +19,16 @@ public class GetUserByIdTests : AuthTestsBase
     [Fact]
     public async Task GetUserById_AdminGettingAnyUser_ReturnsOkAndUserData()
     {
-        var targetUser = await RegisterUserSuccessfullyAsync(firstName: "Target", lastName: "UserGet");
+        var adminAccessToken = await GetAdminAccessTokenAsync(); // Get admin token first
+        var registerDto = new RegisterUserDto(
+            Email: $"target-get-{Guid.NewGuid()}@example.com",
+            FirstName: "Target",
+            LastName: "UserGet",
+            Password: "Password123!"
+        );
+        var targetUser = await RegisterUserSuccessfullyAsync(adminAccessToken, registerDto); // Pass token and DTO
         var targetUserId = targetUser.UserId;
         targetUserId.Should().NotBeNullOrEmpty();
-        var adminAccessToken = await GetAdminAccessTokenAsync();
         _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", adminAccessToken);
         var response = await _client.GetAsync($"{UsersBaseUrl}/{targetUserId}");
         _client.DefaultRequestHeaders.Authorization = null;
@@ -30,17 +36,24 @@ public class GetUserByIdTests : AuthTestsBase
         var user = await response.Content.ReadFromJsonAsync<UserDto>();
         user.Should().NotBeNull();
         user!.Id.Should().Be(targetUserId.ToString());
-        user.Email.Should().Be(targetUser.Email);
-        user.FirstName.Should().Be("Target");
+        user.Email.Should().Be(registerDto.Email);
+        user.FirstName.Should().Be(registerDto.FirstName);
     }
 
     [Fact]
     public async Task GetUserById_UserGettingSelf_ReturnsOkAndUserData()
     {
-        var userEmail = $"self-get-{Guid.NewGuid()}@example.com";
-        var userPassword = "Password123!";
-        var registerResult = await RegisterUserSuccessfullyAsync(userEmail, userPassword, firstName: "Self", lastName: "Get");
-        var loginResult = await LoginUserSuccessfullyAsync(userEmail, userPassword);
+        var adminAccessToken = await GetAdminAccessTokenAsync(); // Get admin token first
+        var registerDto = new RegisterUserDto(
+            Email: $"self-get-{Guid.NewGuid()}@example.com",
+            FirstName: "Self",
+            LastName: "Get",
+            Password: "Password123!"
+        );
+        var registerResult = await RegisterUserSuccessfullyAsync(adminAccessToken, registerDto); // Pass token and DTO
+
+        var loginDto = new LoginUserDto(registerDto.Email, registerDto.Password);
+        var loginResult = await LoginUserSuccessfullyAsync(loginDto); // Pass DTO
         var userId = registerResult.UserId;
         var userToken = loginResult.AccessToken;
         _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", userToken);
@@ -51,19 +64,33 @@ public class GetUserByIdTests : AuthTestsBase
         user.Should().NotBeNull();
         userId.Should().NotBeNullOrEmpty();
         user.Id.Should().Be(userId.ToString());
-        user.Email.Should().Be(userEmail);
-        user.FirstName.Should().Be("Self");
+        user.Email.Should().Be(registerDto.Email);
+        user.FirstName.Should().Be(registerDto.FirstName);
     }
 
     [Fact]
     public async Task GetUserById_UserGettingOtherUser_ReturnsForbidden()
     {
-        var targetUser = await RegisterUserSuccessfullyAsync(firstName: "TargetOther");
+        var adminAccessToken = await GetAdminAccessTokenAsync(); // Get admin token first
+        var targetRegisterDto = new RegisterUserDto(
+            Email: $"target-other-get-{Guid.NewGuid()}@example.com",
+            FirstName: "TargetOther",
+            LastName: "Get",
+            Password: "Password123!"
+        );
+        var targetUser = await RegisterUserSuccessfullyAsync(adminAccessToken, targetRegisterDto); // Pass token and DTO
         var targetUserId = targetUser.UserId;
-        var requesterEmail = $"requester-other-{Guid.NewGuid()}@example.com";
-        var requesterPassword = "Password123!";
-        await RegisterUserSuccessfullyAsync(requesterEmail, requesterPassword);
-        var requesterLogin = await LoginUserSuccessfullyAsync(requesterEmail, requesterPassword);
+
+        var requesterRegisterDto = new RegisterUserDto(
+            Email: $"requester-other-{Guid.NewGuid()}@example.com",
+            FirstName: "Requester",
+            LastName: "Other",
+            Password: "Password123!"
+        );
+        await RegisterUserSuccessfullyAsync(adminAccessToken, requesterRegisterDto); // Pass token and DTO
+
+        var requesterLoginDto = new LoginUserDto(requesterRegisterDto.Email, requesterRegisterDto.Password);
+        var requesterLogin = await LoginUserSuccessfullyAsync(requesterLoginDto); // Pass DTO
         var requesterToken = requesterLogin.AccessToken;
         _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", requesterToken);
         var response = await _client.GetAsync($"{UsersBaseUrl}/{targetUserId}");

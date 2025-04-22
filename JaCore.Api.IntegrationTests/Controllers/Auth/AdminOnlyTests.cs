@@ -38,11 +38,17 @@ public class AdminOnlyTests : AuthTestsBase
     [Fact]
     public async Task AdminOnly_WithStandardUserToken_ReturnsForbidden()
     {
-        // Arrange: Register and login a standard user using success helpers
-        var email = $"standard-user-{Guid.NewGuid()}@example.com";
-        var password = "Password123!";
-        await RegisterUserSuccessfullyAsync(email, password);
-        var loginResult = await LoginUserSuccessfullyAsync(email, password);
+        var adminAccessToken = await GetAdminAccessTokenAsync(); // Get admin token first
+        var registerDto = new RegisterUserDto(
+            Email: $"standard-user-{Guid.NewGuid()}@example.com",
+            FirstName: "Standard",
+            LastName: "User",
+            Password: "Password123!"
+        );
+        await RegisterUserSuccessfullyAsync(adminAccessToken, registerDto); // Pass token and DTO
+
+        var loginDto = new LoginUserDto(registerDto.Email, registerDto.Password);
+        var loginResult = await LoginUserSuccessfullyAsync(loginDto); // Pass DTO
         // loginResult is guaranteed non-null here
         var standardUserAccessToken = loginResult.AccessToken;
 

@@ -1,4 +1,5 @@
 using JaCore.Api.Data; // Your DbContext namespace
+using JaCore.Api.Helpers;
 using JaCore.Api.IntegrationTests.Helpers; // Where DatabaseFixture lives
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -6,7 +7,9 @@ using Microsoft.AspNetCore.TestHost; // For ConfigureTestServices
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions; // For Remove / TryRemove
+using Microsoft.Extensions.Hosting;
 using Npgsql; // Npgsql EF Core provider namespace
+using Org.BouncyCastle.Asn1;
 using System.Data.Common; // For DbConnection
 using Xunit; // Needed for IClassFixture
 
@@ -29,7 +32,7 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>, IClas
     {
         Console.WriteLine("---> Configuring WebHost for Testing...");
         // Use ConfigureTestServices for reliable service overrides in tests
-        builder.ConfigureTestServices(services =>
+        builder.ConfigureTestServices(async services =>
         {
             Console.WriteLine("---> Configuring Test Services...");
             // Remove the original DbContext registration from Program.cs/Startup.cs
@@ -67,13 +70,27 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>, IClas
             });
              Console.WriteLine("---> ApplicationDbContext configured for Testcontainer.");
 
+            var sp = services.BuildServiceProvider(); // Build the service provider to apply changes
+            using (var scope = sp.CreateScope())
+            {
+                var scopedServices = scope.ServiceProvider;
+                var db = scopedServices.GetRequiredService<ApplicationDbContext>();
+                db.Database.Migrate();
+
+                var env = scopedServices.GetRequiredService<IHostEnvironment>();
+                await TestDataSeeder.SeedAdminUserAsync(scopedServices, env); // Seed admin user if needed
+
+                // Ensure the database is created and migrations are applied
+                db.Database.EnsureCreated(); // This is usually not needed in tests, but can be useful for setup
+            }
+
             // Optional: Override other services for testing (e.g., mock external dependencies)
             // services.Replace(ServiceDescriptor.Scoped<IEmailService, MockEmailService>());
              Console.WriteLine("---> Test Services configuration complete.");
         });
 
         // Optionally set the environment for tests (useful if appsettings.Testing.json exists)
-        builder.UseEnvironment("Testing");
+        builder.UseEnvironment("Test");
         Console.WriteLine("---> WebHost configuration complete.");
     }
 

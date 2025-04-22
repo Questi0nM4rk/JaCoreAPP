@@ -19,9 +19,15 @@ public class UpdateUserTests : AuthTestsBase
     [Fact]
     public async Task UpdateUser_AdminUpdatingAnyUser_ReturnsNoContent()
     {
-        var targetUser = await RegisterUserSuccessfullyAsync(firstName: "TargetUpdate", lastName: "Initial");
+        var adminAccessToken = await GetAdminAccessTokenAsync(); // Get admin token first
+        var registerDto = new RegisterUserDto(
+            Email: $"target-update-{Guid.NewGuid()}@example.com",
+            FirstName: "TargetUpdate",
+            LastName: "Initial",
+            Password: "Password123!"
+        );
+        var targetUser = await RegisterUserSuccessfullyAsync(adminAccessToken, registerDto); // Pass token and DTO
         var targetUserId = targetUser.UserId;
-        var adminAccessToken = await GetAdminAccessTokenAsync();
         var updateDto = new UpdateUserDto { FirstName = "TargetUpdated", LastName = "ByAdmin" };
         _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", adminAccessToken);
         var response = await _client.PutAsJsonAsync($"{UsersBaseUrl}/{targetUserId}", updateDto);
@@ -32,10 +38,17 @@ public class UpdateUserTests : AuthTestsBase
     [Fact]
     public async Task UpdateUser_UserUpdatingSelf_ReturnsNoContent()
     {
-        var userEmail = $"self-update-{Guid.NewGuid()}@example.com";
-        var userPassword = "Password123!";
-        var registerResult = await RegisterUserSuccessfullyAsync(userEmail, userPassword, firstName: "SelfUpdate", lastName: "Initial");
-        var loginResult = await LoginUserSuccessfullyAsync(userEmail, userPassword);
+        var adminAccessToken = await GetAdminAccessTokenAsync(); // Get admin token first
+        var registerDto = new RegisterUserDto(
+            Email: $"self-update-{Guid.NewGuid()}@example.com",
+            FirstName: "SelfUpdate",
+            LastName: "Initial",
+            Password: "Password123!"
+        );
+        var registerResult = await RegisterUserSuccessfullyAsync(adminAccessToken, registerDto); // Pass token and DTO
+
+        var loginDto = new LoginUserDto(registerDto.Email, registerDto.Password);
+        var loginResult = await LoginUserSuccessfullyAsync(loginDto); // Pass DTO
         var userId = registerResult.UserId;
         var userToken = loginResult.AccessToken;
         var updateDto = new UpdateUserDto { FirstName = "SelfUpdated", LastName = "ByUser" };
@@ -48,12 +61,26 @@ public class UpdateUserTests : AuthTestsBase
     [Fact]
     public async Task UpdateUser_UserUpdatingOtherUser_ReturnsForbidden()
     {
-        var targetUser = await RegisterUserSuccessfullyAsync(firstName: "TargetOtherUpdate");
+        var adminAccessToken = await GetAdminAccessTokenAsync(); // Get admin token first
+        var targetRegisterDto = new RegisterUserDto(
+            Email: $"target-other-update-{Guid.NewGuid()}@example.com",
+            FirstName: "TargetOtherUpdate",
+            LastName: "Initial",
+            Password: "Password123!"
+        );
+        var targetUser = await RegisterUserSuccessfullyAsync(adminAccessToken, targetRegisterDto); // Pass token and DTO
         var targetUserId = targetUser.UserId;
-        var requesterEmail = $"requester-other-update-{Guid.NewGuid()}@example.com";
-        var requesterPassword = "Password123!";
-        await RegisterUserSuccessfullyAsync(requesterEmail, requesterPassword);
-        var requesterLogin = await LoginUserSuccessfullyAsync(requesterEmail, requesterPassword);
+
+        var requesterRegisterDto = new RegisterUserDto(
+            Email: $"requester-other-update-{Guid.NewGuid()}@example.com",
+            FirstName: "Requester",
+            LastName: "OtherUpdate",
+            Password: "Password123!"
+        );
+        await RegisterUserSuccessfullyAsync(adminAccessToken, requesterRegisterDto); // Pass token and DTO
+
+        var requesterLoginDto = new LoginUserDto(requesterRegisterDto.Email, requesterRegisterDto.Password);
+        var requesterLogin = await LoginUserSuccessfullyAsync(requesterLoginDto); // Pass DTO
         var requesterToken = requesterLogin.AccessToken;
         var updateDto = new UpdateUserDto { FirstName = "AttemptedUpdate", LastName = "Forbidden" };
         _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", requesterToken);
@@ -87,10 +114,17 @@ public class UpdateUserTests : AuthTestsBase
     [Fact]
     public async Task UpdateUser_WithInvalidData_ReturnsBadRequest()
     {
-        var userEmail = $"self-update-invalid-{Guid.NewGuid()}@example.com";
-        var userPassword = "Password123!";
-        var registerResult = await RegisterUserSuccessfullyAsync(userEmail, userPassword);
-        var loginResult = await LoginUserSuccessfullyAsync(userEmail, userPassword);
+        var adminAccessToken = await GetAdminAccessTokenAsync(); // Get admin token first
+        var registerDto = new RegisterUserDto(
+            Email: $"self-update-invalid-{Guid.NewGuid()}@example.com",
+            FirstName: "SelfUpdateInvalid",
+            LastName: "Initial",
+            Password: "Password123!"
+        );
+        var registerResult = await RegisterUserSuccessfullyAsync(adminAccessToken, registerDto); // Pass token and DTO
+
+        var loginDto = new LoginUserDto(registerDto.Email, registerDto.Password);
+        var loginResult = await LoginUserSuccessfullyAsync(loginDto); // Pass DTO
         var userId = registerResult.UserId;
         var userToken = loginResult.AccessToken;
         var updateDto = new UpdateUserDto { FirstName = "", LastName = "ValidLastName" };

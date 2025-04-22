@@ -12,18 +12,22 @@ public class LoginTests : AuthTestsBase
     [Fact]
     public async Task Login_WithValidCredentials_ReturnsOkAndTokens()
     {
-        // Arrange: Register a user first using the success helper
-        var email = $"login-ok-{Guid.NewGuid()}@example.com";
-        var password = "Password123!";
-        var registerResult = await RegisterUserSuccessfullyAsync(email, password);
-        // No need to check registerResponse or registerResult for null here
+        var adminAccessToken = await GetAdminAccessTokenAsync(); // Get admin token first
+        var registerDto = new RegisterUserDto(
+            Email: $"login-ok-{Guid.NewGuid()}@example.com",
+            FirstName: "Login",
+            LastName: "Ok",
+            Password: "Password123!"
+        );
+        var registerResult = await RegisterUserSuccessfullyAsync(adminAccessToken, registerDto); // Pass token and DTO
 
         // Act: Still use the original LoginUserAsync as login is the action under test
-        var (loginResult, loginResponse) = await LoginUserAsync(email, password);
+        var loginDto = new LoginUserDto(registerDto.Email, registerDto.Password);
+        var (loginResult, loginResponse) = await LoginUserAsync(loginDto); // Pass DTO
 
         // Assert
         loginResponse.StatusCode.Should().Be(HttpStatusCode.OK);
-        // loginResult null check is now inside LoginUserAsync helper for success cases
+        loginResult.Should().NotBeNull(); // Assert not null after checking status code
         loginResult!.Succeeded.Should().BeTrue();
         loginResult.AccessToken.Should().NotBeNullOrWhiteSpace();
         loginResult.RefreshToken.Should().NotBeNullOrWhiteSpace();
@@ -33,14 +37,18 @@ public class LoginTests : AuthTestsBase
     [Fact]
     public async Task Login_WithInvalidPassword_ReturnsUnauthorized()
     {
-        // Arrange: Register a user first using the success helper
-        var email = $"login-fail-pass-{Guid.NewGuid()}@example.com";
-        var password = "Password123!";
-        await RegisterUserSuccessfullyAsync(email, password);
-        // No need to check registerResponse or registerResult
+        var adminAccessToken = await GetAdminAccessTokenAsync(); // Get admin token first
+        var registerDto = new RegisterUserDto(
+            Email: $"login-fail-pass-{Guid.NewGuid()}@example.com",
+            FirstName: "LoginFail",
+            LastName: "Pass",
+            Password: "Password123!"
+        );
+        await RegisterUserSuccessfullyAsync(adminAccessToken, registerDto); // Pass token and DTO
 
         // Act: Still use the original LoginUserAsync as login failure is the action under test
-        var (loginResult, loginResponse) = await LoginUserAsync(email, "WrongPassword!");
+        var loginDto = new LoginUserDto(registerDto.Email, "WrongPassword!");
+        var (loginResult, loginResponse) = await LoginUserAsync(loginDto); // Pass DTO
 
         // Assert
         loginResponse.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
@@ -51,15 +59,15 @@ public class LoginTests : AuthTestsBase
     public async Task Login_WithNonExistentUser_ReturnsUnauthorized()
     {
         // Arrange
-        var email = $"nonexistent-{Guid.NewGuid()}@example.com";
-        var password = "Password123!";
+        var loginDto = new LoginUserDto(
+            Email: $"nonexistent-{Guid.NewGuid()}@example.com",
+            Password: "Password123!"
+        );
 
         // Act
-        var (loginResult, loginResponse) = await LoginUserAsync(email, password);
+        var (loginResult, loginResponse) = await LoginUserAsync(loginDto); // Pass DTO
 
         // Assert
-        // Depending on implementation, this might be Unauthorized or BadRequest.
-        // Unauthorized is common for security reasons (don't reveal if user exists).
         loginResponse.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
         loginResult.Should().BeNull();
     }
@@ -72,10 +80,10 @@ public class LoginTests : AuthTestsBase
         string email, string password)
     {
         // Arrange
-        // No user registration needed as validation should happen first
+        var loginDto = new LoginUserDto(email, password);
 
         // Act
-        var (result, response) = await LoginUserAsync(email, password);
+        var (result, response) = await LoginUserAsync(loginDto); // Pass DTO
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);

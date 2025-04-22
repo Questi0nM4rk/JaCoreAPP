@@ -41,77 +41,89 @@ public abstract class AuthTestsBase : IClassFixture<CustomWebApplicationFactory>
         Console.WriteLine($"---> AuthTestsBase initialized for {GetType().Name}.");
     }
 
+    // --- DTO Definitions ---
+    public record RegisterUserDto(
+        string Email,
+        string FirstName,
+        string LastName,
+        string Password
+    );
+
+    public record LoginUserDto(
+        string Email,
+        string Password
+    );
+
     // --- Common Helper Methods ---
 
     protected async Task<(AuthResponseDto? AuthResult, HttpResponseMessage Response)> RegisterUserAsync(
-        string? email = null,
-        string? password = null,
-        string? firstName = "Test",
-        string? lastName = "User")
+        string adminAccessToken,
+        RegisterUserDto registerDto)
     {
-        var request = new RegisterDto(
-            Email: email ?? $"test-{Guid.NewGuid()}@example.com",
-            FirstName: firstName ?? "Test",
-            LastName: lastName ?? "User",
-            Password: password ?? "Password123!" // Ensure this meets policy
-        );
-        Console.WriteLine($"---> Helper: Attempting registration for: {request.Email} at {RegisterUrl}");
-        var response = await _client.PostAsJsonAsync(RegisterUrl, request);
-        AuthResponseDto? result = null;
-        if (response.IsSuccessStatusCode)
+        var httpRequest = new HttpRequestMessage(HttpMethod.Post, RegisterUrl)
         {
-            result = await response.Content.ReadFromJsonAsync<AuthResponseDto>();
-            // Add assertion here for successful cases
-            result.Should().NotBeNull("because registration is expected to succeed and return data.");
-        }
-        else
-        {
-             Console.WriteLine($"---> Helper: Registration failed: {response.StatusCode}");
-             // Optionally log error content here if needed for debugging helpers
-        }
+            Content = JsonContent.Create(registerDto)
+        };
+        httpRequest.Headers.Authorization = new("Bearer", adminAccessToken);
+
+        var response = await _client.SendAsync(httpRequest);
+        AuthResponseDto? result = response.IsSuccessStatusCode 
+            ? await response.Content.ReadFromJsonAsync<AuthResponseDto>()
+            : null;
+
+        Console.WriteLine($"Registration attempt for {registerDto.Email} - Status: {response.StatusCode}");
         return (result, response);
     }
 
-     protected async Task<(AuthResponseDto? AuthResult, HttpResponseMessage Response)> LoginUserAsync(string email, string password)
+    protected async Task<(AuthResponseDto? AuthResult, HttpResponseMessage Response)> LoginUserAsync(
+        LoginUserDto loginDto)
     {
-        var request = new LoginDto(email, password);
-        Console.WriteLine($"---> Helper: Attempting login for: {email} at {LoginUrl}");
-        var response = await _client.PostAsJsonAsync(LoginUrl, request);
-        AuthResponseDto? result = null;
-        if (response.IsSuccessStatusCode)
-        {
-            result = await response.Content.ReadFromJsonAsync<AuthResponseDto>();
-            // Add assertion here for successful cases
-            result.Should().NotBeNull("because login is expected to succeed and return data.");
-            result!.RefreshToken.Should().NotBeNullOrWhiteSpace("because a successful login should provide a refresh token.");
-        }
-         else
-        {
-             Console.WriteLine($"---> Helper: Login failed: {response.StatusCode}");
-        }
+        var response = await _client.PostAsJsonAsync(LoginUrl, loginDto);
+        AuthResponseDto? result = response.IsSuccessStatusCode
+            ? await response.Content.ReadFromJsonAsync<AuthResponseDto>()
+            : null;
+
+        Console.WriteLine($"Login attempt for {loginDto.Email} - Status: {response.StatusCode}");
         return (result, response);
+    }
+
+    protected async Task<(AuthResponseDto? AuthResult, HttpResponseMessage Response)> RefreshTokenAsync(
+        string refreshToken)
+    {
+        var response = await _client.PostAsJsonAsync(RefreshUrl, new { refreshToken });
+        AuthResponseDto? result = response.IsSuccessStatusCode
+            ? await response.Content.ReadFromJsonAsync<AuthResponseDto>()
+            : null;
+
+        Console.WriteLine($"Refresh token attempt - Status: {response.StatusCode}");
+        return (result, response);
+    }
+
+    protected async Task<HttpResponseMessage> LogoutAsync(string accessToken)
+    {
+        var request = new HttpRequestMessage(HttpMethod.Post, LogoutUrl);
+        request.Headers.Authorization = new("Bearer", accessToken);
+        return await _client.SendAsync(request);
     }
 
     // --- Success-Oriented Helper Methods ---
 
     /// <summary>
-    /// Registers a user and asserts that the operation was successful.
+    /// Registers a user (requires admin privileges) and asserts that the operation was successful.
     /// Throws an exception if registration fails or returns null data.
     /// </summary>
+    /// <param name="adminAccessToken">The access token of an authenticated admin user.</param>
     /// <returns>The non-nullable AuthResponseDto on success.</returns>
     protected async Task<AuthResponseDto> RegisterUserSuccessfullyAsync(
-        string? email = null,
-        string? password = null,
-        string? firstName = "Test",
-        string? lastName = "User")
+        string adminAccessToken, // Added: Admin token is now required
+        RegisterUserDto registerDto)
     {
-        var (result, response) = await RegisterUserAsync(email, password, firstName, lastName);
+        // Pass the admin token to the underlying helper
+        var (result, response) = await RegisterUserAsync(adminAccessToken, registerDto);
 
         // Assert success within the helper
         response.EnsureSuccessStatusCode(); // Throws if not 2xx
         result.Should().NotBeNull("because successful registration must return auth data.");
-        // The null check is already inside RegisterUserAsync for success cases, but double-checking doesn't hurt
-        // and makes the contract of this method clearer.
 
         return result!;
     }
@@ -121,9 +133,9 @@ public abstract class AuthTestsBase : IClassFixture<CustomWebApplicationFactory>
     /// Throws an exception if login fails or returns null data.
     /// </summary>
     /// <returns>The non-nullable AuthResponseDto on success.</returns>
-    protected async Task<AuthResponseDto> LoginUserSuccessfullyAsync(string email, string password)
+    protected async Task<AuthResponseDto> LoginUserSuccessfullyAsync(LoginUserDto loginDto)
     {
-        var (result, response) = await LoginUserAsync(email, password);
+        var (result, response) = await LoginUserAsync(loginDto);
 
         // Assert success within the helper
         response.EnsureSuccessStatusCode(); // Throws if not 2xx
@@ -134,44 +146,29 @@ public abstract class AuthTestsBase : IClassFixture<CustomWebApplicationFactory>
     }
 
     /// <summary>
-    /// Creates a new user, promotes them to the Admin role directly via UserManager,
-    /// logs them in, and returns a valid access token for that admin user.
-    /// Throws exceptions if any step fails.
+    /// Logs in using the pre-seeded admin credentials and returns a valid access token.
+    /// Assumes an admin user is seeded during test setup (e.g., in DatabaseFixture or TestDataSeeder).
+    /// Throws exceptions if login fails.
     /// </summary>
-    /// <returns>A valid access token for an admin user.</returns>
+    /// <returns>A valid access token for the pre-seeded admin user.</returns>
     protected async Task<string> GetAdminAccessTokenAsync()
     {
-        // Strategy: Create a user and promote them to Admin directly via DbContext/UserManager
-        var adminEmail = $"admin-{Guid.NewGuid()}@example.com";
-        var adminPassword = "Password123!";
+        // --- MODIFIED ---
+        // Assume admin credentials are known and seeded
+        // Replace with your actual seeded admin credentials
+        var loginDto = new LoginUserDto(
+            Email: "admin@jacore.app", // Replace with actual seeded admin email
+            Password: "AdminPassword123!" // Replace with actual seeded admin password
+        );
 
-        // 1. Register the user normally using the success helper
-        var registerResult = await RegisterUserSuccessfullyAsync(adminEmail, adminPassword, "Admin", "User");
-        var userId = registerResult.UserId;
+        Console.WriteLine($"---> Attempting to log in as seeded admin: {loginDto.Email}");
 
-        // 2. Use the factory's service provider to get UserManager
-        using (var scope = _factory.Services.CreateScope())
-        {
-            var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+        // Login as the pre-seeded admin user
+        var loginResult = await LoginUserSuccessfullyAsync(loginDto);
 
-            userId.Should().NotBeNullOrWhiteSpace();
-            // Find the user
-            var user = await userManager.FindByIdAsync(userId.ToString()) ?? throw new InvalidOperationException($"Failed to find newly registered user with ID {userId} to promote to admin.");
+        loginResult.AccessToken.Should().NotBeNullOrWhiteSpace("because admin login should succeed and provide a token.");
 
-            // 3. Add the user to the Admin role
-            var addToRoleResult = await userManager.AddToRoleAsync(user, RoleConstants.Roles.Admin);
-            if (!addToRoleResult.Succeeded)
-            {
-                throw new InvalidOperationException($"Failed to add user {userId} to Admin role: {string.Join(", ", addToRoleResult.Errors.Select(e => e.Description))}");
-            }
-            Console.WriteLine($"---> Promoted user {adminEmail} to Admin role.");
-        }
-
-        // 4. Login as the now-admin user using the success helper
-        var loginResult = await LoginUserSuccessfullyAsync(adminEmail, adminPassword);
-
-        loginResult.AccessToken.Should().NotBeNullOrWhiteSpace();
-
+        Console.WriteLine($"---> Successfully obtained access token for admin: {loginDto.Email}");
         return loginResult.AccessToken;
     }
 }

@@ -15,11 +15,17 @@ public class LogoutTests : AuthTestsBase
     [Fact]
     public async Task Logout_WithValidTokens_ReturnsNoContentAndRevokesToken()
     {
-        // Arrange: Register and Login using success helpers
-        var email = $"logout-ok-{Guid.NewGuid()}@example.com";
-        var password = "Password123!";
-        await RegisterUserSuccessfullyAsync(email, password);
-        var loginResult = await LoginUserSuccessfullyAsync(email, password);
+        var adminAccessToken = await GetAdminAccessTokenAsync(); // Get admin token first
+        var registerDto = new RegisterUserDto(
+            Email: $"logout-ok-{Guid.NewGuid()}@example.com",
+            FirstName: "Logout",
+            LastName: "Ok",
+            Password: "Password123!"
+        );
+        await RegisterUserSuccessfullyAsync(adminAccessToken, registerDto); // Pass token and DTO
+
+        var loginDto = new LoginUserDto(registerDto.Email, registerDto.Password);
+        var loginResult = await LoginUserSuccessfullyAsync(loginDto); // Pass DTO
         // loginResult is guaranteed non-null here
 
         var accessToken = loginResult.AccessToken;
@@ -64,11 +70,17 @@ public class LogoutTests : AuthTestsBase
     [Fact]
     public async Task Logout_WithInvalidRefreshTokenInBody_ReturnsNoContent()
     {
-        // Arrange: Register and Login using success helpers
-        var email = $"logout-invalid-rt-{Guid.NewGuid()}@example.com";
-        var password = "Password123!";
-        await RegisterUserSuccessfullyAsync(email, password);
-        var loginResult = await LoginUserSuccessfullyAsync(email, password);
+        var adminAccessToken = await GetAdminAccessTokenAsync(); // Get admin token first
+        var registerDto = new RegisterUserDto(
+            Email: $"logout-invalid-rt-{Guid.NewGuid()}@example.com",
+            FirstName: "LogoutInvalid",
+            LastName: "Rt",
+            Password: "Password123!"
+        );
+        await RegisterUserSuccessfullyAsync(adminAccessToken, registerDto); // Pass token and DTO
+
+        var loginDto = new LoginUserDto(registerDto.Email, registerDto.Password);
+        var loginResult = await LoginUserSuccessfullyAsync(loginDto); // Pass DTO
         // loginResult is guaranteed non-null here
 
         var accessToken = loginResult.AccessToken;
@@ -91,11 +103,17 @@ public class LogoutTests : AuthTestsBase
     [Fact]
     public async Task Logout_WithMissingRefreshTokenBody_ReturnsBadRequest()
     {
-        // Arrange: Register and Login using success helpers
-        var email = $"logout-no-rt-body-{Guid.NewGuid()}@example.com";
-        var password = "Password123!";
-        await RegisterUserSuccessfullyAsync(email, password);
-        var loginResult = await LoginUserSuccessfullyAsync(email, password);
+        var adminAccessToken = await GetAdminAccessTokenAsync(); // Get admin token first
+        var registerDto = new RegisterUserDto(
+            Email: $"logout-no-rt-body-{Guid.NewGuid()}@example.com",
+            FirstName: "LogoutNoRt",
+            LastName: "Body",
+            Password: "Password123!"
+        );
+        await RegisterUserSuccessfullyAsync(adminAccessToken, registerDto); // Pass token and DTO
+
+        var loginDto = new LoginUserDto(registerDto.Email, registerDto.Password);
+        var loginResult = await LoginUserSuccessfullyAsync(loginDto); // Pass DTO
         // loginResult is guaranteed non-null here
 
         var accessToken = loginResult.AccessToken;

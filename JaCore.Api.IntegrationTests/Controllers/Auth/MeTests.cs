@@ -14,14 +14,17 @@ public class MeTests : AuthTestsBase
     [Fact]
     public async Task GetMe_WithValidToken_ReturnsUserData()
     {
-        // Arrange: Register and Login using success helpers
-        var email = $"me-ok-{Guid.NewGuid()}@example.com";
-        var password = "Password123!";
-        var firstName = "MeFirst";
-        var lastName = "MeLast";
-        var registerResult = await RegisterUserSuccessfullyAsync(email, password, firstName, lastName);
-        var loginResult = await LoginUserSuccessfullyAsync(email, password);
-        // registerResult and loginResult are guaranteed non-null here
+        var adminAccessToken = await GetAdminAccessTokenAsync(); // Get admin token first
+        var registerDto = new RegisterUserDto(
+            Email: $"me-ok-{Guid.NewGuid()}@example.com",
+            FirstName: "MeFirst",
+            LastName: "MeLast",
+            Password: "Password123!"
+        );
+        var registerResult = await RegisterUserSuccessfullyAsync(adminAccessToken, registerDto); // Pass token and DTO
+
+        var loginDto = new LoginUserDto(registerDto.Email, registerDto.Password);
+        var loginResult = await LoginUserSuccessfullyAsync(loginDto); // Pass DTO
 
         var accessToken = loginResult.AccessToken;
 
@@ -36,9 +39,9 @@ public class MeTests : AuthTestsBase
         meResponse.StatusCode.Should().Be(HttpStatusCode.OK);
         var meResult = await meResponse.Content.ReadFromJsonAsync<MeResponseDto>();
         meResult.Should().NotBeNull();
-        meResult!.Email.Should().Be(email);
-        meResult.FirstName.Should().Be(firstName);
-        meResult.LastName.Should().Be(lastName);
+        meResult!.Email.Should().Be(registerDto.Email);
+        meResult.FirstName.Should().Be(registerDto.FirstName);
+        meResult.LastName.Should().Be(registerDto.LastName);
         meResult.UserId.Should().Be(registerResult.UserId.ToString());
         meResult.Roles.Should().NotBeNull().And.Contain("User");
     }

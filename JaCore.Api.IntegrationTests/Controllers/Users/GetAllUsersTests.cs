@@ -19,9 +19,14 @@ public class GetAllUsersTests : AuthTestsBase
     [Fact]
     public async Task GetAllUsers_WithAdminToken_ReturnsOkAndUserList()
     {
-        var standardUserEmail = $"std-user-{Guid.NewGuid()}@example.com";
-        await RegisterUserSuccessfullyAsync(standardUserEmail, "Password123!");
-        var adminAccessToken = await GetAdminAccessTokenAsync();
+        var adminAccessToken = await GetAdminAccessTokenAsync(); // Get admin token first
+        var registerDto = new RegisterUserDto(
+            Email: $"std-user-{Guid.NewGuid()}@example.com",
+            FirstName: "Standard",
+            LastName: "User",
+            Password: "Password123!"
+        );
+        await RegisterUserSuccessfullyAsync(adminAccessToken, registerDto); // Pass token and DTO
         _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", adminAccessToken);
         var response = await _client.GetAsync(UsersBaseUrl);
         _client.DefaultRequestHeaders.Authorization = null;
@@ -29,15 +34,23 @@ public class GetAllUsersTests : AuthTestsBase
         var users = await response.Content.ReadFromJsonAsync<List<UserDto>>();
         users.Should().NotBeNull();
         users.Should().HaveCountGreaterThanOrEqualTo(1);
-        users.Should().Contain(u => u.Email == standardUserEmail);
+        users.Should().Contain(u => u.Email == registerDto.Email);
     }
 
     [Fact]
     public async Task GetAllUsers_WithStandardUserToken_ReturnsForbidden()
     {
-        var standardUserEmail = $"std-user-forbidden-{Guid.NewGuid()}@example.com";
-        await RegisterUserSuccessfullyAsync(standardUserEmail, "Password123!");
-        var loginResult = await LoginUserSuccessfullyAsync(standardUserEmail, "Password123!");
+        var adminAccessToken = await GetAdminAccessTokenAsync(); // Get admin token first
+        var registerDto = new RegisterUserDto(
+            Email: $"std-user-forbidden-{Guid.NewGuid()}@example.com",
+            FirstName: "Standard",
+            LastName: "Forbidden",
+            Password: "Password123!"
+        );
+        await RegisterUserSuccessfullyAsync(adminAccessToken, registerDto); // Pass token and DTO
+
+        var loginDto = new LoginUserDto(registerDto.Email, registerDto.Password);
+        var loginResult = await LoginUserSuccessfullyAsync(loginDto); // Pass DTO
         var standardUserToken = loginResult.AccessToken;
         _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", standardUserToken);
         var response = await _client.GetAsync(UsersBaseUrl);

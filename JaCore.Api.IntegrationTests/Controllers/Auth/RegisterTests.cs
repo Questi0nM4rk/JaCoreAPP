@@ -2,6 +2,8 @@ using FluentAssertions;
 using JaCore.Api.IntegrationTests.Helpers; // For Factory, Collection
 using System.Net;
 using Xunit;
+// Add using for the DTOs if not already present in AuthTestsBase or globally
+// using static JaCore.Api.IntegrationTests.Controllers.Auth.AuthTestsBase; 
 
 namespace JaCore.Api.IntegrationTests.Controllers.Auth;
 
@@ -14,11 +16,17 @@ public class RegisterTests : AuthTestsBase
     public async Task Register_WithValidData_ReturnsOkAndTokens()
     {
         // Arrange
-        var email = $"register-ok-{Guid.NewGuid()}@example.com";
-        var password = "Password123!";
+        var adminToken = await GetAdminAccessTokenAsync(); // Get admin token
+        var registerDto = new RegisterUserDto(
+            Email: $"register-ok-{Guid.NewGuid()}@example.com",
+            Password: "Password123!",
+            FirstName: "Register",
+            LastName: "Ok"
+        );
 
         // Act
-        var (result, response) = await RegisterUserAsync(email, password, "Register", "Ok");
+        // Use the updated RegisterUserAsync with admin token and DTO
+        var (result, response) = await RegisterUserAsync(adminToken, registerDto);
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -26,21 +34,27 @@ public class RegisterTests : AuthTestsBase
         result!.Succeeded.Should().BeTrue();
         result.AccessToken.Should().NotBeNullOrWhiteSpace();
         result.RefreshToken.Should().NotBeNullOrWhiteSpace();
-        result.Email.Should().Be(email);
+        result.Email.Should().Be(registerDto.Email);
         result.UserId.Should().NotBeEmpty();
     }
 
     [Fact]
     public async Task Register_WithDuplicateEmail_ReturnsBadRequest()
     {
-        // Arrange: Register a user first using the success helper
-        var email = $"duplicate-{Guid.NewGuid()}@example.com";
-        var password = "Password123!";
-        await RegisterUserSuccessfullyAsync(email, password);
-        // No need to check firstResponse or firstResult
+        // Arrange: Get admin token and register a user first
+        var adminToken = await GetAdminAccessTokenAsync();
+        var registerDto = new RegisterUserDto(
+            Email: $"duplicate-{Guid.NewGuid()}@example.com",
+            Password: "Password123!",
+            FirstName: "Duplicate",
+            LastName: "Test"
+        );
+        // Use the updated RegisterUserSuccessfullyAsync with admin token and DTO
+        await RegisterUserSuccessfullyAsync(adminToken, registerDto);
 
-        // Act: Try to register the same email again using the original helper
-        var (secondResult, secondResponse) = await RegisterUserAsync(email, password);
+        // Act: Try to register the same email again
+        // Use the updated RegisterUserAsync with admin token and DTO
+        var (secondResult, secondResponse) = await RegisterUserAsync(adminToken, registerDto);
 
         // Assert
         secondResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -54,11 +68,17 @@ public class RegisterTests : AuthTestsBase
     public async Task Register_WithInvalidPassword_ReturnsBadRequest()
     {
         // Arrange
-        var email = $"invalid-pass-{Guid.NewGuid()}@example.com";
-        var invalidPassword = "123"; // Assuming this violates password policy
+        var adminToken = await GetAdminAccessTokenAsync();
+        var registerDto = new RegisterUserDto(
+            Email: $"invalid-pass-{Guid.NewGuid()}@example.com",
+            Password: "123", // Assuming this violates password policy
+            FirstName: "Invalid",
+            LastName: "Password"
+        );
 
         // Act
-        var (result, response) = await RegisterUserAsync(email, invalidPassword);
+        // Use the updated RegisterUserAsync with admin token and DTO
+        var (result, response) = await RegisterUserAsync(adminToken, registerDto);
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -77,10 +97,17 @@ public class RegisterTests : AuthTestsBase
         string firstName, string lastName, string password, string? email = null)
     {
         // Arrange
-        email ??= $"missing-data-{Guid.NewGuid()}@example.com";
+        var adminToken = await GetAdminAccessTokenAsync();
+        var registerDto = new RegisterUserDto(
+            Email: email ?? $"missing-data-{Guid.NewGuid()}@example.com",
+            Password: password,
+            FirstName: firstName,
+            LastName: lastName
+        );
 
         // Act
-        var (result, response) = await RegisterUserAsync(email, password, firstName, lastName);
+        // Use the updated RegisterUserAsync with admin token and DTO
+        var (result, response) = await RegisterUserAsync(adminToken, registerDto);
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);

@@ -15,11 +15,17 @@ public class RefreshTests : AuthTestsBase
     [Fact]
     public async Task Refresh_WithValidTokens_ReturnsOkAndNewTokens()
     {
-        // Arrange: Register and Login using success helpers
-        var email = $"refresh-ok-{Guid.NewGuid()}@example.com";
-        var password = "Password123!";
-        await RegisterUserSuccessfullyAsync(email, password);
-        var loginResult = await LoginUserSuccessfullyAsync(email, password);
+        var adminAccessToken = await GetAdminAccessTokenAsync(); // Get admin token first
+        var registerDto = new RegisterUserDto(
+            Email: $"refresh-ok-{Guid.NewGuid()}@example.com",
+            FirstName: "Refresh",
+            LastName: "Ok",
+            Password: "Password123!"
+        );
+        await RegisterUserSuccessfullyAsync(adminAccessToken, registerDto); // Pass token and DTO
+
+        var loginDto = new LoginUserDto(registerDto.Email, registerDto.Password);
+        var loginResult = await LoginUserSuccessfullyAsync(loginDto); // Pass DTO
         // loginResult is guaranteed non-null here
 
         var initialAccessToken = loginResult.AccessToken;
@@ -40,17 +46,23 @@ public class RefreshTests : AuthTestsBase
         refreshResult.AccessToken.Should().NotBeNullOrWhiteSpace().And.NotBe(initialAccessToken);
         refreshResult.RefreshToken.Should().NotBeNullOrWhiteSpace(); // Could be the same or a new one depending on strategy
         refreshResult.UserId.Should().Be(loginResult.UserId);
-        refreshResult.Email.Should().Be(email);
+        refreshResult.Email.Should().Be(registerDto.Email);
     }
 
     [Fact]
     public async Task Refresh_WithInvalidRefreshToken_ReturnsUnauthorized()
     {
-        // Arrange: Register and Login using success helpers
-        var email = $"refresh-invalid-rt-{Guid.NewGuid()}@example.com";
-        var password = "Password123!";
-        await RegisterUserSuccessfullyAsync(email, password);
-        var loginResult = await LoginUserSuccessfullyAsync(email, password);
+        var adminAccessToken = await GetAdminAccessTokenAsync(); // Get admin token first
+        var registerDto = new RegisterUserDto(
+            Email: $"refresh-invalid-rt-{Guid.NewGuid()}@example.com",
+            FirstName: "RefreshInvalid",
+            LastName: "Rt",
+            Password: "Password123!"
+        );
+        await RegisterUserSuccessfullyAsync(adminAccessToken, registerDto); // Pass token and DTO
+
+        var loginDto = new LoginUserDto(registerDto.Email, registerDto.Password);
+        var loginResult = await LoginUserSuccessfullyAsync(loginDto); // Pass DTO
         // loginResult is guaranteed non-null here
 
         var validAccessToken = loginResult.AccessToken;
@@ -70,11 +82,17 @@ public class RefreshTests : AuthTestsBase
     [Fact]
     public async Task Refresh_WithoutAccessTokenHeader_ReturnsUnauthorized()
     {
-        // Arrange: Register and Login using success helpers
-        var email = $"refresh-no-at-{Guid.NewGuid()}@example.com";
-        var password = "Password123!";
-        await RegisterUserSuccessfullyAsync(email, password);
-        var loginResult = await LoginUserSuccessfullyAsync(email, password);
+        var adminAccessToken = await GetAdminAccessTokenAsync(); // Get admin token first
+        var registerDto = new RegisterUserDto(
+            Email: $"refresh-no-at-{Guid.NewGuid()}@example.com",
+            FirstName: "RefreshNo",
+            LastName: "At",
+            Password: "Password123!"
+        );
+        await RegisterUserSuccessfullyAsync(adminAccessToken, registerDto); // Pass token and DTO
+
+        var loginDto = new LoginUserDto(registerDto.Email, registerDto.Password);
+        var loginResult = await LoginUserSuccessfullyAsync(loginDto); // Pass DTO
         // loginResult is guaranteed non-null here
 
         var validRefreshToken = loginResult.RefreshToken;
@@ -92,11 +110,17 @@ public class RefreshTests : AuthTestsBase
     [Fact]
     public async Task Refresh_WithMissingRefreshTokenBody_ReturnsBadRequest()
     {
-        // Arrange: Register and Login using success helpers
-        var email = $"refresh-no-rt-body-{Guid.NewGuid()}@example.com";
-        var password = "Password123!";
-        await RegisterUserSuccessfullyAsync(email, password);
-        var loginResult = await LoginUserSuccessfullyAsync(email, password);
+        var adminAccessToken = await GetAdminAccessTokenAsync(); // Get admin token first
+        var registerDto = new RegisterUserDto(
+            Email: $"refresh-no-rt-body-{Guid.NewGuid()}@example.com",
+            FirstName: "RefreshNoRt",
+            LastName: "Body",
+            Password: "Password123!"
+        );
+        await RegisterUserSuccessfullyAsync(adminAccessToken, registerDto); // Pass token and DTO
+
+        var loginDto = new LoginUserDto(registerDto.Email, registerDto.Password);
+        var loginResult = await LoginUserSuccessfullyAsync(loginDto); // Pass DTO
         // loginResult is guaranteed non-null here
 
         var validAccessToken = loginResult.AccessToken;

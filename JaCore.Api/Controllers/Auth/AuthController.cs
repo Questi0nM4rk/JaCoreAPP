@@ -35,7 +35,7 @@ public class AuthController : ControllerBase
 
     // Register and Login actions remain the same as in Response #47
     [HttpPost(ApiConstants.Routes.Register)] // Use route constant
-    [AllowAnonymous]
+    [Authorize(Policy = ApiConstants.Policies.AdminOnly)] // Only admins can register new users
     [ProducesResponseType(typeof(AuthResponseDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]

@@ -19,9 +19,15 @@ public class UpdateUserRolesTests : AuthTestsBase
     [Fact]
     public async Task UpdateUserRoles_AdminUpdatesRoles_ReturnsNoContent()
     {
-        var targetUser = await RegisterUserSuccessfullyAsync();
+        var adminAccessToken = await GetAdminAccessTokenAsync(); // Get admin token first
+        var registerDto = new RegisterUserDto(
+            Email: $"target-roles-{Guid.NewGuid()}@example.com",
+            FirstName: "Target",
+            LastName: "Roles",
+            Password: "Password123!"
+        );
+        var targetUser = await RegisterUserSuccessfullyAsync(adminAccessToken, registerDto); // Pass token and DTO
         var targetUserId = targetUser.UserId;
-        var adminAccessToken = await GetAdminAccessTokenAsync();
         var updateRolesDto = new UpdateUserRolesDto { Roles = new List<string> { "Admin" } };
         _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", adminAccessToken);
         var response = await _client.PutAsJsonAsync($"{UsersBaseUrl}/{targetUserId}/roles", updateRolesDto);
@@ -32,12 +38,26 @@ public class UpdateUserRolesTests : AuthTestsBase
     [Fact]
     public async Task UpdateUserRoles_StandardUserForbidden()
     {
-        var targetUser = await RegisterUserSuccessfullyAsync();
+        var adminAccessToken = await GetAdminAccessTokenAsync(); // Get admin token first
+        var targetRegisterDto = new RegisterUserDto(
+            Email: $"target-forbidden-roles-{Guid.NewGuid()}@example.com",
+            FirstName: "Target",
+            LastName: "ForbiddenRoles",
+            Password: "Password123!"
+        );
+        var targetUser = await RegisterUserSuccessfullyAsync(adminAccessToken, targetRegisterDto); // Pass token and DTO
         var targetUserId = targetUser.UserId;
-        var requesterEmail = $"requester-roles-{Guid.NewGuid()}@example.com";
-        var requesterPassword = "Password123!";
-        await RegisterUserSuccessfullyAsync(requesterEmail, requesterPassword);
-        var requesterLogin = await LoginUserSuccessfullyAsync(requesterEmail, requesterPassword);
+
+        var requesterRegisterDto = new RegisterUserDto(
+            Email: $"requester-roles-{Guid.NewGuid()}@example.com",
+            FirstName: "Requester",
+            LastName: "Roles",
+            Password: "Password123!"
+        );
+        await RegisterUserSuccessfullyAsync(adminAccessToken, requesterRegisterDto); // Pass token and DTO
+
+        var requesterLoginDto = new LoginUserDto(requesterRegisterDto.Email, requesterRegisterDto.Password);
+        var requesterLogin = await LoginUserSuccessfullyAsync(requesterLoginDto); // Pass DTO
         var requesterToken = requesterLogin.AccessToken;
         var updateRolesDto = new UpdateUserRolesDto { Roles = new List<string> { "Admin" } };
         _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", requesterToken);

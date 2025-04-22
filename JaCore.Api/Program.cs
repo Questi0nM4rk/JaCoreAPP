@@ -26,6 +26,7 @@ using JaCore.Api.Helpers; // Add using for the new constants
 using FluentValidation; // Add using for FluentValidation
 using FluentValidation.AspNetCore; // Add using for ASP.NET Core integration
 using System.Reflection; // Add using for Assembly
+using JaCore.Api.Services.Repositories; // Add using for Repositories
 
 [assembly: InternalsVisibleTo("JaCore.Api.Tests")]
 [assembly: InternalsVisibleTo("JaCore.Api.IntegrationTests")]
@@ -68,7 +69,7 @@ try
 
     // Database Context
     var connectionString = configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string not found.");
-    builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connectionString));
+    builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(connectionString)); // Add this line for PostgreSQL
 
     // Identity
     builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
@@ -128,6 +129,7 @@ try
     // **Register Application Services using Interfaces (Dependency Injection)**
     builder.Services.AddScoped<IAuthService, AuthService>(); // Maps interface to implementation
     builder.Services.AddScoped<IUserService, UserService>(); // Maps interface to implementation
+    builder.Services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>(); // Add this line
 
     // Swagger / OpenAPI (for testing controllers)
     builder.Services.AddEndpointsApiExplorer();
