@@ -12,6 +12,7 @@ using Npgsql; // Npgsql EF Core provider namespace
 using Org.BouncyCastle.Asn1;
 using System.Data.Common; // For DbConnection
 using Xunit; // Needed for IClassFixture
+using Microsoft.Extensions.Logging; // Add this using
 
 namespace JaCore.Api.IntegrationTests.Helpers;
 
@@ -31,8 +32,17 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>, IClas
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
         Console.WriteLine("---> Configuring WebHost for Testing...");
+
+        // Clear default logging providers to prevent conflicts with Serilog setup in Program.cs
+        builder.ConfigureLogging(logging =>
+        {
+            logging.ClearProviders();
+            // Optionally add a console logger for test output if desired
+            // logging.AddConsole();
+        });
+
         // Use ConfigureTestServices for reliable service overrides in tests
-        builder.ConfigureTestServices(async services =>
+        builder.ConfigureTestServices(services =>
         {
             Console.WriteLine("---> Configuring Test Services...");
             // Remove the original DbContext registration from Program.cs/Startup.cs
@@ -70,23 +80,22 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>, IClas
             });
              Console.WriteLine("---> ApplicationDbContext configured for Testcontainer.");
 
-            var sp = services.BuildServiceProvider(); // Build the service provider to apply changes
-            using (var scope = sp.CreateScope())
-            {
-                var scopedServices = scope.ServiceProvider;
-                var db = scopedServices.GetRequiredService<ApplicationDbContext>();
-                db.Database.Migrate();
+            // --- Move Seeding Logic ---
+            // We will move the seeding logic to DatabaseFixture later
+            // var sp = services.BuildServiceProvider();
+            // using (var scope = sp.CreateScope())
+            // {
+            //     var scopedServices = scope.ServiceProvider;
+            //     var db = scopedServices.GetRequiredService<ApplicationDbContext>();
+            //     // Ensure migrations are applied (might be redundant if DatabaseFixture does it)
+            //     // db.Database.Migrate();
+            //
+            //     var env = scopedServices.GetRequiredService<IHostEnvironment>();
+            //     // await TestDataSeeder.SeedAdminUserAsync(scopedServices, env); // SEEDING MOVED
+            // }
+            // --- End Move Seeding Logic ---
 
-                var env = scopedServices.GetRequiredService<IHostEnvironment>();
-                await TestDataSeeder.SeedAdminUserAsync(scopedServices, env); // Seed admin user if needed
-
-                // Ensure the database is created and migrations are applied
-                db.Database.EnsureCreated(); // This is usually not needed in tests, but can be useful for setup
-            }
-
-            // Optional: Override other services for testing (e.g., mock external dependencies)
-            // services.Replace(ServiceDescriptor.Scoped<IEmailService, MockEmailService>());
-             Console.WriteLine("---> Test Services configuration complete.");
+            Console.WriteLine("---> Test Services configuration complete.");
         });
 
         // Optionally set the environment for tests (useful if appsettings.Testing.json exists)
