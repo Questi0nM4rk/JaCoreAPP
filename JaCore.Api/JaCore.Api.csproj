@@ -4,7 +4,6 @@
     <TargetFramework>net9.0</TargetFramework> <!-- Target .NET 9 -->
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <UserSecretsId>your-unique-guid-for-secrets</UserSecretsId> <!-- Add your unique ID -->
   </PropertyGroup>
 
   <ItemGroup>
