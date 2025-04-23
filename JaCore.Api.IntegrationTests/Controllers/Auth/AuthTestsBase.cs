@@ -157,8 +157,8 @@ public abstract class AuthTestsBase : IClassFixture<CustomWebApplicationFactory>
         // Assume admin credentials are known and seeded
         // Replace with your actual seeded admin credentials
         var loginDto = new LoginUserDto(
-            Email: "admin@jacore.app", // Replace with actual seeded admin email
-            Password: "AdminPassword123!" // Replace with actual seeded admin password
+            Email: "admin@jacore.app",
+            Password: "AdminPassword123!"
         );
 
         Console.WriteLine($"---> Attempting to log in as seeded admin: {loginDto.Email}");
