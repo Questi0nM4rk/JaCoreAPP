@@ -1,10 +1,12 @@
 using FluentAssertions;
-using JaCore.Api.DTOs.Auth;
+using JaCore.Api.Helpers;
 using JaCore.Api.IntegrationTests.Helpers;
 using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using Xunit;
+using JaCore.Api.IntegrationTests.DTOs.Auth;
+using JaCore.Api.IntegrationTests.Controllers.Base;
 
 namespace JaCore.Api.IntegrationTests.Controllers.Auth;
 
@@ -16,15 +18,16 @@ public class LogoutTests : AuthTestsBase
     public async Task Logout_WithValidTokens_ReturnsNoContentAndRevokesToken()
     {
         var adminAccessToken = await GetAdminAccessTokenAsync(); // Get admin token first
-        var registerDto = new RegisterUserDto(
-            Email: $"logout-ok-{Guid.NewGuid()}@example.com",
-            FirstName: "Logout",
-            LastName: "Ok",
-            Password: "Password123!"
-        );
+        var registerDto = new RegisterDto
+        {
+            Email = $"logout-ok-{Guid.NewGuid()}@example.com",
+            FirstName = "Logout",
+            LastName = "Ok",
+            Password = "Password123!"
+        };
         await RegisterUserSuccessfullyAsync(adminAccessToken, registerDto); // Pass token and DTO
 
-        var loginDto = new LoginUserDto(registerDto.Email, registerDto.Password);
+        var loginDto = new LoginDto { Email = registerDto.Email, Password = registerDto.Password };
         var loginResult = await LoginUserSuccessfullyAsync(loginDto); // Pass DTO
         // loginResult is guaranteed non-null here
 
@@ -35,7 +38,7 @@ public class LogoutTests : AuthTestsBase
 
         // Act: Call logout with valid access token and the refresh token to revoke
         _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
-        var logoutResponse = await _client.PostAsJsonAsync(LogoutUrl, logoutRequest);
+        var logoutResponse = await _client.PostAsJsonAsync(ApiConstants.AuthRoutes.Logout, logoutRequest);
         _client.DefaultRequestHeaders.Authorization = null;
 
         // Assert: Logout successful
@@ -46,7 +49,7 @@ public class LogoutTests : AuthTestsBase
         // Assert: Try to refresh using the revoked token (should fail)
         var refreshRequestAfterLogout = new TokenRefreshRequestDto(refreshTokenToRevoke);
         _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken); // Still need AT header for refresh
-        var refreshResponseAfterLogout = await _client.PostAsJsonAsync(RefreshUrl, refreshRequestAfterLogout);
+        var refreshResponseAfterLogout = await _client.PostAsJsonAsync(ApiConstants.AuthRoutes.Refresh, refreshRequestAfterLogout);
         _client.DefaultRequestHeaders.Authorization = null;
 
         refreshResponseAfterLogout.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
@@ -61,7 +64,7 @@ public class LogoutTests : AuthTestsBase
 
         // Act: Call logout without Authorization header
         _client.DefaultRequestHeaders.Authorization = null;
-        var logoutResponse = await _client.PostAsJsonAsync(LogoutUrl, logoutRequest);
+        var logoutResponse = await _client.PostAsJsonAsync(ApiConstants.AuthRoutes.Logout, logoutRequest);
 
         // Assert
         logoutResponse.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
@@ -71,15 +74,16 @@ public class LogoutTests : AuthTestsBase
     public async Task Logout_WithInvalidRefreshTokenInBody_ReturnsNoContent()
     {
         var adminAccessToken = await GetAdminAccessTokenAsync(); // Get admin token first
-        var registerDto = new RegisterUserDto(
-            Email: $"logout-invalid-rt-{Guid.NewGuid()}@example.com",
-            FirstName: "LogoutInvalid",
-            LastName: "Rt",
-            Password: "Password123!"
-        );
+        var registerDto = new RegisterDto
+        {
+            Email = $"logout-invalid-rt-{Guid.NewGuid()}@example.com",
+            FirstName = "LogoutInvalid",
+            LastName = "Rt",
+            Password = "Password123!"
+        };
         await RegisterUserSuccessfullyAsync(adminAccessToken, registerDto); // Pass token and DTO
 
-        var loginDto = new LoginUserDto(registerDto.Email, registerDto.Password);
+        var loginDto = new LoginDto { Email = registerDto.Email, Password = registerDto.Password };
         var loginResult = await LoginUserSuccessfullyAsync(loginDto); // Pass DTO
         // loginResult is guaranteed non-null here
 
@@ -90,7 +94,7 @@ public class LogoutTests : AuthTestsBase
 
         // Act: Call logout with valid access token but an invalid refresh token
         _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
-        var logoutResponse = await _client.PostAsJsonAsync(LogoutUrl, logoutRequest);
+        var logoutResponse = await _client.PostAsJsonAsync(ApiConstants.AuthRoutes.Logout, logoutRequest);
         _client.DefaultRequestHeaders.Authorization = null;
 
         // Assert
@@ -104,15 +108,16 @@ public class LogoutTests : AuthTestsBase
     public async Task Logout_WithMissingRefreshTokenBody_ReturnsBadRequest()
     {
         var adminAccessToken = await GetAdminAccessTokenAsync(); // Get admin token first
-        var registerDto = new RegisterUserDto(
-            Email: $"logout-no-rt-body-{Guid.NewGuid()}@example.com",
-            FirstName: "LogoutNoRt",
-            LastName: "Body",
-            Password: "Password123!"
-        );
+        var registerDto = new RegisterDto
+        {
+            Email = $"logout-no-rt-body-{Guid.NewGuid()}@example.com",
+            FirstName = "LogoutNoRt",
+            LastName = "Body",
+            Password = "Password123!"
+        };
         await RegisterUserSuccessfullyAsync(adminAccessToken, registerDto); // Pass token and DTO
 
-        var loginDto = new LoginUserDto(registerDto.Email, registerDto.Password);
+        var loginDto = new LoginDto { Email = registerDto.Email, Password = registerDto.Password };
         var loginResult = await LoginUserSuccessfullyAsync(loginDto); // Pass DTO
         // loginResult is guaranteed non-null here
 
@@ -120,7 +125,7 @@ public class LogoutTests : AuthTestsBase
 
         // Act: Call logout with valid access token but null body
         _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
-        var logoutResponse = await _client.PostAsJsonAsync<TokenRefreshRequestDto?>(LogoutUrl, null);
+        var logoutResponse = await _client.PostAsJsonAsync<TokenRefreshRequestDto?>(ApiConstants.AuthRoutes.Logout, null);
         _client.DefaultRequestHeaders.Authorization = null;
 
         // Assert

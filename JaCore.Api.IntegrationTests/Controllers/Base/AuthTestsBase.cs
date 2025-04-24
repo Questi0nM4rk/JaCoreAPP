@@ -1,17 +1,12 @@
 using FluentAssertions; // Added for Should().NotBeNull()
-using JaCore.Api.DTOs.Auth;
 using JaCore.Api.Helpers; // For ApiConstants
 using JaCore.Api.IntegrationTests.Helpers; // For Factory, Collection
 using Microsoft.AspNetCore.Mvc.Testing;
 using System.Net.Http.Json;
 using Xunit;
-using JaCore.Api.Data; // For ApplicationDbContext
-using JaCore.Api.Entities.Identity; // For ApplicationUser
-using JaCore.Common; // For RoleConstants
-using Microsoft.AspNetCore.Identity; // For UserManager
-using Microsoft.Extensions.DependencyInjection; // For CreateScope
+using JaCore.Api.IntegrationTests.DTOs.Auth; // Added new using for Integration Test DTOs
 
-namespace JaCore.Api.IntegrationTests.Controllers.Auth;
+namespace JaCore.Api.IntegrationTests.Controllers.Base;
 
 // Base class for Auth controller tests, sharing the database fixture via collection
 [Collection("Database Collection")]
@@ -19,17 +14,6 @@ public abstract class AuthTestsBase : IClassFixture<CustomWebApplicationFactory>
 {
     protected readonly HttpClient _client;
     protected readonly CustomWebApplicationFactory _factory;
-
-    // Base URL for Auth controller
-    protected const string AuthBaseUrl = $"{ApiConstants.ApiRoutePrefix}/auth"; // e.g., "/api/v1/auth"
-
-    // Specific endpoint routes
-    protected const string RegisterUrl = $"{AuthBaseUrl}/{ApiConstants.Routes.Register}";
-    protected const string LoginUrl = $"{AuthBaseUrl}/{ApiConstants.Routes.Login}";
-    protected const string RefreshUrl = $"{AuthBaseUrl}/{ApiConstants.Routes.Refresh}";
-    protected const string LogoutUrl = $"{AuthBaseUrl}/{ApiConstants.Routes.Logout}";
-    protected const string MeUrl = $"{AuthBaseUrl}/{ApiConstants.Routes.GetCurrentUser}";
-    protected const string AdminOnlyUrl = $"{AuthBaseUrl}/{ApiConstants.Routes.AdminOnlyData}";
 
     protected AuthTestsBase(CustomWebApplicationFactory factory)
     {
@@ -41,26 +25,13 @@ public abstract class AuthTestsBase : IClassFixture<CustomWebApplicationFactory>
         Console.WriteLine($"---> AuthTestsBase initialized for {GetType().Name}.");
     }
 
-    // --- DTO Definitions ---
-    public record RegisterUserDto(
-        string Email,
-        string FirstName,
-        string LastName,
-        string Password
-    );
-
-    public record LoginUserDto(
-        string Email,
-        string Password
-    );
-
     // --- Common Helper Methods ---
 
     protected async Task<(AuthResponseDto? AuthResult, HttpResponseMessage Response)> RegisterUserAsync(
         string adminAccessToken,
-        RegisterUserDto registerDto)
+        RegisterDto registerDto) // Updated to use new RegisterDto
     {
-        var httpRequest = new HttpRequestMessage(HttpMethod.Post, RegisterUrl)
+        var httpRequest = new HttpRequestMessage(HttpMethod.Post, ApiConstants.AuthRoutes.Register)
         {
             Content = JsonContent.Create(registerDto)
         };
@@ -76,9 +47,10 @@ public abstract class AuthTestsBase : IClassFixture<CustomWebApplicationFactory>
     }
 
     protected async Task<(AuthResponseDto? AuthResult, HttpResponseMessage Response)> LoginUserAsync(
-        LoginUserDto loginDto)
+        LoginDto loginDto) // Updated to use new LoginDto
     {
-        var response = await _client.PostAsJsonAsync(LoginUrl, loginDto);
+        Console.WriteLine($"---> Attempting send login request to endpoint: {ApiConstants.AuthRoutes.Login}");
+        var response = await _client.PostAsJsonAsync(ApiConstants.AuthRoutes.Login, loginDto);
         AuthResponseDto? result = response.IsSuccessStatusCode
             ? await response.Content.ReadFromJsonAsync<AuthResponseDto>()
             : null;
@@ -90,7 +62,8 @@ public abstract class AuthTestsBase : IClassFixture<CustomWebApplicationFactory>
     protected async Task<(AuthResponseDto? AuthResult, HttpResponseMessage Response)> RefreshTokenAsync(
         string refreshToken)
     {
-        var response = await _client.PostAsJsonAsync(RefreshUrl, new { refreshToken });
+        var refreshDto = new TokenRefreshRequestDto(refreshToken); // Use new TokenRefreshRequestDto implicitly or explicitly
+        var response = await _client.PostAsJsonAsync(ApiConstants.AuthRoutes.Refresh, refreshDto);
         AuthResponseDto? result = response.IsSuccessStatusCode
             ? await response.Content.ReadFromJsonAsync<AuthResponseDto>()
             : null;
@@ -101,7 +74,7 @@ public abstract class AuthTestsBase : IClassFixture<CustomWebApplicationFactory>
 
     protected async Task<HttpResponseMessage> LogoutAsync(string accessToken)
     {
-        var request = new HttpRequestMessage(HttpMethod.Post, LogoutUrl);
+        var request = new HttpRequestMessage(HttpMethod.Post, ApiConstants.AuthRoutes.Logout);
         request.Headers.Authorization = new("Bearer", accessToken);
         return await _client.SendAsync(request);
     }
@@ -116,7 +89,7 @@ public abstract class AuthTestsBase : IClassFixture<CustomWebApplicationFactory>
     /// <returns>The non-nullable AuthResponseDto on success.</returns>
     protected async Task<AuthResponseDto> RegisterUserSuccessfullyAsync(
         string adminAccessToken, // Added: Admin token is now required
-        RegisterUserDto registerDto)
+        RegisterDto registerDto) // Updated to use new RegisterDto
     {
         // Pass the admin token to the underlying helper
         var (result, response) = await RegisterUserAsync(adminAccessToken, registerDto);
@@ -133,7 +106,7 @@ public abstract class AuthTestsBase : IClassFixture<CustomWebApplicationFactory>
     /// Throws an exception if login fails or returns null data.
     /// </summary>
     /// <returns>The non-nullable AuthResponseDto on success.</returns>
-    protected async Task<AuthResponseDto> LoginUserSuccessfullyAsync(LoginUserDto loginDto)
+    protected async Task<AuthResponseDto> LoginUserSuccessfullyAsync(LoginDto loginDto) // Updated to use new LoginDto
     {
         var (result, response) = await LoginUserAsync(loginDto);
 
@@ -153,13 +126,11 @@ public abstract class AuthTestsBase : IClassFixture<CustomWebApplicationFactory>
     /// <returns>A valid access token for the pre-seeded admin user.</returns>
     protected async Task<string> GetAdminAccessTokenAsync()
     {
-        // --- MODIFIED ---
-        // Assume admin credentials are known and seeded
-        // Replace with your actual seeded admin credentials
-        var loginDto = new LoginUserDto(
-            Email: "admin@jacore.app",
-            Password: "AdminPassword123!"
-        );
+        var loginDto = new LoginDto // Use new LoginDto
+        {
+            Email = "admin@jacore.app",
+            Password = "AdminPassword123!"
+        };
 
         Console.WriteLine($"---> Attempting to log in as seeded admin: {loginDto.Email}");
 

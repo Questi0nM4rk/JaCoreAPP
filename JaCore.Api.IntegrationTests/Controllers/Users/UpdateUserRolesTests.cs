@@ -6,62 +6,78 @@ using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using Xunit;
+using JaCore.Api.IntegrationTests.DTOs.Auth;
+using JaCore.Api.IntegrationTests.DTOs.Users;
+using JaCore.Api.IntegrationTests.Controllers.Base;
 
 namespace JaCore.Api.IntegrationTests.Controllers.Users;
 
 [Collection("Database Collection")]
 public class UpdateUserRolesTests : AuthTestsBase
 {
-    private const string UsersBaseUrl = $"{ApiConstants.ApiRoutePrefix}/users";
-
     public UpdateUserRolesTests(CustomWebApplicationFactory factory) : base(factory) { }
 
     [Fact]
     public async Task UpdateUserRoles_AdminUpdatesRoles_ReturnsNoContent()
     {
         var adminAccessToken = await GetAdminAccessTokenAsync(); // Get admin token first
-        var registerDto = new RegisterUserDto(
-            Email: $"target-roles-{Guid.NewGuid()}@example.com",
-            FirstName: "Target",
-            LastName: "Roles",
-            Password: "Password123!"
-        );
+        var registerDto = new RegisterDto
+        {
+            Email = $"target-roles-{Guid.NewGuid()}@example.com",
+            FirstName = "Target",
+            LastName = "Roles",
+            Password = "Password123!"
+        };
         var targetUser = await RegisterUserSuccessfullyAsync(adminAccessToken, registerDto); // Pass token and DTO
         var targetUserId = targetUser.UserId;
         var updateRolesDto = new UpdateUserRolesDto { Roles = new List<string> { "Admin" } };
         _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", adminAccessToken);
-        var response = await _client.PutAsJsonAsync($"{UsersBaseUrl}/{targetUserId}/roles", updateRolesDto);
+        var response = await _client.PutAsJsonAsync($"{ApiConstants.BasePaths.Users}/{targetUserId}/roles", updateRolesDto);
         _client.DefaultRequestHeaders.Authorization = null;
         response.StatusCode.Should().Be(HttpStatusCode.NoContent);
+
+        // Verify roles were updated by fetching the user again
+        _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", adminAccessToken);
+        var getUserResponse = await _client.GetAsync($"{ApiConstants.BasePaths.Users}/{targetUserId}");
+        _client.DefaultRequestHeaders.Authorization = null;
+
+        getUserResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+        var userAfterUpdate = await getUserResponse.Content.ReadFromJsonAsync<UserDto>();
+        userAfterUpdate.Should().NotBeNull();
+        // Assuming UserDto has a Roles property (adjust if needed)
+        userAfterUpdate!.Roles.Should().NotBeNull();
+        userAfterUpdate.Roles.Should().BeEquivalentTo(updateRolesDto.Roles);
     }
 
     [Fact]
     public async Task UpdateUserRoles_StandardUserForbidden()
     {
         var adminAccessToken = await GetAdminAccessTokenAsync(); // Get admin token first
-        var targetRegisterDto = new RegisterUserDto(
-            Email: $"target-forbidden-roles-{Guid.NewGuid()}@example.com",
-            FirstName: "Target",
-            LastName: "ForbiddenRoles",
-            Password: "Password123!"
-        );
+        var targetRegisterDto = new RegisterDto
+        {
+            Email = $"target-forbidden-roles-{Guid.NewGuid()}@example.com",
+            FirstName = "Target",
+            LastName = "ForbiddenRoles",
+            Password = "Password123!"
+        };
         var targetUser = await RegisterUserSuccessfullyAsync(adminAccessToken, targetRegisterDto); // Pass token and DTO
         var targetUserId = targetUser.UserId;
 
-        var requesterRegisterDto = new RegisterUserDto(
-            Email: $"requester-roles-{Guid.NewGuid()}@example.com",
-            FirstName: "Requester",
-            LastName: "Roles",
-            Password: "Password123!"
-        );
+        var requesterRegisterDto = new RegisterDto
+        {
+            Email = $"requester-roles-{Guid.NewGuid()}@example.com",
+            FirstName = "Requester",
+            LastName = "Roles",
+            Password = "Password123!"
+        };
         await RegisterUserSuccessfullyAsync(adminAccessToken, requesterRegisterDto); // Pass token and DTO
 
-        var requesterLoginDto = new LoginUserDto(requesterRegisterDto.Email, requesterRegisterDto.Password);
+        var requesterLoginDto = new LoginDto { Email = requesterRegisterDto.Email, Password = requesterRegisterDto.Password };
         var requesterLogin = await LoginUserSuccessfullyAsync(requesterLoginDto); // Pass DTO
         var requesterToken = requesterLogin.AccessToken;
         var updateRolesDto = new UpdateUserRolesDto { Roles = new List<string> { "Admin" } };
         _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", requesterToken);
-        var response = await _client.PutAsJsonAsync($"{UsersBaseUrl}/{targetUserId}/roles", updateRolesDto);
+        var response = await _client.PutAsJsonAsync($"{ApiConstants.BasePaths.Users}/{targetUserId}/roles", updateRolesDto);
         _client.DefaultRequestHeaders.Authorization = null;
         response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
     }
@@ -73,7 +89,7 @@ public class UpdateUserRolesTests : AuthTestsBase
         var nonExistentUserId = Guid.NewGuid();
         var updateRolesDto = new UpdateUserRolesDto { Roles = new List<string> { "Admin" } };
         _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", adminAccessToken);
-        var response = await _client.PutAsJsonAsync($"{UsersBaseUrl}/{nonExistentUserId}/roles", updateRolesDto);
+        var response = await _client.PutAsJsonAsync($"{ApiConstants.BasePaths.Users}/{nonExistentUserId}/roles", updateRolesDto);
         _client.DefaultRequestHeaders.Authorization = null;
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }
@@ -84,12 +100,7 @@ public class UpdateUserRolesTests : AuthTestsBase
         var targetUserId = Guid.NewGuid();
         var updateRolesDto = new UpdateUserRolesDto { Roles = new List<string> { "Admin" } };
         _client.DefaultRequestHeaders.Authorization = null;
-        var response = await _client.PutAsJsonAsync($"{UsersBaseUrl}/{targetUserId}/roles", updateRolesDto);
+        var response = await _client.PutAsJsonAsync($"{ApiConstants.BasePaths.Users}/{targetUserId}/roles", updateRolesDto);
         response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
-    }
-
-    private class UpdateUserRolesDto
-    {
-        public List<string>? Roles { get; set; }
     }
 }

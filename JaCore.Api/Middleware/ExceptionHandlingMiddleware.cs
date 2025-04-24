@@ -1,10 +1,8 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc; // Needed for ProblemDetails
-using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Hosting; // Keep for potential future use, though not strictly needed for the change
 using Microsoft.Extensions.Logging;
 using System;
-using System.Net;
-using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace JaCore.Api.Middleware;
@@ -13,44 +11,50 @@ public class ExceptionHandlingMiddleware
 {
     private readonly RequestDelegate _next; // The next middleware in the pipeline
     private readonly ILogger<ExceptionHandlingMiddleware> _logger; // For logging errors
-    private readonly IHostEnvironment _env; // To check if running in Development/Test
 
-    public ExceptionHandlingMiddleware(RequestDelegate next, ILogger<ExceptionHandlingMiddleware> logger, IHostEnvironment env)
+    public ExceptionHandlingMiddleware(RequestDelegate next, ILogger<ExceptionHandlingMiddleware> logger)
     {
         _next = next;
         _logger = logger;
-        _env = env;
     }
 
     public async Task InvokeAsync(HttpContext context)
     {
         try
         {
-            // Call the next middleware in the pipeline
             await _next(context);
         }
-        catch (Exception ex) // Catch ANY unhandled exception
+        catch (Exception ex)
         {
-            // Log the error with details
+            // Log the original exception with full details (KEEP THIS)
             _logger.LogError(ex, "Unhandled exception for request {Path}", context.Request.Path);
 
-            // Prepare a standard ProblemDetails response
+            context.Response.StatusCode = StatusCodes.Status500InternalServerError;
             context.Response.ContentType = "application/problem+json";
-            context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
 
             var problemDetails = new ProblemDetails
             {
                 Status = context.Response.StatusCode,
                 Title = "An internal server error occurred.",
-                // Provide more detail only in non-production environments
-                Detail = _env.IsDevelopment() || _env.IsEnvironment("Test")
-                    ? $"{ex.Message} \n{ex.StackTrace}"
-                    : "Please contact support.",
-                Instance = context.Request.Path // Identify the request path
+                // Always return a generic detail message, regardless of environment
+                Detail = "An unexpected error occurred processing your request. Please contact support.", 
+                Instance = context.Request.Path
             };
 
-            // Write the JSON response
-            await context.Response.WriteAsync(JsonSerializer.Serialize(problemDetails));
+            try
+            {
+                // Use WriteAsJsonAsync for proper serialization
+                await context.Response.WriteAsJsonAsync(problemDetails); 
+            }
+            catch (Exception writeEx)
+            {
+                // Log if writing the error response itself fails (KEEP THIS)
+                _logger.LogError(writeEx, "Failed to write error response for request {Path}", context.Request.Path);
+                // Optionally, write a plain text fallback (KEEP THIS)
+                context.Response.StatusCode = StatusCodes.Status500InternalServerError; // Ensure status code is set even for fallback
+                context.Response.ContentType = "text/plain"; // Set content type for plain text
+                await context.Response.WriteAsync("A fatal error occurred and the error response could not be serialized.");
+            }
         }
     }
 }

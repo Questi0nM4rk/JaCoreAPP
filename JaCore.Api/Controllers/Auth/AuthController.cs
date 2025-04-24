@@ -16,7 +16,7 @@ namespace JaCore.Api.Controllers.Auth;
 
 [ApiController]
 [ApiVersion(ApiConstants.Versions.V1_0_String)] // Use version string constant
-[Route(ApiConstants.ApiRoutePrefix + "/auth")] // Use route prefix constant
+[Route(ApiConstants.BasePaths.Auth)] // Use route prefix constant
 public class AuthController : ControllerBase
 {
     private readonly IAuthService _authService;
@@ -33,8 +33,7 @@ public class AuthController : ControllerBase
         _logger = logger;
     }
 
-    // Register and Login actions remain the same as in Response #47
-    [HttpPost(ApiConstants.Routes.Register)] // Use route constant
+    [HttpPost(ApiConstants.AuthEndpoints.Register)] // Use route constant
     [Authorize(Policy = ApiConstants.Policies.AdminOnly)] // Only admins can register new users
     [ProducesResponseType(typeof(AuthResponseDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
@@ -55,12 +54,12 @@ public class AuthController : ControllerBase
         }
         catch (Exception ex)
         {
-             _logger.LogError(ex, "Unexpected error during registration for {Email}", registerDto.Email);
-             return StatusCode(StatusCodes.Status500InternalServerError, new ProblemDetails { Title = "Internal Server Error", Detail = "An unexpected error occurred during registration."});
+            _logger.LogError(ex, "Unexpected error during registration for {Email}", registerDto.Email);
+            return StatusCode(StatusCodes.Status500InternalServerError, new ProblemDetails { Title = "Internal Server Error", Detail = "An unexpected error occurred during registration." });
         }
     }
 
-    [HttpPost(ApiConstants.Routes.Login)] // Use route constant
+    [HttpPost(ApiConstants.AuthEndpoints.Login)] // Use route constant
     [AllowAnonymous]
     [ProducesResponseType(typeof(AuthResponseDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
@@ -70,7 +69,7 @@ public class AuthController : ControllerBase
     {
         _logger.LogInformation("Login attempt for email {Email}.", loginDto.Email);
 
-         try
+        try
         {
             var result = await _authService.LoginAsync(loginDto);
             if (!result.Succeeded)
@@ -82,14 +81,14 @@ public class AuthController : ControllerBase
         }
         catch (Exception ex)
         {
-             _logger.LogError(ex, "Unexpected error during login for {Email}", loginDto.Email);
-             return StatusCode(StatusCodes.Status500InternalServerError, new ProblemDetails { Title = "Internal Server Error", Detail = "An unexpected error occurred during login."});
+            _logger.LogError(ex, "Unexpected error during login for {Email}", loginDto.Email);
+            return StatusCode(StatusCodes.Status500InternalServerError, new ProblemDetails { Title = "Internal Server Error", Detail = "An unexpected error occurred during login." });
         }
     }
 
 
     // --- UPDATED Refresh Action ---
-    [HttpPost(ApiConstants.Routes.Refresh)] // Use route constant
+    [HttpPost(ApiConstants.AuthEndpoints.Refresh)] // Use route constant
     [AllowAnonymous] // Refresh token is its own authentication
     [ProducesResponseType(typeof(AuthResponseDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
@@ -97,12 +96,12 @@ public class AuthController : ControllerBase
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> Refresh(TokenRefreshRequestDto request)
     {
-         _logger.LogInformation("Attempting token refresh.");
+        _logger.LogInformation("Attempting token refresh.");
 
         // Try to get UserId from the (potentially expired) access token in the header
         if (!TryGetUserIdFromExpiredToken(out Guid userId))
         {
-             // If we cannot get the UserID from the expired token, we cannot proceed with this strategy
+            // If we cannot get the UserID from the expired token, we cannot proceed with this strategy
             return Unauthorized(new ProblemDetails { Title = "Token Refresh Failed", Detail = "Could not identify user from accompanying token." });
         }
 
@@ -124,12 +123,12 @@ public class AuthController : ControllerBase
         catch (Exception ex) // Catch exceptions from the service layer
         {
             _logger.LogError(ex, "Unexpected error during token refresh for user {UserId}", userId);
-            return StatusCode(StatusCodes.Status500InternalServerError, new ProblemDetails { Title = "Internal Server Error", Detail = "An unexpected error occurred during token refresh."});
+            return StatusCode(StatusCodes.Status500InternalServerError, new ProblemDetails { Title = "Internal Server Error", Detail = "An unexpected error occurred during token refresh." });
         }
     }
 
     // --- UPDATED Logout Action ---
-    [HttpPost(ApiConstants.Routes.Logout)] // Use route constant
+    [HttpPost(ApiConstants.AuthEndpoints.Logout)] // Use route constant
     [Authorize] // User must be authenticated with a VALID access token to call logout
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
@@ -140,8 +139,8 @@ public class AuthController : ControllerBase
         var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
         if (!Guid.TryParse(userIdString, out Guid userId))
         {
-             _logger.LogError("Could not parse UserId {UserIdString} during logout for authenticated user.", userIdString);
-             return BadRequest(new ProblemDetails { Title = "Logout Failed", Detail = "Invalid user context."});
+            _logger.LogError("Could not parse UserId {UserIdString} during logout for authenticated user.", userIdString);
+            return BadRequest(new ProblemDetails { Title = "Logout Failed", Detail = "Invalid user context." });
         }
 
         _logger.LogInformation("Logout attempt for user {UserId}.", userId);
@@ -158,28 +157,11 @@ public class AuthController : ControllerBase
         catch (Exception ex)
         {
             _logger.LogError(ex, "Unexpected error during logout for user {UserId}", userId);
-            return StatusCode(StatusCodes.Status500InternalServerError, new ProblemDetails { Title = "Internal Server Error", Detail = "An unexpected error occurred during logout."});
+            return StatusCode(StatusCodes.Status500InternalServerError, new ProblemDetails { Title = "Internal Server Error", Detail = "An unexpected error occurred during logout." });
         }
     }
 
-
-    // GetCurrentUser and AdminOnlyData actions remain the same as in Response #47
-    [HttpGet(ApiConstants.Routes.GetCurrentUser)] // Use route constant
-    [Authorize]
-    [ProducesResponseType(typeof(object), StatusCodes.Status200OK)]
-    public IActionResult GetCurrentUser()
-    {
-        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        var email = User.FindFirstValue(ClaimTypes.Email);
-        var firstName = User.FindFirstValue(ClaimTypes.GivenName);
-        var lastName = User.FindFirstValue(ClaimTypes.Surname); // Or FamilyName
-        var roles = User.FindAll(ClaimTypes.Role).Select(c => c.Value).ToList();
-
-        _logger.LogInformation("Accessed 'me' endpoint by user {UserId}.", userId);
-        return Ok(new { UserId = userId, Email = email, FirstName = firstName, LastName = lastName, Roles = roles });
-    }
-
-    [HttpGet(ApiConstants.Routes.AdminOnlyData)] // Use route constant
+    [HttpGet(ApiConstants.AuthEndpoints.AdminOnlyData)] // Use route constant
     [Authorize(Policy = ApiConstants.Policies.AdminOnly)] // Use policy constant
     [ProducesResponseType(typeof(object), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
@@ -189,7 +171,6 @@ public class AuthController : ControllerBase
         _logger.LogInformation("Accessed 'admin-only' endpoint by admin user {UserId}.", userId);
         return Ok(new { Message = $"Welcome Admin User {userId}! This data is sensitive." });
     }
-
 
     // --- Private Helper Method to Extract UserId from Expired Token ---
     private bool TryGetUserIdFromExpiredToken(out Guid userId)
@@ -206,10 +187,11 @@ public class AuthController : ControllerBase
 
         // Get secret and validation parameters (disable lifetime validation)
         var jwtSecret = _configuration[ApiConstants.JwtConfigKeys.Secret]; // Use JWT key constant
-         if (string.IsNullOrEmpty(jwtSecret) || jwtSecret.Length < 32) {
-             _logger.LogError("JWT Secret not configured or too short, cannot decode token.");
-             return false; // Cannot proceed without secret
-         }
+        if (string.IsNullOrEmpty(jwtSecret) || jwtSecret.Length < 32)
+        {
+            _logger.LogError("JWT Secret not configured or too short, cannot decode token.");
+            return false; // Cannot proceed without secret
+        }
 
         var tokenValidationParameters = new TokenValidationParameters
         {
@@ -232,14 +214,14 @@ public class AuthController : ControllerBase
             if (securityToken is not JwtSecurityToken jwtSecurityToken ||
                 !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
             {
-                 _logger.LogWarning("Refresh attempt failed: Invalid token format or algorithm in expired token.");
-                 return false;
+                _logger.LogWarning("Refresh attempt failed: Invalid token format or algorithm in expired token.");
+                return false;
             }
 
             var userIdClaim = principal.FindFirstValue(ClaimTypes.NameIdentifier);
             if (Guid.TryParse(userIdClaim, out userId))
             {
-                 _logger.LogDebug("Successfully extracted UserId {UserId} from expired token.", userId);
+                _logger.LogDebug("Successfully extracted UserId {UserId} from expired token.", userId);
                 return true; // Success
             }
             else
@@ -250,8 +232,8 @@ public class AuthController : ControllerBase
         }
         catch (SecurityTokenException ex) // Catch specific token validation errors
         {
-             _logger.LogWarning(ex, "Refresh attempt failed: SecurityTokenException while validating expired token (potentially invalid signature/issuer/audience).");
-             return false;
+            _logger.LogWarning(ex, "Refresh attempt failed: SecurityTokenException while validating expired token (potentially invalid signature/issuer/audience).");
+            return false;
         }
         catch (Exception ex) // Catch unexpected errors
         {

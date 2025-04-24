@@ -11,7 +11,7 @@ namespace JaCore.Api.Controllers.Users;
 
 [ApiController]
 [ApiVersion(ApiConstants.Versions.V1_0_String)] // Use version string constant
-[Route(ApiConstants.ApiRoutePrefix + "/users")] // Use route prefix constant
+[Route(ApiConstants.BasePaths.Users)] // Use route prefix constant
 [Authorize] // Require authentication for all user actions by default
 public class UsersController : ControllerBase
 {
@@ -36,7 +36,7 @@ public class UsersController : ControllerBase
     }
 
     // GET: api/v1/users/{id}
-    [HttpGet(ApiConstants.Routes.GetById)] // Use route constant
+    [HttpGet(ApiConstants.UserEndpoints.GetById)] // Use route constant
     [ProducesResponseType(typeof(UserDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
@@ -57,8 +57,30 @@ public class UsersController : ControllerBase
         return user == null ? NotFound() : Ok(user);
     }
 
+    // GET: api/v1/users/me
+    [HttpGet(ApiConstants.UserEndpoints.Me)]
+    [ProducesResponseType(typeof(UserDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetCurrentUser()
+    {
+        var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (!Guid.TryParse(userIdString, out Guid userId))
+        {
+            _logger.LogWarning("Could not parse user ID from claims for /me endpoint.");
+            // This shouldn't happen for an authenticated user, but handle defensively
+            return Unauthorized(new ProblemDetails { Title = "Unauthorized", Detail = "Invalid user identifier." });
+        }
+
+        _logger.LogInformation("Request for current user data by user {UserId}.", userId);
+        var user = await _userService.GetUserByIdAsync(userId);
+
+        return user == null
+            ? NotFound(new ProblemDetails { Title = "Not Found", Detail = "Current user data not found." })
+            : Ok(user);
+    }
+
     // PUT: api/v1/users/{id}
-    [HttpPut(ApiConstants.Routes.GetById)] // Use route constant
+    [HttpPut(ApiConstants.UserEndpoints.GetById)] // Use route constant
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
@@ -81,7 +103,7 @@ public class UsersController : ControllerBase
     }
 
     // PUT: api/v1/users/{id}/roles
-    [HttpPut(ApiConstants.Routes.UpdateRoles)] // Use route constant
+    [HttpPut(ApiConstants.UserEndpoints.UpdateRoles)] // Use route constant
     [Authorize(Policy = ApiConstants.Policies.AdminOnly)] // Use policy constant
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
@@ -101,7 +123,7 @@ public class UsersController : ControllerBase
     }
 
     // DELETE: api/v1/users/{id}
-    [HttpDelete(ApiConstants.Routes.GetById)] // Use route constant
+    [HttpDelete(ApiConstants.UserEndpoints.GetById)] // Use route constant
     [Authorize(Policy = ApiConstants.Policies.AdminOnly)] // Use policy constant
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]

@@ -282,7 +282,7 @@ public class AuthService : IAuthService
 
         _logger.LogDebug("Generated tokens; refresh token queued for add for user {UserId}.", user.Id);
         // Use Common Role constants if needed in AuthResponseDto constructor (assuming it takes roles)
-        return new AuthResponseDto(true, accessTokenString, accessExpires, refreshTokenString, user.Id.ToString(), user.Email, userRoles);
+        return new AuthResponseDto(true, accessTokenString, accessExpires, refreshTokenString, user.Id.ToString(), user.Email, user.FirstName, user.LastName, Roles:userRoles, Message: "Login successful.");
     }
 
     private List<Claim> GenerateClaims(ApplicationUser user, IList<string> roles)

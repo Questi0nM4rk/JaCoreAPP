@@ -21,30 +21,52 @@ public static class ApiConstants
 
     /// <summary>
     /// Base route prefix including version placeholder.
-    /// Usage: [Route(ApiConstants.Routing.ApiRoutePrefix + "/your-controller")]
+    /// Usage: [Route(ApiConstants.Routing.RoutePrefix + "/your-controller")]
     /// </summary>
-    public const string ApiRoutePrefix = "api/v{version:apiVersion}";
+    public const string RoutePrefix = $"api/v{Versions.V1_0_String}";
 
-    /// <summary>
-    /// Standard relative route segments for common actions.
-    /// Usage: [HttpGet(ApiConstants.Routes.GetById)]
-    /// </summary>
-    public static class Routes
+    public static class BasePaths
     {
-        // No need for GetAll = "" if using controller root
-        public const string GetById = "{id:guid}";
-        // Create = "" (usually handled by HttpPost on controller root)
-        // Update = "{id:guid}" (usually handled by HttpPut on controller root)
-        // Delete = "{id:guid}" (usually handled by HttpDelete on controller root)
+        public const string Auth = $"{RoutePrefix}/auth";
+        public const string Users = $"{RoutePrefix}/users";
+    }
 
-        // Specific actions
+    // Authentication and Authorization related constants
+    public static class AuthEndpoints
+    {
         public const string Register = "register";
         public const string Login = "login";
         public const string Refresh = "refresh";
         public const string Logout = "logout";
-        public const string GetCurrentUser = "me";
         public const string AdminOnlyData = "admin-only";
-        public const string UpdateRoles = "{id:guid}/roles";
+    }
+
+    public static class AuthRoutes
+    {
+        public const string HealthCheck = $"{RoutePrefix}/healthz";
+        public const string Register = $"{BasePaths.Auth}/{AuthEndpoints.Register}";
+        public const string Login = $"{BasePaths.Auth}/{AuthEndpoints.Login}";
+        public const string Refresh = $"{BasePaths.Auth}/{AuthEndpoints.Refresh}";
+        public const string Logout = $"{BasePaths.Auth}/{AuthEndpoints.Logout}";
+        public const string AdminOnly = $"{BasePaths.Auth}/{AuthEndpoints.AdminOnlyData}";
+    }
+
+    // User management related constants
+    public static class UserEndpoints
+    {
+        public const string GetById = "{id:guid}";
+        public const string UpdateRoles = $"{GetById}/roles";
+        public const string Me = "me";
+    }
+
+    public static class UserRoutes
+    {
+        public const string GetAll = $"{BasePaths.Users}";
+        public const string GetById = $"{BasePaths.Users}/{UserEndpoints.GetById}";
+        public const string Update = $"{BasePaths.Users}/{UserEndpoints.GetById}";
+        public const string Me = $"{BasePaths.Users}/{UserEndpoints.Me}";
+        public const string UpdateRoles = $"{BasePaths.Users}/{UserEndpoints.UpdateRoles}";
+        public const string Delete = $"{BasePaths.Users}/{UserEndpoints.GetById}";
     }
 
     /// <summary>

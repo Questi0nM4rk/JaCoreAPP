@@ -1,19 +1,17 @@
 using FluentAssertions;
+using JaCore.Api.Helpers;
 using JaCore.Api.IntegrationTests.Helpers;
 using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using Xunit;
-using JaCore.Common; // For RoleConstants
-using JaCore.Api.Data; // For ApplicationDbContext
-using Microsoft.EntityFrameworkCore; // For EF Core operations
-using JaCore.Api.Entities.Identity; // For ApplicationUser
-using Microsoft.AspNetCore.Identity; // For UserManager
-using Microsoft.Extensions.DependencyInjection; // For CreateScope
+using JaCore.Api.IntegrationTests.DTOs.Auth;
+using JaCore.Api.IntegrationTests.Controllers.Auth;
+using JaCore.Api.IntegrationTests.Controllers.Base; // Add this for AuthTestsBase
 
 namespace JaCore.Api.IntegrationTests.Controllers.Auth;
 
-public class AdminOnlyTests : AuthTestsBase
+public class AdminOnlyTests : AuthTestsBase // Ensure base class is found
 {
     public AdminOnlyTests(CustomWebApplicationFactory factory) : base(factory) { }
 
@@ -25,7 +23,7 @@ public class AdminOnlyTests : AuthTestsBase
 
         // Act: Call the admin-only endpoint with the admin token
         _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", adminAccessToken);
-        var response = await _client.GetAsync(AdminOnlyUrl);
+        var response = await _client.GetAsync(ApiConstants.AuthRoutes.AdminOnly);
         _client.DefaultRequestHeaders.Authorization = null;
 
         // Assert
@@ -39,22 +37,23 @@ public class AdminOnlyTests : AuthTestsBase
     public async Task AdminOnly_WithStandardUserToken_ReturnsForbidden()
     {
         var adminAccessToken = await GetAdminAccessTokenAsync(); // Get admin token first
-        var registerDto = new RegisterUserDto(
-            Email: $"standard-user-{Guid.NewGuid()}@example.com",
-            FirstName: "Standard",
-            LastName: "User",
-            Password: "Password123!"
-        );
+        var registerDto = new RegisterDto
+        {
+            Email = $"standard-user-{Guid.NewGuid()}@example.com",
+            FirstName = "Standard",
+            LastName = "User",
+            Password = "Password123!"
+        };
         await RegisterUserSuccessfullyAsync(adminAccessToken, registerDto); // Pass token and DTO
 
-        var loginDto = new LoginUserDto(registerDto.Email, registerDto.Password);
+        var loginDto = new LoginDto { Email = registerDto.Email, Password = registerDto.Password };
         var loginResult = await LoginUserSuccessfullyAsync(loginDto); // Pass DTO
         // loginResult is guaranteed non-null here
         var standardUserAccessToken = loginResult.AccessToken;
 
         // Act: Call the admin-only endpoint with the standard user's token
         _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", standardUserAccessToken);
-        var response = await _client.GetAsync(AdminOnlyUrl);
+        var response = await _client.GetAsync(ApiConstants.AuthRoutes.AdminOnly);
         _client.DefaultRequestHeaders.Authorization = null;
 
         // Assert
@@ -68,7 +67,7 @@ public class AdminOnlyTests : AuthTestsBase
         _client.DefaultRequestHeaders.Authorization = null;
 
         // Act
-        var response = await _client.GetAsync(AdminOnlyUrl);
+        var response = await _client.GetAsync(ApiConstants.AuthRoutes.AdminOnly);
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);

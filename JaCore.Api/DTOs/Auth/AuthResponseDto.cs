@@ -9,6 +9,8 @@ public record AuthResponseDto(
     string? RefreshToken = null, // The raw refresh token string (sent once)
     string? UserId = null,
     string? Email = null,
+    string? FirstName = null,
+    string? LastName = null,
     IList<string>? Roles = null,
     string? Message = null
 );

@@ -78,23 +78,6 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>, IClas
                 options.UseNpgsql(_dbFixture.ConnectionString); // Use Npgsql and the fixture's connection string
                 // options.EnableSensitiveDataLogging(); // Optional: Useful for debugging failed tests
             });
-             Console.WriteLine("---> ApplicationDbContext configured for Testcontainer.");
-
-            // --- Move Seeding Logic ---
-            // We will move the seeding logic to DatabaseFixture later
-            // var sp = services.BuildServiceProvider();
-            // using (var scope = sp.CreateScope())
-            // {
-            //     var scopedServices = scope.ServiceProvider;
-            //     var db = scopedServices.GetRequiredService<ApplicationDbContext>();
-            //     // Ensure migrations are applied (might be redundant if DatabaseFixture does it)
-            //     // db.Database.Migrate();
-            //
-            //     var env = scopedServices.GetRequiredService<IHostEnvironment>();
-            //     // await TestDataSeeder.SeedAdminUserAsync(scopedServices, env); // SEEDING MOVED
-            // }
-            // --- End Move Seeding Logic ---
-
             Console.WriteLine("---> Test Services configuration complete.");
         });
 

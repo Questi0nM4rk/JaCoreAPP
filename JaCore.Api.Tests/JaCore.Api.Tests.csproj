@@ -22,7 +22,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\JaCore.ApiO\JaCore.ApiO.csproj" />
     <ProjectReference Include="..\JaCore.Common\JaCore.Common.csproj" />
   </ItemGroup>
 
