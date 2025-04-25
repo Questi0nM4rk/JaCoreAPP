@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JaCore.Common", "JaCore.Com
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JaCore.Api", "JaCore.Api\JaCore.Api.csproj", "{08C47D79-B49B-4CE3-BF8B-300812F2E353}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JaCore.Api.UnitTests", "JaCore.Api.UnitTests\JaCore.Api.UnitTests.csproj", "{739BB88A-1F89-4408-8843-BECDBCC63AE9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{08C47D79-B49B-4CE3-BF8B-300812F2E353}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{08C47D79-B49B-4CE3-BF8B-300812F2E353}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{08C47D79-B49B-4CE3-BF8B-300812F2E353}.Release|Any CPU.Build.0 = Release|Any CPU
+		{739BB88A-1F89-4408-8843-BECDBCC63AE9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{739BB88A-1F89-4408-8843-BECDBCC63AE9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{739BB88A-1F89-4408-8843-BECDBCC63AE9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{739BB88A-1F89-4408-8843-BECDBCC63AE9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

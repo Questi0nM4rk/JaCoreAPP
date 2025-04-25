@@ -5,7 +5,9 @@ using JaCore.Api.Middleware;
 using JaCore.Api.Services.Abstractions;
 using JaCore.Api.Services.Auth;
 using JaCore.Api.Services.Repositories;
+using JaCore.Api.Services.Repositories.Device;
 using JaCore.Api.Services.Users;
+using JaCore.Api.Services.Device;
 using JaCore.Common;
 using JaCore.Api.Helpers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -108,6 +110,22 @@ try
     builder.Services.AddScoped<IAuthService, AuthService>();
     builder.Services.AddScoped<IUserService, UserService>();
     builder.Services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
+
+    builder.Services.AddScoped<IDeviceRepository, DeviceRepository>();
+    builder.Services.AddScoped<IDeviceCardRepository, DeviceCardRepository>();
+    builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+    builder.Services.AddScoped<ISupplierRepository, SupplierRepository>();
+    builder.Services.AddScoped<IServiceRepository, ServiceRepository>();
+    builder.Services.AddScoped<IEventRepository, EventRepository>();
+    builder.Services.AddScoped<IDeviceOperationRepository, DeviceOperationRepository>();
+
+    builder.Services.AddScoped<IDeviceService, DeviceService>();
+    builder.Services.AddScoped<IDeviceCardService, DeviceCardService>();
+    builder.Services.AddScoped<ICategoryService, CategoryService>();
+    builder.Services.AddScoped<ISupplierService, SupplierService>();
+    builder.Services.AddScoped<IServiceService, ServiceService>();
+    builder.Services.AddScoped<IEventService, EventService>();
+    builder.Services.AddScoped<IDeviceOperationService, DeviceOperationService>();
 
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddSwaggerGen(options =>
