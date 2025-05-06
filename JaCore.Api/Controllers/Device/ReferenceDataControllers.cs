@@ -1,5 +1,5 @@
 using JaCore.Api.DTOs.Device;
-using JaCore.Api.Services.Device;
+using JaCore.Api.Services.Abstractions.Device;
 using JaCore.Api.Helpers;
 using JaCore.Common;
 using Microsoft.AspNetCore.Authorization;
@@ -9,7 +9,7 @@ namespace JaCore.Api.Controllers.Device;
 
 // --- Categories Controller ---
 [ApiController]
-[ApiVersion(ApiConstants.Versions.V1_0_String)]
+[ApiVersion(ApiConstants.Versions.VersionString)]
 [Produces("application/json")]
 public class CategoriesController : ControllerBase
 {
@@ -69,7 +69,7 @@ public class CategoriesController : ControllerBase
 
 // --- Suppliers Controller ---
 [ApiController]
-[ApiVersion(ApiConstants.Versions.V1_0_String)]
+[ApiVersion(ApiConstants.Versions.VersionString)]
 [Produces("application/json")]
 [Authorize]
 public class SuppliersController : ControllerBase
@@ -129,7 +129,7 @@ public class SuppliersController : ControllerBase
 
 // --- Services Controller ---
 [ApiController]
-[ApiVersion(ApiConstants.Versions.V1_0_String)]
+[ApiVersion(ApiConstants.Versions.VersionString)]
 [Produces("application/json")]
 [Authorize]
 public class ServicesController : ControllerBase

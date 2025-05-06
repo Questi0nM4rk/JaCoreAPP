@@ -1,6 +1,6 @@
 using JaCore.Api.DTOs.Auth;
 using JaCore.Common; // Keep for Roles
-using JaCore.Api.Services.Abstractions;
+using JaCore.Api.Services.Abstractions.Auth;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens; // Needed for SecurityTokenException, SymmetricSecurityKey
@@ -15,7 +15,7 @@ using JaCore.Api.Helpers; // Add using for the new constants
 namespace JaCore.Api.Controllers.Auth;
 
 [ApiController]
-[ApiVersion(ApiConstants.Versions.V1_0_String)] // Use version string constant
+[ApiVersion(ApiConstants.Versions.VersionString)] // Use version string constant
 [Route(ApiConstants.BasePaths.Auth)] // Use route prefix constant
 public class AuthController : ControllerBase
 {

@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using JaCoreUI.Models.Device;
 using Microsoft.Extensions.Configuration;
 using JaCore.Common.Device;
-using JaCore.Api.Dtos.Device;
 
 namespace JaCoreUI.Services.Api;
 
@@ -29,7 +28,8 @@ public class DeviceApiService : ApiClientBase
     {
         try
         {
-            var deviceDtos = await GetAsync<List<JaCore.Api.Dtos.Device.DeviceDto>>($"Device?pageNumber={page}&pageSize={pageSize}");
+            // var deviceDtos = await GetAsync<List<JaCore.Api.Dtos.Device.DeviceDto>>($"Device?pageNumber={page}&pageSize={pageSize}");
+            var deviceDtos = new List<Models.Device.Device>();
             var devices = new ObservableCollection<Models.Device.Device>();
             if (deviceDtos != null) // Check if list is null
             {

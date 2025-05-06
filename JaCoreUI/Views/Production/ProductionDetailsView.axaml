@@ -1,0 +1,109 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:JaCoreUI.ViewModels.Production"
+             xmlns:templateSelector="using:JaCoreUI.DataTemplates"
+             mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="700"
+             x:Class="JaCoreUI.Views.Production.ProductionDetailsView"
+             x:DataType="vm:ProductionDetailsViewModel">
+
+    <UserControl.Resources>
+        <!-- Define templates for dynamic UI elements in Prepare mode (mostly read-only) -->
+        <DataTemplate x:Key="PrepareLabelTemplate" x:DataType="vm:DynamicUiElementViewModel">
+            <TextBlock Text="{Binding Label}" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0 2"/>
+        </DataTemplate>
+        <DataTemplate x:Key="PrepareTextReadOnlyTemplate" x:DataType="vm:DynamicUiElementViewModel">
+            <DockPanel LastChildFill="True" Margin="0 2">
+                 <TextBlock Text="{Binding Unit}" DockPanel.Dock="Right" VerticalAlignment="Center" Margin="5 0 0 0" Foreground="Gray"/>
+                 <TextBlock Text="{Binding CalculatedValue}" VerticalAlignment="Center" FontStyle="Italic" Foreground="Gray"/>
+            </DockPanel>
+        </DataTemplate>
+        <DataTemplate x:Key="PrepareDefaultFallbackTemplate" x:DataType="vm:DynamicUiElementViewModel">
+             <TextBlock Text="{Binding Label}" VerticalAlignment="Center" Margin="0 2" FontStyle="Italic" Foreground="Gray"/>
+        </DataTemplate>
+
+        <!-- Selector for Prepare mode UI elements -->
+        <templateSelector:DynamicUiTemplateSelector x:Key="PrepareDynamicUiSelector"
+                                                    LabelTemplate="{StaticResource PrepareLabelTemplate}"
+                                                    TextReadOnlyTemplate="{StaticResource PrepareTextReadOnlyTemplate}"
+                                                    TextInputTemplate="{StaticResource PrepareTextReadOnlyTemplate}"  
+                                                    NumericInputTemplate="{StaticResource PrepareTextReadOnlyTemplate}"
+                                                    CheckboxTemplate="{StaticResource PrepareDefaultFallbackTemplate}"
+                                                    FallbackTemplate="{StaticResource PrepareDefaultFallbackTemplate}"/>
+        <!-- TextInputTemplate and NumericInputTemplate show calculated value in Prepare mode -->
+    </UserControl.Resources>
+
+    <Design.DataContext>
+        <vm:ProductionDetailsViewModel />
+    </Design.DataContext>
+
+    <DockPanel LastChildFill="True">
+        <!-- Header for Prepare Mode -->
+        <Border DockPanel.Dock="Top" BorderThickness="0 0 0 1" BorderBrush="{DynamicResource ControlStrokeColorDefault}" Padding="10">
+            <StackPanel Orientation="Horizontal" Spacing="10">
+                <TextBlock Text="Prepare Production" VerticalAlignment="Center" FontWeight="SemiBold" FontSize="16"/>
+                <TextBlock Text="Select Template:" VerticalAlignment="Center"/>
+                <ComboBox ItemsSource="{Binding AvailableTemplates}"
+                          SelectedItem="{Binding SelectedTemplate, Mode=TwoWay}"
+                          DisplayMemberBinding="{Binding Name}"
+                          MinWidth="200"/>
+                <TextBlock Text="Target Amount:" VerticalAlignment="Center"/>
+                <NumericUpDown Value="{Binding TargetProductionAmount, Mode=TwoWay}" Width="100" FormatString="N2"/>
+                <TextBlock Text="Target Unit:" VerticalAlignment="Center"/>
+                <ComboBox ItemsSource="{Binding AvailableUnits}"
+                          SelectedItem="{Binding SelectedTargetUnit, Mode=TwoWay}"
+                          MinWidth="80"/>
+                <Button Content="Publish to Work" Command="{Binding PublishToWorkCommand}" HorizontalAlignment="Right" Classes="accent"/>
+            </StackPanel>
+        </Border>
+
+        <!-- Main Content Area -->
+        <Grid ColumnDefinitions="250,*" Margin="10">
+            <!-- Outline TreeView (Read-Only) -->
+             <Border Grid.Column="0" BorderThickness="0 0 1 0" BorderBrush="{DynamicResource ControlStrokeColorDefault}" Padding="0 0 10 0">
+                <TreeView Name="OutlineTreeView"
+                          ItemsSource="{Binding ProductionRootNode.Steps}"
+                          SelectionMode="Single">
+                    <TreeView.DataTemplates>
+                        <HierarchicalDataTemplate DataType="{x:Type vm:StepViewModel}" ItemsSource="{Binding SubSteps}">
+                             <TextBlock Text="{Binding Name}" Foreground="Gray" /> <!-- Default color -->
+                        </HierarchicalDataTemplate>
+                    </TreeView.DataTemplates>
+                </TreeView>
+            </Border>
+
+            <!-- Main Hierarchy TreeView (Read-Only) -->
+            <ScrollViewer Grid.Column="1" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Padding="10 0 0 0">
+                <TreeView Name="MainTreeView"
+                          ItemsSource="{Binding ProductionRootNode.Steps}">
+                    <TreeView.Styles>
+                        <!-- Disable selection highlighting -->
+                        <Style Selector="TreeViewItem">
+                            <Setter Property="IsHitTestVisible" Value="False"/>
+                        </Style>
+                    </TreeView.Styles>
+                    <TreeView.DataTemplates>
+                         <!-- Step Template (Read-Only) -->
+                        <HierarchicalDataTemplate DataType="{x:Type vm:StepViewModel}" ItemsSource="{Binding Instructions}">
+                           <TextBlock Text="{Binding Name}" 
+                                      VerticalAlignment="Center" 
+                                      FontSize="14" 
+                                      FontWeight="SemiBold"/>
+                        </HierarchicalDataTemplate>
+
+                        <!-- Instruction Template (Read-Only + Dynamic Elements) -->
+                        <DataTemplate DataType="{x:Type vm:InstructionViewModel}">
+                            <StackPanel Spacing="5" Margin="0 2">
+                                <TextBlock Text="{Binding Name}" VerticalAlignment="Center"/>
+                                <ItemsControl ItemsSource="{Binding DynamicUiElements}"
+                                              ItemTemplateSelector="{StaticResource PrepareDynamicUiSelector}"
+                                              Margin="15 0 0 0"/> 
+                            </StackPanel>
+                        </DataTemplate>
+                    </TreeView.DataTemplates>
+                </TreeView>
+            </ScrollViewer>
+        </Grid>
+    </DockPanel>
+</UserControl> 

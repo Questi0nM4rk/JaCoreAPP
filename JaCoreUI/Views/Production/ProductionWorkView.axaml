@@ -2,7 +2,155 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="JaCoreUI.Views.Production.ProductionWorkView">
-    Welcome to Avalonia!
+             xmlns:vm="using:JaCoreUI.ViewModels.Production"
+             xmlns:conv="using:JaCoreUI.ValueConverters"
+             xmlns:templateSelector="using:JaCoreUI.DataTemplates"
+             mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="700"
+             x:Class="JaCoreUI.Views.Production.ProductionWorkView"
+             x:DataType="vm:ProductionWorkViewModel">
+
+    <UserControl.Resources>
+        <conv:BoolToOpacityConverter x:Key="CompletedOpacityConverter"/>
+
+        <!-- Define templates for dynamic UI elements in Work mode -->
+        <DataTemplate x:Key="WorkLabelTemplate" x:DataType="vm:DynamicUiElementViewModel">
+            <TextBlock Text="{Binding Label}" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0 2"/>
+        </DataTemplate>
+        <DataTemplate x:Key="WorkTextReadOnlyTemplate" x:DataType="vm:DynamicUiElementViewModel">
+             <DockPanel LastChildFill="True" Margin="0 2">
+                 <TextBlock Text="{Binding Unit}" DockPanel.Dock="Right" VerticalAlignment="Center" Margin="5 0 0 0" Foreground="Gray"/>
+                 <TextBlock Text="{Binding CalculatedValue}" VerticalAlignment="Center" FontStyle="Italic" Foreground="Gray"/>
+            </DockPanel>
+        </DataTemplate>
+        <DataTemplate x:Key="WorkTextInputTemplate" x:DataType="vm:DynamicUiElementViewModel">
+            <DockPanel LastChildFill="True" Margin="0 2">
+                <TextBlock Text="{Binding Label}" VerticalAlignment="Center" Margin="0 0 5 0" MinWidth="100"/>
+                <TextBox Text="{Binding ActualValue, Mode=TwoWay}" IsEnabled="{Binding IsWorkMode}" Watermark="Enter value" MinWidth="150"/>
+            </DockPanel>
+        </DataTemplate>
+        <DataTemplate x:Key="WorkNumericInputTemplate" x:DataType="vm:DynamicUiElementViewModel">
+             <DockPanel LastChildFill="True" Margin="0 2">
+                <TextBlock Text="{Binding Label}" VerticalAlignment="Center" Margin="0 0 5 0" MinWidth="100"/>
+                <TextBlock Text="{Binding Unit}" DockPanel.Dock="Right" VerticalAlignment="Center" Margin="5 0 0 0"/>
+                <NumericUpDown Value="{Binding ActualValue, Mode=TwoWay}" 
+                               IsEnabled="{Binding IsWorkMode}" 
+                               Minimum="{Binding MinValue}" 
+                               Maximum="{Binding MaxValue}" 
+                               FormatString="N2" 
+                               Watermark="Enter value" 
+                               MinWidth="100"/>
+            </DockPanel>
+        </DataTemplate>
+        <DataTemplate x:Key="WorkCheckboxTemplate" x:DataType="vm:DynamicUiElementViewModel">
+             <CheckBox Content="{Binding Label}" IsChecked="{Binding ActualValue, Mode=TwoWay}" IsEnabled="{Binding IsWorkMode}" Margin="0 2"/>
+        </DataTemplate>
+        <DataTemplate x:Key="WorkFallbackTemplate" x:DataType="vm:DynamicUiElementViewModel">
+             <TextBlock Text="{Binding Label} (Unknown UI Type)" Foreground="Red" FontStyle="Italic" Margin="0 2"/>
+        </DataTemplate>
+
+        <templateSelector:DynamicUiTemplateSelector x:Key="WorkDynamicUiSelector"
+                                                    LabelTemplate="{StaticResource WorkLabelTemplate}"
+                                                    TextReadOnlyTemplate="{StaticResource WorkTextReadOnlyTemplate}"
+                                                    TextInputTemplate="{StaticResource WorkTextInputTemplate}" 
+                                                    NumericInputTemplate="{StaticResource WorkNumericInputTemplate}" 
+                                                    CheckboxTemplate="{StaticResource WorkCheckboxTemplate}"
+                                                    FallbackTemplate="{StaticResource WorkFallbackTemplate}"/>
+    </UserControl.Resources>
+
+     <UserControl.Styles>
+        <!-- Styles for Outline TreeView Item Text based on ProgressStatus -->
+        <Style Selector="TreeView#OutlineTreeView TextBlock.Completed">
+            <Setter Property="Foreground" Value="Green"/>
+        </Style>
+         <Style Selector="TreeView#OutlineTreeView TextBlock.InProgress">
+            <Setter Property="Foreground" Value="Orange"/>
+        </Style>
+         <Style Selector="TreeView#OutlineTreeView TextBlock.NotStarted">
+            <Setter Property="Foreground" Value="Gray"/>
+        </Style>
+
+        <!-- Style to dim completed items in the Main TreeView -->
+         <Style Selector="TreeView#MainTreeView TreeViewItem > ContentPresenter">
+             <Setter Property="Opacity" Value="{Binding $parent[TreeViewItem].DataContext.IsCompleted, Converter={StaticResource CompletedOpacityConverter}}"/>
+         </Style>
+    </UserControl.Styles>
+
+    <Design.DataContext>
+        <vm:ProductionWorkViewModel />
+    </Design.DataContext>
+
+    <DockPanel LastChildFill="True">
+        <!-- Header for Work Mode -->
+        <Border DockPanel.Dock="Top" BorderThickness="0 0 0 1" BorderBrush="{DynamicResource ControlStrokeColorDefault}" Padding="10">
+            <StackPanel Orientation="Horizontal" Spacing="10">
+                <TextBlock Text="Execute Production:" VerticalAlignment="Center" FontWeight="SemiBold" FontSize="16"/>
+                <TextBlock Text="{Binding ProductionRootNode.Name}" VerticalAlignment="Center" FontSize="16"/>
+                <!-- Add other relevant read-only info here -->
+            </StackPanel>
+        </Border>
+
+        <!-- Main Content Area -->
+        <Grid ColumnDefinitions="250,*" Margin="10">
+            <!-- Outline TreeView with Status -->
+             <Border Grid.Column="0" BorderThickness="0 0 1 0" BorderBrush="{DynamicResource ControlStrokeColorDefault}" Padding="0 0 10 0">
+                <TreeView Name="OutlineTreeView"
+                          ItemsSource="{Binding ProductionRootNode.Steps}"
+                          SelectionMode="Single">
+                    <TreeView.DataTemplates>
+                        <HierarchicalDataTemplate DataType="{x:Type vm:StepViewModel}" ItemsSource="{Binding SubSteps}">
+                             <TextBlock Text="{Binding Name}" Classes="{Binding ProgressStatus}"/> 
+                        </HierarchicalDataTemplate>
+                    </TreeView.DataTemplates>
+                </TreeView>
+            </Border>
+
+            <!-- Main Hierarchy TreeView (Work Mode) -->
+            <ScrollViewer Grid.Column="1" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Padding="10 0 0 0">
+                <TreeView Name="MainTreeView"
+                          ItemsSource="{Binding ProductionRootNode.Steps}">
+                    <TreeView.DataTemplates>
+                         <!-- Step Template (Work Mode) -->
+                        <HierarchicalDataTemplate DataType="{x:Type vm:StepViewModel}" ItemsSource="{Binding Instructions}">
+                             <DockPanel LastChildFill="True" Margin="0 2">
+                                <CheckBox IsChecked="{Binding IsCompleted, Mode=TwoWay}" 
+                                          IsEnabled="{Binding CanComplete}"
+                                          IsThreeState="True"
+                                          DockPanel.Dock="Left"
+                                          VerticalAlignment="Center"/>
+                                <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" Spacing="5">
+                                    <Button Content="Note" Command="{Binding $parent[TreeView].DataContext.AddNoteCommand}" CommandParameter="{Binding}" FontSize="10" Padding="3"/>
+                                    <Button Content="Issue" Command="{Binding $parent[TreeView].DataContext.MarkIssueCommand}" CommandParameter="{Binding}" FontSize="10" Padding="3" Classes="danger"/>
+                                </StackPanel>
+                                <TextBlock Text="{Binding Name}" 
+                                           VerticalAlignment="Center" 
+                                           Margin="5 0 0 0"
+                                           FontSize="14" 
+                                           FontWeight="SemiBold"/>
+                            </DockPanel>
+                        </HierarchicalDataTemplate>
+
+                        <!-- Instruction Template (Work Mode) -->
+                        <DataTemplate DataType="{x:Type vm:InstructionViewModel}">
+                           <DockPanel LastChildFill="True" Margin="0 2">
+                                <CheckBox IsChecked="{Binding IsCompleted, Mode=TwoWay}" 
+                                          IsThreeState="False"
+                                          DockPanel.Dock="Left"
+                                          VerticalAlignment="Top" Margin="0 3 0 0"/>
+                                <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" Spacing="5" VerticalAlignment="Top">
+                                    <Button Content="Note" Command="{Binding $parent[TreeView].DataContext.AddNoteCommand}" CommandParameter="{Binding}" FontSize="10" Padding="3"/>
+                                    <Button Content="Issue" Command="{Binding $parent[TreeView].DataContext.MarkIssueCommand}" CommandParameter="{Binding}" FontSize="10" Padding="3" Classes="danger"/>
+                                </StackPanel>
+                                <StackPanel Margin="5 0 0 0" Spacing="3">
+                                    <TextBlock Text="{Binding Name}" VerticalAlignment="Center" FontWeight="Normal" TextWrapping="Wrap"/>
+                                    <ItemsControl ItemsSource="{Binding DynamicUiElements}"
+                                                  ItemTemplateSelector="{StaticResource WorkDynamicUiSelector}"
+                                                  Margin="10 0 0 0"/> 
+                                </StackPanel>
+                           </DockPanel>
+                        </DataTemplate>
+                    </TreeView.DataTemplates>
+                </TreeView>
+            </ScrollViewer>
+        </Grid>
+    </DockPanel>
 </UserControl>

@@ -27,10 +27,13 @@
     <PackageReference Include="Serilog.Sinks.File" Version="6.0.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
 
-    <!-- Optional: Logging (Example: Serilog) -->
-    <PackageReference Include="Serilog.AspNetCore" Version="9.0.0" />
     <!-- Updated Serilog.Sinks.Console -->
     <PackageReference Include="Serilog.Sinks.Console" Version="6.0.0" />
+
+    <!-- New packages -->
+    <PackageReference Include="Serilog.AspNetCore" Version="8.0.1" />
+    <PackageReference Include="Testcontainers.MsSql" Version="3.9.0" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
 
   </ItemGroup>
 

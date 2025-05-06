@@ -4,18 +4,10 @@ namespace JaCore.Api.DTOs.Device;
 
 // --- Device DTOs ---
 
-public record DeviceReadDto(
+public record DeviceDto(
     Guid Id,
     string Name,
-    string SerialNumber,
-    string? ModelNumber,
-    string? Manufacturer,
-    DateTimeOffset? PurchaseDate,
-    DateTimeOffset? WarrantyExpiryDate,
-    Guid? CategoryId,
-    string? CategoryName, // Include related data
-    Guid? SupplierId,
-    string? SupplierName, // Include related data
+    DateTimeOffset? ActivationDate,
     DateTimeOffset CreatedAt,
     DateTimeOffset ModifiedAt
 );

@@ -12,8 +12,8 @@ public static class ApiConstants
     /// </summary>
     public static class Versions
     {
-        public const string V1_0_String = "1.0";
-        public static readonly ApiVersion V1_0 = new(1, 0);
+        public const string VersionString = "1.0";
+        public static readonly ApiVersion Version = new(1, 0);
         // Add other versions here, e.g.:
         // public const string V2_0_String = "2.0";
         // public static readonly ApiVersion V2_0 = new(2, 0);
@@ -22,7 +22,7 @@ public static class ApiConstants
     /// <summary>
     /// Base route prefix including version placeholder.
     /// </summary>
-    private const string RoutePrefixBase = "api/v{version:apiVersion}"; // Keep version placeholder for AddApiVersioning
+    private const string RoutePrefixBase = $"api/v{Versions.VersionString}"; // Keep version placeholder for AddApiVersioning
 
     public static class BasePaths
     {

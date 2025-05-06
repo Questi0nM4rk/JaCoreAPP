@@ -3,7 +3,7 @@ using JaCore.Api.DTOs.Auth;
 using JaCore.Api.Entities.Auth;
 using JaCore.Api.Entities.Identity;
 using JaCore.Common; // Keep for Roles
-using JaCore.Api.Services.Abstractions; // Use Interfaces
+using JaCore.Api.Services.Abstractions.Auth; // Use Interfaces
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using System;
@@ -16,6 +16,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore; // Required for Include/ToListAsync potentially
 using JaCore.Api.Helpers; // Add using for the new constants
+using AutoMapper; // Added for IMapper
+using JaCore.Api.Services.Repositories;
 
 namespace JaCore.Api.Services.Auth;
 
@@ -28,6 +30,7 @@ public class AuthService : IAuthService
     private readonly IConfiguration _configuration;
     private readonly ILogger<AuthService> _logger;
     private readonly IPasswordHasher<RefreshToken> _refreshTokenHasher;
+    private readonly IMapper _mapper; // Added IMapper
 
     public AuthService(
         UserManager<ApplicationUser> userManager,
@@ -35,7 +38,8 @@ public class AuthService : IAuthService
         IRefreshTokenRepository refreshTokenRepository, // Inject Repository
         ApplicationDbContext context, // Inject DbContext for UoW
         IConfiguration configuration,
-        ILogger<AuthService> logger)
+        ILogger<AuthService> logger,
+        IMapper mapper) // Inject IMapper
     {
         _userManager = userManager;
         _roleManager = roleManager;
@@ -44,10 +48,10 @@ public class AuthService : IAuthService
         _configuration = configuration;
         _logger = logger;
         _refreshTokenHasher = new PasswordHasher<RefreshToken>();
+        _mapper = mapper; // Assign IMapper
     }
 
-    // RegisterAsync and LoginAsync remain the same as in Response #45
-    public async Task<AuthResponseDto> RegisterAsync(RegisterDto registerDto, string defaultRole = RoleConstants.Roles.User) // Use RENAMED RoleConstants
+    public async Task<AuthResponseDto> RegisterAsync(RegisterDto registerDto, string defaultRole)
     {
         var existingUser = await _userManager.FindByEmailAsync(registerDto.Email);
         if (existingUser != null)
@@ -56,36 +60,63 @@ public class AuthService : IAuthService
             return new AuthResponseDto(false, Message: "Email already exists.");
         }
 
-        var newUser = new ApplicationUser
-        {
-            FirstName = registerDto.FirstName, LastName = registerDto.LastName, Email = registerDto.Email, UserName = registerDto.Email, IsActive = true
-        };
+        // Use AutoMapper to map DTO to Entity
+        var newUser = _mapper.Map<ApplicationUser>(registerDto);
+        // Note: Specific fields ignored in the profile (like Id, PasswordHash) are handled correctly.
+        // UserName is mapped from Email, IsActive is set to true by the profile.
 
-        var result = await _userManager.CreateAsync(newUser, registerDto.Password); // Hashes password
+        var result = await _userManager.CreateAsync(newUser, registerDto.Password);
         if (!result.Succeeded)
         {
             var errors = FormatErrors(result);
             _logger.LogError("User creation failed for {Email}: {Errors}", registerDto.Email, errors);
             return new AuthResponseDto(false, Message: $"User creation failed: {errors}");
         }
-        _logger.LogInformation("User {Email} created successfully.", registerDto.Email);
+        _logger.LogInformation("User {Email} created successfully with ID {UserId}.", registerDto.Email, newUser.Id);
 
-        // Add to default role
-        if (!string.IsNullOrEmpty(defaultRole))
+        if (registerDto.Roles == null || !registerDto.Roles.Any())
         {
-             if (!await _roleManager.RoleExistsAsync(defaultRole))
-            {
-                 _logger.LogWarning("Default role '{Role}' not found. Creating it.", defaultRole);
-                 await _roleManager.CreateAsync(new ApplicationRole(defaultRole) { Description = $"{defaultRole} role created automatically."});
-            }
-            var roleResult = await _userManager.AddToRoleAsync(newUser, defaultRole);
-            if (!roleResult.Succeeded) _logger.LogError("Failed to add user {Email} to role {Role}: {Errors}", registerDto.Email, defaultRole, FormatErrors(roleResult));
-            else _logger.LogInformation("User {Email} added to role {Role}.", registerDto.Email, defaultRole);
+             _logger.LogError("User {Email} created but no roles were provided in registration request. Deleting user.", registerDto.Email);
+             await _userManager.DeleteAsync(newUser);
+             return new AuthResponseDto(false, Message: "Registration failed: At least one role must be provided.");
         }
 
+        var validRolesToAdd = new List<string>();
+        foreach (var roleName in registerDto.Roles.Distinct())
+        {
+            if (!await _roleManager.RoleExistsAsync(roleName))
+            {
+                 _logger.LogError("User {Email} registration failed: Invalid role \'{RoleName}\' provided. Deleting user.", registerDto.Email, roleName);
+                 await _userManager.DeleteAsync(newUser);
+                 return new AuthResponseDto(false, Message: $"Unknown role specified: {roleName}");
+            }
+            validRolesToAdd.Add(roleName);
+        }
+
+        if (!validRolesToAdd.Any())
+        {
+            _logger.LogError("User {Email} created but no valid roles were identified (this should not happen if validation passed). Deleting user.", 
+                registerDto.Email);
+            await _userManager.DeleteAsync(newUser);
+            return new AuthResponseDto(false, Message: "Registration failed: No valid roles were processed.");
+        }
+
+        var roleResult = await _userManager.AddToRolesAsync(newUser, validRolesToAdd);
+        if (!roleResult.Succeeded)
+        {
+            var roleErrors = FormatErrors(roleResult);
+            _logger.LogError("Failed to add user {Email} to roles [{Roles}]: {Errors}. Deleting user.", 
+                registerDto.Email, string.Join(", ", validRolesToAdd), roleErrors);
+            await _userManager.DeleteAsync(newUser);
+            return new AuthResponseDto(false, Message: $"Failed to assign roles: {roleErrors}");
+        }
+        
+        _logger.LogInformation("User {Email} added to roles [{Roles}].", registerDto.Email, string.Join(", ", validRolesToAdd));
+
         var tokenResponse = await GenerateTokensAsync(newUser);
-        await _context.SaveChangesAsync(); // Commit user creation and new refresh token
-        _logger.LogInformation("User {UserId} registered and initial tokens saved.", newUser.Id);
+        await _context.SaveChangesAsync();
+        _logger.LogInformation("User {UserId} registered, roles assigned, and initial tokens saved.", newUser.Id);
+
         return tokenResponse;
     }
 
@@ -97,7 +128,6 @@ public class AuthService : IAuthService
              _logger.LogWarning("Login failed for {Email}: Invalid credentials.", loginDto.Email);
              return new AuthResponseDto(false, Message: "Invalid email or password.");
          }
-         // *** ADDED CHECK: Prevent login if user is inactive ***
          if (!user.IsActive)
          {
               _logger.LogWarning("Login failed for {Email}: Account inactive.", loginDto.Email);
@@ -106,100 +136,22 @@ public class AuthService : IAuthService
 
         _logger.LogInformation("User {Email} logged in successfully.", loginDto.Email);
         var tokenResponse = await GenerateTokensAsync(user);
-        await _context.SaveChangesAsync(); // Commit the new refresh token
+        await _context.SaveChangesAsync();
         _logger.LogInformation("New refresh token saved for user {UserId}.", user.Id);
         return tokenResponse;
     }
 
-    // --- REFACTORED RefreshAccessTokenAsync ---
-    // ** Now requires the userId associated with the tokens **
     public async Task<AuthResponseDto> RefreshAccessTokenAsync(string refreshToken, Guid userId)
     {
         _logger.LogDebug("Attempting token refresh for user {UserId}.", userId);
 
-        // 1. Fetch VALID candidate tokens for THIS user using the repository
         var validUserTokens = await _refreshTokenRepository.GetValidTokensByUserIdAsync(userId);
         if (!validUserTokens.Any())
         {
             _logger.LogWarning("No valid refresh tokens found for user {UserId} during refresh attempt.", userId);
-            // It's possible the token belonged to this user but was already revoked/used/expired
             return new AuthResponseDto(false, Message: "Invalid refresh token or session expired.");
         }
 
-        // 2. Find the specific token by verifying the hash
-        RefreshToken? storedToken = null;
-        foreach (var candidate in validUserTokens)
-        {
-            // Compare hash of received token with stored hash
-            if (_refreshTokenHasher.VerifyHashedPassword(candidate, candidate.TokenHash, refreshToken) == PasswordVerificationResult.Success)
-            {
-                storedToken = candidate;
-                break; // Found the match
-            }
-        }
-
-        // 3. Validate Found Token
-        if (storedToken == null)
-        {
-            _logger.LogWarning("Refresh token validation failed for user {UserId}: Token hash mismatch or token invalid.", userId);
-            // Security: Consider revoking all other valid tokens for this user if an invalid one belonging to them is used.
-            // await RevokeAllUserTokensAsync(userId); // Needs implementation
-            return new AuthResponseDto(false, Message: "Invalid refresh token.");
-        }
-
-        // 4. Rotation: Mark old token as used
-        storedToken.IsUsed = true;
-        await _refreshTokenRepository.UpdateAsync(storedToken); // Queue update
-
-        // 5. Get user for new token generation
-        // Since we already queried by UserId, we primarily need to ensure the user still exists and is active.
-        var user = await _userManager.FindByIdAsync(userId.ToString());
-        if(user == null) {
-             // This case means the user was deleted after the token was issued but before it expired/was used.
-             _logger.LogError("User {UserId} for valid refresh token {TokenId} not found during refresh.", storedToken.UserId, storedToken.Id);
-             storedToken.IsRevoked = true; // Clean up the now orphaned token
-             await _context.SaveChangesAsync(); // Save revoke status
-             return new AuthResponseDto(false, Message: "Associated user not found.");
-        }
-         // *** ADDED CHECK: Prevent refresh if user is inactive ***
-         if (!user.IsActive) {
-              _logger.LogWarning("User {UserId} is inactive, cannot refresh token.", storedToken.UserId);
-              storedToken.IsRevoked = true; // Revoke the token if user becomes inactive
-              await _context.SaveChangesAsync();
-              return new AuthResponseDto(false, Message: "User account is inactive.");
-         }
-
-        _logger.LogInformation("Refresh token validated for user {UserId}. Rotating token.", storedToken.UserId);
-
-        // 6. Generate new tokens (includes AddAsync via repo for the NEW refresh token)
-        var newTokenResponse = await GenerateTokensAsync(user);
-
-        // 7. Save changes (marks old token used, adds new token)
-        try
-        {
-             await _context.SaveChangesAsync(); // Commit transaction
-             _logger.LogInformation("Rotated refresh token and saved changes for user {UserId}.", storedToken.UserId);
-             return newTokenResponse;
-        }
-        catch(DbUpdateException dbEx)
-        {
-            _logger.LogError(dbEx, "Failed to save changes during token rotation for user {UserId}", storedToken.UserId);
-            // If saving fails, the client still has the old (now potentially invalid if IsUsed was key) refresh token.
-            // The state is inconsistent. This indicates a potential DB issue.
-            return new AuthResponseDto(false, Message:"Failed to update token state. Please try logging in again.");
-        }
-    }
-
-    // --- REFACTORED RevokeRefreshTokenAsync ---
-    // ** Now requires the userId associated with the token **
-    public async Task<bool> RevokeRefreshTokenAsync(string refreshToken, Guid userId)
-    {
-        _logger.LogDebug("Attempting token revocation for user {UserId}.", userId);
-
-        // 1. Fetch valid candidate tokens for this user
-        var validUserTokens = await _refreshTokenRepository.GetValidTokensByUserIdAsync(userId);
-
-        // 2. Find the specific token by verifying the hash
         RefreshToken? storedToken = null;
         foreach (var candidate in validUserTokens)
         {
@@ -210,92 +162,153 @@ public class AuthService : IAuthService
             }
         }
 
-        // 3. Validate Found Token
+        if (storedToken == null)
+        {
+            _logger.LogWarning("Refresh token validation failed for user {UserId}: Token hash mismatch or token invalid.", userId);
+            return new AuthResponseDto(false, Message: "Invalid refresh token.");
+        }
+
+        storedToken.IsUsed = true;
+        await _refreshTokenRepository.UpdateAsync(storedToken);
+
+        var user = await _userManager.FindByIdAsync(userId.ToString());
+        if(user == null) {
+             _logger.LogError("User {UserId} for valid refresh token {TokenId} not found during refresh.", storedToken.UserId, storedToken.Id);
+             storedToken.IsRevoked = true;
+             await _context.SaveChangesAsync();
+             return new AuthResponseDto(false, Message: "Associated user not found.");
+        }
+         if (!user.IsActive) {
+              _logger.LogWarning("User {UserId} is inactive, cannot refresh token.", storedToken.UserId);
+              storedToken.IsRevoked = true;
+              await _context.SaveChangesAsync();
+              return new AuthResponseDto(false, Message: "User account is inactive.");
+         }
+
+        _logger.LogInformation("Refresh token validated for user {UserId}. Rotating token.", storedToken.UserId);
+
+        var newTokenResponse = await GenerateTokensAsync(user);
+
+        try
+        {
+             await _context.SaveChangesAsync();
+             _logger.LogInformation("Rotated refresh token and saved changes for user {UserId}.", storedToken.UserId);
+             return newTokenResponse;
+        }
+        catch(DbUpdateException dbEx)
+        {
+            _logger.LogError(dbEx, "Failed to save changes during token rotation for user {UserId}", storedToken.UserId);
+            return new AuthResponseDto(false, Message:"Failed to update token state. Please try logging in again.");
+        }
+    }
+
+    public async Task<bool> RevokeRefreshTokenAsync(string refreshToken, Guid userId)
+    {
+        _logger.LogDebug("Attempting token revocation for user {UserId}.", userId);
+
+        var validUserTokens = await _refreshTokenRepository.GetValidTokensByUserIdAsync(userId);
+
+        RefreshToken? storedToken = null;
+        foreach (var candidate in validUserTokens)
+        {
+            if (_refreshTokenHasher.VerifyHashedPassword(candidate, candidate.TokenHash, refreshToken) == PasswordVerificationResult.Success)
+            {
+                storedToken = candidate;
+                break;
+            }
+        }
+
         if (storedToken == null)
         {
             _logger.LogWarning("Revoke failed for user {UserId}: Refresh token not found or already invalid.", userId);
-            return false; // Indicate token wasn't found or already invalid
+            return false;
         }
 
-        // 4. Mark as revoked
         storedToken.IsRevoked = true;
-        await _refreshTokenRepository.UpdateAsync(storedToken); // Queue update
+        await _refreshTokenRepository.UpdateAsync(storedToken);
 
-        // 5. Save the change
         try
         {
-            await _context.SaveChangesAsync(); // Commit transaction
+            await _context.SaveChangesAsync();
             _logger.LogInformation("Refresh token {TokenId} revoked for user {UserId}.", storedToken.Id, storedToken.UserId);
             return true;
         }
         catch(DbUpdateException dbEx)
         {
              _logger.LogError(dbEx, "Failed to save revoke status for token {TokenId}, user {UserId}", storedToken.Id, storedToken.UserId);
-             return false; // Indicate failure to save
+             return false;
         }
     }
 
-    // --- Private Helper Methods ---
-    // GenerateTokensAsync, GenerateClaims, GenerateRefreshTokenString, FormatErrors
-    // remain the same as in Response #47
     private async Task<AuthResponseDto> GenerateTokensAsync(ApplicationUser user)
     {
         var userRoles = await _userManager.GetRolesAsync(user);
         var claims = GenerateClaims(user, userRoles);
 
-        var jwtSecret = _configuration[ApiConstants.JwtConfigKeys.Secret]!; // Use new constant
-        var issuer = _configuration[ApiConstants.JwtConfigKeys.Issuer]; // Use new constant
-        var audience = _configuration[ApiConstants.JwtConfigKeys.Audience]; // Use new constant
-        var accessExpiryMinutes = _configuration.GetValue<int>(ApiConstants.JwtConfigKeys.AccessExpiryMinutes, 15); // Use new constant
-        var refreshExpiryDays = _configuration.GetValue<int>(ApiConstants.JwtConfigKeys.RefreshExpiryDays, 7); // Use new constant
+        var jwtConfig = _configuration.GetSection(ApiConstants.JwtConfigKeys.Section);
+        var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtConfig[ApiConstants.JwtConfigKeys.Secret] 
+            ?? throw new InvalidOperationException("JWT Secret not configured")));
+        var credentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
 
-        var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecret));
-        var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+        var accessTokenExpirationMinutes = double.Parse(jwtConfig[ApiConstants.JwtConfigKeys.AccessExpiryMinutes] ?? "15");
+        var accessToken = new JwtSecurityToken(
+            issuer: jwtConfig[ApiConstants.JwtConfigKeys.Issuer],
+            audience: jwtConfig[ApiConstants.JwtConfigKeys.Audience],
+            claims: claims,
+            expires: DateTime.UtcNow.AddMinutes(accessTokenExpirationMinutes),
+            signingCredentials: credentials);
 
-        // Access Token
-        var accessExpires = DateTime.UtcNow.AddMinutes(accessExpiryMinutes);
-        var accessTokenDescriptor = new SecurityTokenDescriptor
-        {
-            Subject = new ClaimsIdentity(claims),
-            Expires = accessExpires,
-            Issuer = issuer,
-            Audience = audience,
-            SigningCredentials = credentials
-        };
-        var tokenHandler = new JwtSecurityTokenHandler();
-        var accessToken = tokenHandler.CreateToken(accessTokenDescriptor);
-        var accessTokenString = tokenHandler.WriteToken(accessToken);
+        var accessTokenString = new JwtSecurityTokenHandler().WriteToken(accessToken);
 
-        // Refresh Token
         var refreshTokenString = GenerateRefreshTokenString();
-        var refreshTokenEntity = new RefreshToken
+        var refreshTokenExpiryDays = double.Parse(jwtConfig[ApiConstants.JwtConfigKeys.RefreshExpiryDays] ?? "7");
+
+        var refreshToken = new RefreshToken
         {
             UserId = user.Id,
             TokenHash = _refreshTokenHasher.HashPassword(null!, refreshTokenString),
-            ExpiryDate = DateTime.UtcNow.AddDays(refreshExpiryDays),
+            ExpiryDate = DateTime.UtcNow.AddDays(refreshTokenExpiryDays),
             CreatedDate = DateTime.UtcNow,
+            IsUsed = false,
             IsRevoked = false,
-            IsUsed = false
         };
-        await _refreshTokenRepository.AddAsync(refreshTokenEntity); // Add via repo
-        // SaveChangesAsync called by the calling public method
 
-        _logger.LogDebug("Generated tokens; refresh token queued for add for user {UserId}.", user.Id);
-        // Use Common Role constants if needed in AuthResponseDto constructor (assuming it takes roles)
-        return new AuthResponseDto(true, accessTokenString, accessExpires, refreshTokenString, user.Id.ToString(), user.Email, user.FirstName, user.LastName, Roles:userRoles, Message: "Login successful.");
+        await _refreshTokenRepository.AddAsync(refreshToken);
+
+        _logger.LogDebug("Generated new access and refresh tokens for user {UserId}", user.Id);
+
+        return new AuthResponseDto(
+            Succeeded: true,
+            AccessToken: accessTokenString,
+            AccessTokenExpiration: accessToken.ValidTo,
+            RefreshToken: refreshTokenString,
+            UserId: user.Id.ToString(),
+            Email: user.Email,
+            FirstName: user.FirstName,
+            LastName: user.LastName,
+            Roles: await _userManager.GetRolesAsync(user)
+        );
     }
 
     private List<Claim> GenerateClaims(ApplicationUser user, IList<string> roles)
     {
         var claims = new List<Claim>
         {
-            new(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
-            new(JwtRegisteredClaimNames.Email, user.Email ?? string.Empty),
-            new(JwtRegisteredClaimNames.GivenName, user.FirstName),
-            new(JwtRegisteredClaimNames.FamilyName, user.LastName),
-            new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+            new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
+            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+            new Claim(JwtRegisteredClaimNames.Email, user.Email ?? string.Empty),
+            new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+            new Claim(ClaimTypes.Name, user.UserName ?? string.Empty),
+            new Claim(ClaimTypes.GivenName, user.FirstName ?? string.Empty),
+            new Claim(ClaimTypes.Surname, user.LastName ?? string.Empty),
+            new Claim("isActive", user.IsActive.ToString(), ClaimValueTypes.Boolean)
         };
-        claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
+
+        foreach (var role in roles)
+        {
+            claims.Add(new Claim(ClaimTypes.Role, role));
+        }
+
         return claims;
     }
 
@@ -308,18 +321,5 @@ public class AuthService : IAuthService
     }
 
     private string FormatErrors(IdentityResult result) =>
-        string.Join("; ", result.Errors.Select(e => e.Description));
-
-    // Optional Security Enhancement (Example)
-    // private async Task RevokeAllUserTokensAsync(Guid userId)
-    // {
-    //     _logger.LogWarning("Revoking all valid refresh tokens for user {UserId} due to potential security issue.", userId);
-    //     var tokens = await _refreshTokenRepository.GetValidTokensByUserIdAsync(userId);
-    //     if (tokens.Any())
-    //     {
-    //         foreach (var token in tokens) { token.IsRevoked = true; await _refreshTokenRepository.UpdateAsync(token); }
-    //         await _context.SaveChangesAsync();
-    //         _logger.LogInformation("Successfully revoked {Count} tokens for user {UserId}.", tokens.Count, userId);
-    //     }
-    // }
+        string.Join(" ", result.Errors.Select(e => e.Description));
 }

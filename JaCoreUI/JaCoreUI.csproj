@@ -2,6 +2,7 @@
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net8.0</TargetFramework>
+    <LangVersion>preview</LangVersion>
     <Nullable>enable</Nullable>
     <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
     <ApplicationManifest>app.manifest</ApplicationManifest>
@@ -23,7 +24,7 @@
       <PrivateAssets Condition="'$(Configuration)' != 'Debug'">All</PrivateAssets>
     </PackageReference>
     <!-- CommunityToolkit.Mvvm: Latest stable -->
-    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
     <!-- DeepCloner: Latest stable -->
     <PackageReference Include="DeepCloner" Version="0.10.4" />
     <!-- Irihi.Ursa packages upgraded to match Avalonia 11.2.x -->

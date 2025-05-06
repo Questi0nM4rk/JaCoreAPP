@@ -105,7 +105,7 @@ public class DatabaseFixture : IAsyncLifetime
             }
 
             // Do the seeding
-            await TestDataSeeder.SeedAdminUserAsync(scopedServices, env);
+            await TestDataSeeder.SeedEssentialUsersAsync(scopedServices, env);
             
             // Verify after seeding
             adminUser = await userManager.FindByEmailAsync("admin@jacore.app");

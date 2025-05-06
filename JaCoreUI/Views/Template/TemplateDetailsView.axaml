@@ -2,7 +2,90 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="JaCoreUI.Views.Template.TemplateDetailsView">
-    Welcome to Avalonia!
+             xmlns:vm="using:JaCoreUI.ViewModels.Template"
+             xmlns:prodVm="using:JaCoreUI.ViewModels.Production" 
+             mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="700"
+             x:Class="JaCoreUI.Views.Template.TemplateDetailsView"
+             x:DataType="vm:TemplateDetailsViewModel">
+
+    <Design.DataContext>
+        <!-- Provides design-time data -->
+        <vm:TemplateDetailsViewModel />
+    </Design.DataContext>
+
+    <DockPanel LastChildFill="True">
+        <!-- Header for Template Mode -->
+        <Border DockPanel.Dock="Top" BorderThickness="0 0 0 1" BorderBrush="{DynamicResource ControlStrokeColorDefault}" Padding="10">
+            <StackPanel Orientation="Horizontal" Spacing="10">
+                <TextBlock Text="Template Editor" VerticalAlignment="Center" FontWeight="SemiBold" FontSize="16"/>
+                <Button Content="Add Root Step" Command="{Binding AddRootStepCommand}"/>
+                <TextBlock Text="Base Amount:" VerticalAlignment="Center"/>
+                <NumericUpDown Value="{Binding TemplateBaseAmount}" Width="100" FormatString="N2"/>
+                <TextBlock Text="Base Unit:" VerticalAlignment="Center"/>
+                <ComboBox ItemsSource="{Binding AvailableUnits}" 
+                          SelectedItem="{Binding SelectedBaseUnit}" 
+                          MinWidth="80"/>
+                <Button Content="Save Template" Command="{Binding SaveTemplateCommand}" HorizontalAlignment="Right" Classes="accent"/>
+            </StackPanel>
+        </Border>
+
+        <!-- Main Content Area -->
+        <Grid ColumnDefinitions="250,*" Margin="10">
+            <!-- Outline TreeView (Simplified for now) -->
+            <Border Grid.Column="0" BorderThickness="0 0 1 0" BorderBrush="{DynamicResource ControlStrokeColorDefault}" Padding="0 0 10 0">
+                <TreeView Name="OutlineTreeView"
+                          ItemsSource="{Binding ProductionRootNode.Steps}" 
+                          SelectionMode="Single">
+                    <TreeView.DataTemplates>
+                        <HierarchicalDataTemplate DataType="{x:Type prodVm:StepViewModel}" ItemsSource="{Binding SubSteps}">
+                             <TextBlock Text="{Binding Name}" />
+                        </HierarchicalDataTemplate>
+                        <!-- No template for instructions in outline -->
+                    </TreeView.DataTemplates>
+                </TreeView>
+            </Border>
+
+            <!-- Main Hierarchy TreeView -->
+            <ScrollViewer Grid.Column="1" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Padding="10 0 0 0">
+                <TreeView Name="MainTreeView"
+                          ItemsSource="{Binding ProductionRootNode.Steps}">
+                    <TreeView.DataTemplates>
+                         <!-- Step Template -->
+                        <HierarchicalDataTemplate DataType="{x:Type prodVm:StepViewModel}" 
+                                                  ItemsSource="{Binding Items}"> <!-- We'll combine Instructions and SubSteps later if needed, or use nested TreeViews -->
+                                                  
+                            <DockPanel LastChildFill="True" Margin="0 2">
+                                <StackPanel Orientation="Horizontal" Spacing="5" DockPanel.Dock="Right">
+                                    <Button Content="Add Instruction" Command="{Binding $parent[TreeView].DataContext.AddInstructionCommand}" CommandParameter="{Binding}" FontSize="10" Padding="3"/>
+                                    <Button Content="Add Sub-Step" Command="{Binding $parent[TreeView].DataContext.AddSubStepCommand}" CommandParameter="{Binding}" FontSize="10" Padding="3"/>
+                                    <Button Content="Remove" Command="{Binding $parent[TreeView].DataContext.RemoveItemCommand}" CommandParameter="{Binding}" FontSize="10" Padding="3" Classes="danger"/>
+                                </StackPanel>
+                                <TextBox Text="{Binding Name, Mode=TwoWay}" 
+                                         Watermark="Step Name" 
+                                         VerticalAlignment="Center" 
+                                         BorderThickness="0" 
+                                         FontSize="14" 
+                                         FontWeight="SemiBold"/>
+                            </DockPanel>
+                        </HierarchicalDataTemplate>
+
+                        <!-- Instruction Template -->
+                        <DataTemplate DataType="{x:Type prodVm:InstructionViewModel}">
+                            <DockPanel LastChildFill="True" Margin="0 2">
+                               <StackPanel Orientation="Horizontal" Spacing="5" DockPanel.Dock="Right">
+                                    <Button Content="Configure UI" Command="{Binding $parent[TreeView].DataContext.ConfigureUiElementsCommand}" CommandParameter="{Binding}" FontSize="10" Padding="3"/>
+                                    <Button Content="Remove" Command="{Binding $parent[TreeView].DataContext.RemoveItemCommand}" CommandParameter="{Binding}" FontSize="10" Padding="3" Classes="danger"/>
+                                </StackPanel>
+                                <TextBox Text="{Binding Name, Mode=TwoWay}" 
+                                         Watermark="Instruction Name" 
+                                         VerticalAlignment="Center" 
+                                         BorderThickness="0"/>
+                                <!-- TODO: Add ItemsControl for DynamicUiElements display/configuration here later -->
+                            </DockPanel>
+                        </DataTemplate>
+                    </TreeView.DataTemplates>
+                </TreeView>
+            </ScrollViewer>
+        </Grid>
+    </DockPanel>
 </UserControl>

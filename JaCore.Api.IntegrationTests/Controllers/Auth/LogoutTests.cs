@@ -5,8 +5,8 @@ using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using Xunit;
-using JaCore.Api.IntegrationTests.DTOs.Auth;
 using JaCore.Api.IntegrationTests.Controllers.Base;
+using JaCore.Api.DTOs.Auth;
 
 namespace JaCore.Api.IntegrationTests.Controllers.Auth;
 

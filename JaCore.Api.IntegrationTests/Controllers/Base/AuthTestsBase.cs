@@ -1,19 +1,26 @@
-using FluentAssertions; // Added for Should().NotBeNull()
-using JaCore.Api.Helpers; // For ApiConstants
-using JaCore.Api.IntegrationTests.Helpers; // For Factory, Collection
+using FluentAssertions;
+using JaCore.Api.DTOs.Auth; // Use API DTOs
+using JaCore.Api.Helpers;
+using JaCore.Api.IntegrationTests.Helpers;
 using Microsoft.AspNetCore.Mvc.Testing;
 using System.Net.Http.Json;
 using Xunit;
-using JaCore.Api.IntegrationTests.DTOs.Auth; // Added new using for Integration Test DTOs
+using JaCore.Api.Data;
+using JaCore.Api.Entities.Identity;
+using JaCore.Common; // For RoleConstants
+using System.Collections.Generic; // For List<string>
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace JaCore.Api.IntegrationTests.Controllers.Base;
 
-// Base class for Auth controller tests, sharing the database fixture via collection
 [Collection("Database Collection")]
 public abstract class AuthTestsBase : IClassFixture<CustomWebApplicationFactory>
 {
     protected readonly HttpClient _client;
     protected readonly CustomWebApplicationFactory _factory;
+    protected readonly ILogger<AuthTestsBase> _logger;
 
     protected AuthTestsBase(CustomWebApplicationFactory factory)
     {
@@ -22,14 +29,15 @@ public abstract class AuthTestsBase : IClassFixture<CustomWebApplicationFactory>
         {
             AllowAutoRedirect = false
         });
-        Console.WriteLine($"---> AuthTestsBase initialized for {GetType().Name}.");
+        _logger = factory.Services.GetRequiredService<ILogger<AuthTestsBase>>();
+        _logger.LogInformation($"---> AuthTestsBase initialized for {GetType().Name}.");
     }
 
     // --- Common Helper Methods ---
 
     protected async Task<(AuthResponseDto? AuthResult, HttpResponseMessage Response)> RegisterUserAsync(
         string adminAccessToken,
-        RegisterDto registerDto) // Updated to use new RegisterDto
+        RegisterDto registerDto) // <<< Use API RegisterDto
     {
         var httpRequest = new HttpRequestMessage(HttpMethod.Post, ApiConstants.AuthRoutes.Register)
         {
@@ -47,36 +55,81 @@ public abstract class AuthTestsBase : IClassFixture<CustomWebApplicationFactory>
     }
 
     protected async Task<(AuthResponseDto? AuthResult, HttpResponseMessage Response)> LoginUserAsync(
-        LoginDto loginDto) // Updated to use new LoginDto
+        LoginDto loginDto) // <<< Use API LoginDto
     {
-        Console.WriteLine($"---> Attempting send login request to endpoint: {ApiConstants.AuthRoutes.Login}");
+        _logger.LogInformation("Attempting to login user: {Email}", loginDto.Email);
         var response = await _client.PostAsJsonAsync(ApiConstants.AuthRoutes.Login, loginDto);
-        AuthResponseDto? result = response.IsSuccessStatusCode
-            ? await response.Content.ReadFromJsonAsync<AuthResponseDto>()
-            : null;
-
-        Console.WriteLine($"Login attempt for {loginDto.Email} - Status: {response.StatusCode}");
+        AuthResponseDto? result = null;
+        if (response.IsSuccessStatusCode)
+        {
+            try
+            {
+                result = await response.Content.ReadFromJsonAsync<AuthResponseDto>();
+            }
+            catch (Exception ex)
+            {
+                 _logger.LogError(ex, "Failed to deserialize successful login response for {Email}. Status: {StatusCode}", loginDto.Email, response.StatusCode);
+            }
+        }
+        else
+        {
+            var errorContent = await response.Content.ReadAsStringAsync();
+             _logger.LogWarning("Login attempt failed for {Email}. Status: {StatusCode}. Response: {ErrorContent}",
+                 loginDto.Email, response.StatusCode, errorContent);
+        }
+        _logger.LogInformation("Login attempt for {Email} completed. Status: {StatusCode}", loginDto.Email, response.StatusCode);
         return (result, response);
     }
 
     protected async Task<(AuthResponseDto? AuthResult, HttpResponseMessage Response)> RefreshTokenAsync(
+        string accessToken, // <<< Need expired access token for user identification
         string refreshToken)
     {
-        var refreshDto = new TokenRefreshRequestDto(refreshToken); // Use new TokenRefreshRequestDto implicitly or explicitly
-        var response = await _client.PostAsJsonAsync(ApiConstants.AuthRoutes.Refresh, refreshDto);
-        AuthResponseDto? result = response.IsSuccessStatusCode
-            ? await response.Content.ReadFromJsonAsync<AuthResponseDto>()
-            : null;
+        _logger.LogInformation("Attempting token refresh.");
+        // Use TokenRefreshRequestDto from API
+        var requestDto = new TokenRefreshRequestDto(refreshToken);
+        var request = new HttpRequestMessage(HttpMethod.Post, ApiConstants.AuthRoutes.Refresh)
+        {
+            Content = JsonContent.Create(requestDto)
+        };
+        // Add the expired access token to the header for user identification
+        request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", accessToken);
 
-        Console.WriteLine($"Refresh token attempt - Status: {response.StatusCode}");
+        var response = await _client.SendAsync(request);
+        AuthResponseDto? result = null;
+        if (response.IsSuccessStatusCode)
+        {
+             try
+             {
+                 result = await response.Content.ReadFromJsonAsync<AuthResponseDto>();
+             }
+             catch (Exception ex)
+             {
+                 _logger.LogError(ex, "Failed to deserialize successful refresh response. Status: {StatusCode}", response.StatusCode);
+             }
+        }
+        else
+        {
+            var errorContent = await response.Content.ReadAsStringAsync();
+            _logger.LogWarning("Token refresh attempt failed. Status: {StatusCode}. Response: {ErrorContent}", response.StatusCode, errorContent);
+        }
+        _logger.LogInformation("Token refresh attempt completed. Status: {StatusCode}", response.StatusCode);
         return (result, response);
     }
 
-    protected async Task<HttpResponseMessage> LogoutAsync(string accessToken)
+    protected async Task<HttpResponseMessage> LogoutAsync(string accessToken, string refreshToken)
     {
-        var request = new HttpRequestMessage(HttpMethod.Post, ApiConstants.AuthRoutes.Logout);
-        request.Headers.Authorization = new("Bearer", accessToken);
-        return await _client.SendAsync(request);
+        _logger.LogInformation("Attempting logout.");
+        // Use TokenRefreshRequestDto from API
+        var requestDto = new TokenRefreshRequestDto(refreshToken);
+        var request = new HttpRequestMessage(HttpMethod.Post, ApiConstants.AuthRoutes.Logout)
+        {
+            Content = JsonContent.Create(requestDto)
+        };
+        request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", accessToken);
+        var response = await _client.SendAsync(request);
+        _logger.LogInformation("Logout attempt completed. Status: {StatusCode}", response.StatusCode);
+        return response;
     }
 
     // --- Success-Oriented Helper Methods ---
@@ -88,8 +141,8 @@ public abstract class AuthTestsBase : IClassFixture<CustomWebApplicationFactory>
     /// <param name="adminAccessToken">The access token of an authenticated admin user.</param>
     /// <returns>The non-nullable AuthResponseDto on success.</returns>
     protected async Task<AuthResponseDto> RegisterUserSuccessfullyAsync(
-        string adminAccessToken, // Added: Admin token is now required
-        RegisterDto registerDto) // Updated to use new RegisterDto
+        string adminAccessToken,
+        RegisterDto registerDto) // <<< Use API RegisterDto
     {
         // Pass the admin token to the underlying helper
         var (result, response) = await RegisterUserAsync(adminAccessToken, registerDto);
@@ -106,7 +159,7 @@ public abstract class AuthTestsBase : IClassFixture<CustomWebApplicationFactory>
     /// Throws an exception if login fails or returns null data.
     /// </summary>
     /// <returns>The non-nullable AuthResponseDto on success.</returns>
-    protected async Task<AuthResponseDto> LoginUserSuccessfullyAsync(LoginDto loginDto) // Updated to use new LoginDto
+    protected async Task<AuthResponseDto> LoginUserSuccessfullyAsync(LoginDto loginDto) // <<< Use API LoginDto
     {
         var (result, response) = await LoginUserAsync(loginDto);
 
@@ -126,11 +179,11 @@ public abstract class AuthTestsBase : IClassFixture<CustomWebApplicationFactory>
     /// <returns>A valid access token for the pre-seeded admin user.</returns>
     protected async Task<string> GetAdminAccessTokenAsync()
     {
-        var loginDto = new LoginDto // Use new LoginDto
-        {
-            Email = "admin@jacore.app",
-            Password = "AdminPassword123!"
-        };
+        // Use API LoginDto - assuming positional constructor
+        var loginDto = new LoginDto(
+            Email: "admin@jacore.app",
+            Password: "AdminPassword123!"
+        );
 
         Console.WriteLine($"---> Attempting to log in as seeded admin: {loginDto.Email}");
 
@@ -141,5 +194,22 @@ public abstract class AuthTestsBase : IClassFixture<CustomWebApplicationFactory>
 
         Console.WriteLine($"---> Successfully obtained access token for admin: {loginDto.Email}");
         return loginResult.AccessToken;
+    }
+
+    // Helper to create a standard user for tests
+    protected async Task<(AuthResponseDto UserAuth, RegisterDto UserCredentials)> CreateStandardUserAsync(string adminAccessToken)
+    {
+        // Use property initializers for the nominal record
+        var credentials = new RegisterDto
+        {
+            Email = $"testuser-{Guid.NewGuid()}@example.com",
+            FirstName = "Test",
+            LastName = "User",
+            Password = "Password123!",
+            ConfirmPassword = "Password123!", // Add required ConfirmPassword
+            Roles = new List<string> { RoleConstants.Roles.User }
+        };
+        var authResult = await RegisterUserSuccessfullyAsync(adminAccessToken, credentials);
+        return (authResult, credentials);
     }
 }

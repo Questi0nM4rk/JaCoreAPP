@@ -1,5 +1,5 @@
 using JaCore.Api.DTOs.Device;
-using JaCore.Api.Services.Device;
+using JaCore.Api.Services.Abstractions.Device;
 using JaCore.Api.Helpers;
 using JaCore.Common;
 using Microsoft.AspNetCore.Authorization;
@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace JaCore.Api.Controllers.Device;
 
 [ApiController]
-[ApiVersion(ApiConstants.Versions.V1_0_String)]
+[ApiVersion(ApiConstants.Versions.VersionString)]
 [Produces("application/json")]
 [Authorize]
 public class DevicesController : ControllerBase
@@ -21,7 +21,7 @@ public class DevicesController : ControllerBase
     }
 
     [HttpGet(ApiConstants.DeviceRoutes.GetAll)]
-    [ProducesResponseType(typeof(IEnumerable<DeviceReadDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(IEnumerable<DeviceDto>), StatusCodes.Status200OK)]
     [Authorize(Roles = $"{RoleConstants.Roles.Admin},{RoleConstants.Roles.User}")]
     public async Task<IActionResult> GetDevices(CancellationToken cancellationToken)
     {
@@ -30,7 +30,7 @@ public class DevicesController : ControllerBase
     }
 
     [HttpGet(ApiConstants.DeviceRoutes.GetById)]
-    [ProducesResponseType(typeof(DeviceReadDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(DeviceDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [Authorize(Roles = $"{RoleConstants.Roles.Admin},{RoleConstants.Roles.User}")]
     public async Task<IActionResult> GetDeviceById(Guid id, CancellationToken cancellationToken)
@@ -40,7 +40,7 @@ public class DevicesController : ControllerBase
     }
 
     [HttpGet(ApiConstants.DeviceRoutes.GetBySerial)]
-    [ProducesResponseType(typeof(DeviceReadDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(DeviceDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [Authorize(Roles = $"{RoleConstants.Roles.Admin},{RoleConstants.Roles.User}")]
     public async Task<IActionResult> GetDeviceBySerialNumber(string serialNumber, CancellationToken cancellationToken)
@@ -50,7 +50,7 @@ public class DevicesController : ControllerBase
     }
 
     [HttpPost(ApiConstants.DeviceRoutes.Create)]
-    [ProducesResponseType(typeof(DeviceReadDto), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(DeviceDto), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [Authorize(Roles = RoleConstants.Roles.Admin)]
     public async Task<IActionResult> CreateDevice([FromBody] DeviceCreateDto createDto, CancellationToken cancellationToken)

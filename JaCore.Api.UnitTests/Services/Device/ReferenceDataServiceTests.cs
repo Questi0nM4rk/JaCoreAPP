@@ -14,6 +14,7 @@ using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using AutoMapper;
 
 namespace JaCore.Api.UnitTests.Services.Device;
 
@@ -22,17 +23,19 @@ public class CategoryServiceTests
     private readonly Mock<ICategoryRepository> _mockRepo;
     private readonly Mock<ApplicationDbContext> _mockDbContext;
     private readonly Mock<ILogger<CategoryService>> _mockLogger;
+    private readonly Mock<IMapper> _mockMapper;
     private readonly CategoryService _sut;
 
     public CategoryServiceTests()
     {
         _mockRepo = new Mock<ICategoryRepository>();
         _mockLogger = new Mock<ILogger<CategoryService>>();
+        _mockMapper = new Mock<IMapper>();
         var options = new DbContextOptions<ApplicationDbContext>();
         _mockDbContext = new Mock<ApplicationDbContext>(options);
         _mockDbContext.Setup(db => db.SaveChangesAsync(It.IsAny<CancellationToken>())).ReturnsAsync(1);
 
-        _sut = new CategoryService(_mockRepo.Object, _mockDbContext.Object, _mockLogger.Object);
+        _sut = new CategoryService(_mockRepo.Object, _mockDbContext.Object, _mockLogger.Object, _mockMapper.Object);
     }
 
     // Minimal tests - expand as needed
@@ -84,16 +87,18 @@ public class SupplierServiceTests
     private readonly Mock<ISupplierRepository> _mockRepo;
     private readonly Mock<ApplicationDbContext> _mockDbContext;
     private readonly Mock<ILogger<SupplierService>> _mockLogger;
+    private readonly Mock<IMapper> _mockMapper;
     private readonly SupplierService _sut;
 
     public SupplierServiceTests()
     {
         _mockRepo = new Mock<ISupplierRepository>();
         _mockLogger = new Mock<ILogger<SupplierService>>();
+        _mockMapper = new Mock<IMapper>();
         var options = new DbContextOptions<ApplicationDbContext>();
         _mockDbContext = new Mock<ApplicationDbContext>(options);
         _mockDbContext.Setup(db => db.SaveChangesAsync(It.IsAny<CancellationToken>())).ReturnsAsync(1);
-        _sut = new SupplierService(_mockRepo.Object, _mockDbContext.Object, _mockLogger.Object);
+        _sut = new SupplierService(_mockRepo.Object, _mockDbContext.Object, _mockLogger.Object, _mockMapper.Object);
     }
 
     [Fact]
@@ -117,16 +122,18 @@ public class ServiceServiceTests // Renamed class
     private readonly Mock<IServiceRepository> _mockRepo;
     private readonly Mock<ApplicationDbContext> _mockDbContext;
     private readonly Mock<ILogger<ServiceService>> _mockLogger; // Correct Logger type
+    private readonly Mock<IMapper> _mockMapper;
     private readonly ServiceService _sut; // Renamed service
 
     public ServiceServiceTests()
     {
         _mockRepo = new Mock<IServiceRepository>();
         _mockLogger = new Mock<ILogger<ServiceService>>();
+        _mockMapper = new Mock<IMapper>();
         var options = new DbContextOptions<ApplicationDbContext>();
         _mockDbContext = new Mock<ApplicationDbContext>(options);
         _mockDbContext.Setup(db => db.SaveChangesAsync(It.IsAny<CancellationToken>())).ReturnsAsync(1);
-        _sut = new ServiceService(_mockRepo.Object, _mockDbContext.Object, _mockLogger.Object);
+        _sut = new ServiceService(_mockRepo.Object, _mockDbContext.Object, _mockLogger.Object, _mockMapper.Object);
     }
 
     [Fact]

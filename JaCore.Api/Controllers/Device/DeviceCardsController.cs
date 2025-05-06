@@ -1,5 +1,5 @@
 using JaCore.Api.DTOs.Device;
-using JaCore.Api.Services.Device;
+using JaCore.Api.Services.Abstractions.Device;
 using JaCore.Api.Helpers;
 using JaCore.Common;
 using Microsoft.AspNetCore.Authorization;
@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace JaCore.Api.Controllers.Device;
 
 [ApiController]
-[ApiVersion(ApiConstants.Versions.V1_0_String)]
+[ApiVersion(ApiConstants.Versions.VersionString)]
 [Produces("application/json")]
 [Authorize]
 public class DeviceCardsController : ControllerBase

@@ -1,4 +1,4 @@
-using System.ComponentModel.DataAnnotations;
+
 
 namespace JaCore.Api.DTOs.Device;
 

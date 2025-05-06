@@ -14,23 +14,22 @@ using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using AutoMapper;
 
 namespace JaCore.Api.UnitTests.Services.Device;
 
 public class DeviceServiceTests
 {
     private readonly Mock<IDeviceRepository> _mockDeviceRepo;
-    private readonly Mock<ICategoryRepository> _mockCategoryRepo;
-    private readonly Mock<ISupplierRepository> _mockSupplierRepo;
     private readonly Mock<ApplicationDbContext> _mockDbContext; // Mock DbContext for SaveChanges
     private readonly Mock<ILogger<DeviceService>> _mockLogger;
+    private readonly Mock<IMapper> _mockMapper; // Add Mapper mock
     private readonly DeviceService _sut; // System Under Test
 
     public DeviceServiceTests()
     {
         _mockDeviceRepo = new Mock<IDeviceRepository>();
-        _mockCategoryRepo = new Mock<ICategoryRepository>();
-        _mockSupplierRepo = new Mock<ISupplierRepository>();
+        _mockMapper = new Mock<IMapper>(); // Instantiate mapper mock
 
         // Mock DbContext - Simple setup for SaveChangesAsync
         // For more complex scenarios involving ChangeTracker, a more elaborate setup or
@@ -42,13 +41,12 @@ public class DeviceServiceTests
 
         _mockLogger = new Mock<ILogger<DeviceService>>();
 
-        // Instantiate the service with mocks
+        // Correct constructor call for DeviceService (needs repo, context, logger, mapper)
         _sut = new DeviceService(
             _mockDeviceRepo.Object,
-            _mockCategoryRepo.Object,
-            _mockSupplierRepo.Object,
-            _mockDbContext.Object, // Use mocked context
-            _mockLogger.Object
+            _mockDbContext.Object,
+            _mockLogger.Object,
+            _mockMapper.Object // Pass mapper
         );
     }
 
@@ -103,14 +101,14 @@ public class DeviceServiceTests
 
         // Assert
         result.Should().NotBeNull();
-        result.Should().BeOfType<DeviceReadDto>();
+        result.Should().BeOfType<DeviceDto>();
         result!.Id.Should().Be(deviceId);
         result.Name.Should().Be(deviceEntity.Name);
         result.SerialNumber.Should().Be(deviceEntity.SerialNumber);
         result.CategoryName.Should().Be(category.Name);
         result.SupplierName.Should().Be(supplier.Name);
         _mockDeviceRepo.Verify(repo => repo.GetByIdAsync(deviceId, It.IsAny<CancellationToken>(), 
-                                                        It.IsAny<Expression<Func<Entities.Device.Device, object>>[]>()), Times.Once);
+                                                    It.IsAny<Expression<Func<Entities.Device.Device, object>>[]>()), Times.Once);
     }
 
     [Fact]

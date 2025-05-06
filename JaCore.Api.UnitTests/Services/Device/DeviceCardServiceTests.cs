@@ -15,6 +15,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using JaCore.Common.Device; // For enums
+using AutoMapper;
 
 namespace JaCore.Api.UnitTests.Services.Device;
 
@@ -24,6 +25,7 @@ public class DeviceCardServiceTests
     private readonly Mock<IDeviceRepository> _mockDeviceRepo; // For checking device existence
     private readonly Mock<ApplicationDbContext> _mockDbContext;
     private readonly Mock<ILogger<DeviceCardService>> _mockLogger;
+    private readonly Mock<IMapper> _mockMapper;
     private readonly DeviceCardService _sut;
 
     public DeviceCardServiceTests()
@@ -31,6 +33,7 @@ public class DeviceCardServiceTests
         _mockCardRepo = new Mock<IDeviceCardRepository>();
         _mockDeviceRepo = new Mock<IDeviceRepository>();
         _mockLogger = new Mock<ILogger<DeviceCardService>>();
+        _mockMapper = new Mock<IMapper>();
 
         var options = new DbContextOptions<ApplicationDbContext>();
         _mockDbContext = new Mock<ApplicationDbContext>(options);
@@ -41,7 +44,8 @@ public class DeviceCardServiceTests
             _mockCardRepo.Object,
             _mockDeviceRepo.Object,
             _mockDbContext.Object,
-            _mockLogger.Object
+            _mockLogger.Object,
+            _mockMapper.Object
         );
     }
 

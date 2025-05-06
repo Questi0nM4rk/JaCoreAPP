@@ -1,5 +1,5 @@
 using JaCore.Api.DTOs.Users;
-using JaCore.Api.Services.Abstractions;
+using JaCore.Api.Services.Abstractions.Users;
 using JaCore.Common; // Keep for Roles
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -10,7 +10,7 @@ using JaCore.Api.Helpers; // Add using for the new constants
 namespace JaCore.Api.Controllers.Users;
 
 [ApiController]
-[ApiVersion(ApiConstants.Versions.V1_0_String)] // Use version string constant
+[ApiVersion(ApiConstants.Versions.VersionString)] // Use version string constant
 [Route(ApiConstants.BasePaths.Users)] // Use route prefix constant
 [Authorize] // Require authentication for all user actions by default
 public class UsersController : ControllerBase

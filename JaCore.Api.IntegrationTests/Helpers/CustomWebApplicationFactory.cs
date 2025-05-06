@@ -33,18 +33,10 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>, IClas
     {
         Console.WriteLine("---> Configuring WebHost for Testing...");
 
-        // Clear default logging providers to prevent conflicts with Serilog setup in Program.cs
-        builder.ConfigureLogging(logging =>
-        {
-            logging.ClearProviders();
-            // Optionally add a console logger for test output if desired
-            // logging.AddConsole();
-        });
-
         // Use ConfigureTestServices for reliable service overrides in tests
         builder.ConfigureTestServices(services =>
         {
-            Console.WriteLine("---> Configuring Test Services...");
+            Console.WriteLine("---> START: Configuring Test Services...");
             // Remove the original DbContext registration from Program.cs/Startup.cs
             var dbContextOptionsDescriptor = services.SingleOrDefault(
                 d => d.ServiceType == typeof(DbContextOptions<ApplicationDbContext>));
@@ -78,7 +70,7 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>, IClas
                 options.UseNpgsql(_dbFixture.ConnectionString); // Use Npgsql and the fixture's connection string
                 // options.EnableSensitiveDataLogging(); // Optional: Useful for debugging failed tests
             });
-            Console.WriteLine("---> Test Services configuration complete.");
+            Console.WriteLine("---> END: Test Services configuration complete.");
         });
 
         // Optionally set the environment for tests (useful if appsettings.Testing.json exists)

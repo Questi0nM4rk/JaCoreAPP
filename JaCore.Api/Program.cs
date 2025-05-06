@@ -2,12 +2,14 @@ using JaCore.Api.Data;
 using JaCore.Api.Entities.Identity;
 using JaCore.Api.Extensions;
 using JaCore.Api.Middleware;
-using JaCore.Api.Services.Abstractions;
+using JaCore.Api.Services.Abstractions.Auth;
+using JaCore.Api.Services.Abstractions.Device;
+using JaCore.Api.Services.Abstractions.Users;
 using JaCore.Api.Services.Auth;
 using JaCore.Api.Services.Repositories;
-using JaCore.Api.Services.Repositories.Device;
+// using JaCore.Api.Services.Repositories.Device;
 using JaCore.Api.Services.Users;
-using JaCore.Api.Services.Device;
+// using JaCore.Api.Services.Device;
 using JaCore.Common;
 using JaCore.Api.Helpers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -25,6 +27,9 @@ using System.Text;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using System.Reflection;
+using JaCore.Api.Services.Device;
+using JaCore.Api.Services.Repositories.Device;
+using AutoMapper;
 
 [assembly: InternalsVisibleTo("JaCore.Api.Tests")]
 [assembly: InternalsVisibleTo("JaCore.Api.IntegrationTests")]
@@ -45,9 +50,11 @@ try
     builder.Services.AddFluentValidationAutoValidation();
     builder.Services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 
+    builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
+
     builder.Services.AddApiVersioning(options =>
     {
-        options.DefaultApiVersion = ApiConstants.Versions.V1_0;
+        options.DefaultApiVersion = ApiConstants.Versions.Version;
         options.AssumeDefaultVersionWhenUnspecified = true;
         options.ReportApiVersions = true;
         options.ApiVersionReader = new UrlSegmentApiVersionReader();
@@ -69,10 +76,12 @@ try
         options.Password.RequireUppercase = true;
         options.Password.RequireNonAlphanumeric = true;
         options.Password.RequiredUniqueChars = 1;
+
         options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
         options.Lockout.MaxFailedAccessAttempts = 5;
         options.Lockout.AllowedForNewUsers = true;
         options.User.RequireUniqueEmail = true;
+        options.SignIn.RequireConfirmedAccount = true; // Or remove line if default is true
     })
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders();
@@ -124,7 +133,7 @@ try
     builder.Services.AddScoped<ICategoryService, CategoryService>();
     builder.Services.AddScoped<ISupplierService, SupplierService>();
     builder.Services.AddScoped<IServiceService, ServiceService>();
-    builder.Services.AddScoped<IEventService, EventService>();
+    builder.Services.AddScoped<IDeviceEventService, DeviceEventService>();
     builder.Services.AddScoped<IDeviceOperationService, DeviceOperationService>();
 
     builder.Services.AddEndpointsApiExplorer();
